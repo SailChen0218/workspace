@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.servyou.dao.symh.ITaskSynchronizerDao">
+    <!--根据三方协议uuid从中间库查询的三方协议信息-->
+    <select id="getSystems" resultType="cn.com.servyou.task.synchronizer.vo.SystemVo">
+        SELECT
+            a.SM_NO "smNo",
+            a.SYSTEMID "systemId",
+            a.SMDM "smDm",
+            a.SMJK_URI "smjkUri",
+            to_char(a.ZJSMSJ, 'yyyy-MM-dd HH24:MI:SS.ff') "zjsmsj",
+            b.SYSTEMNAME "systemName",
+            b.DESCRIPTION "description",
+            b.AVAILABLE "available",
+            b.URL "url",
+            b.CHARSET "charset",
+            a.SM_IP "smIp",
+            a.SCOPE_MIN "scopeMin",
+            to_char(a.ZJSMSJ_LIMIT, 'yyyy-MM-dd HH24:MI:SS.ff') "zjsmsjLimit"
+        FROM
+            MH_NRJHSM a LEFT JOIN T_SYSTEM b
+                ON a.SYSTEMID = b.SYSTEMID
+        WHERE
+            a.SMDM = 'RW' and a.ENABLE_FLG = 0
+    </select>
+</mapper>

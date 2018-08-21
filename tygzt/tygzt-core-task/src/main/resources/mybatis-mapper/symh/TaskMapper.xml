@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.servyou.dao.symh.ITaskDao">
+    <!--金三任务数拼接SQL-->
+    <sql id="gt3TaskSql">
+        SELECT
+            null "rwPk",
+            null "systemId",
+            #{gt3SysName} "systemName",
+            null "description",
+            null "url",
+            null "swjgDm",
+            null "rwId",
+            #{gt3Count} || #{gt3RwMs} "rwMs",
+            null "fqsj",
+            null "blsx",
+            null "fqr",
+            TO_CLOB(#{gt3BlUrl}) "blUrl",
+            null "rwzt",
+            null "dqzt",
+            null "tbsj",
+            null "rwfl",
+            -999 "blPriority"
+        FROM
+          DUAL
+        WHERE
+          #{gt3Count} > 0
+    </sql>
+
+    <!--查询个人待办任务信息-->
+    <select id="queryTasksGrdb" resultType="cn.com.servyou.task.vo.TaskVo">
+        SELECT
+            mhrw.RW_PK "rwPk",
+            mhrw.SYSTEMID "systemId",
+            tsys.SYSTEMNAME "systemName",
+            tsys.DESCRIPTION "description",
+            tsys.URL "url",
+            mhrw.SWJG_DM "swjgDm",
+            mhrw.RW_ID "rwId",
+            mhrw.RW_MS "rwMs",
+            mhrw.FQSJ "fqsj",
+            mhrw.BLSX "blsx",
+            mhrw.FQR "fqr",
+            mhrw.BL_URL "blUrl",
+            mhrw.RWZT "rwzt",
+            mhrw.DQZT "dqzt",
+            mhrw.TBSJ "tbsj",
+            mhrw.RWFL "rwfl",
+            mhrw.BL_PRIORITY "blPriority"
+        FROM
+            T_SYSTEM tsys,
+            MH_RW mhrw
+        WHERE
+            tsys.SYSTEMID = mhrw.SYSTEMID and
+            tsys.AVAILABLE = '1' and
+            EXISTS (SELECT 1 FROM MH_RW_SWRY swry WHERE swry.RW_PK = mhrw.RW_PK and swry.SWRY_DM = #{swryDm}) and
+            mhrw.RWFL = 'gr' and
+            mhrw.RWZT = 'db' and
+            (
+                (mhrw.SFYXSJBL = 'N' and mhrw.SWJG_DM = #{swjgDm}) or
+                (mhrw.SFYXSJBL = 'Y' and mhrw.SWJG_DM like #{yxswjgDm}) or
+                (mhrw.SWJG_DM is null)
+            )
+            <if test="rwms != null">
+              and mhrw.RW_MS like #{rwms}
+            </if>
+            <if test="fqsjq != null">
+              and mhrw.FQSJ &gt;= to_date(#{fqsjq}, 'yyyy-mm-dd hh24:mi:ss')
+            </if>
+            <if test="fqsjz != null">
+              and mhrw.FQSJ &lt;= to_date(#{fqsjz}, 'yyyy-mm-dd hh24:mi:ss')
+            </if>
+            <if test="systemId != null">
+              and mhrw.SYSTEMID = #{systemId}
+            </if>
+            <if test="blsxq != null">
+              and (mhrw.BLSX &gt;= to_date(#{blsxq}, 'yyyy-mm-dd hh24:mi:ss') or mhrw.BLSX is null)
+            </if>
+            <if test="blsxz != null">
+              and (mhrw.BLSX &lt;= to_date(#{blsxz}, 'yyyy-mm-dd hh24:mi:ss') or mhrw.BLSX is null)
+            </if>
+        UNION ALL
+            <include refid="gt3TaskSql"></include>
+        ORDER BY
+            17,
+            10,
+            1
+    </select>
+</mapper>
