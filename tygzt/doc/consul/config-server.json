@@ -1,0 +1,11 @@
+{
+  "datacenter": "dc",
+  "data_dir": "/usr/local/bin/consul_data/",
+  "log_level": "DEBUG",
+  "node_name": "server1",
+  "server": true,
+  "bind_addr": "192.168.19.10",
+  "bootstrap_expect": 1,
+  "client_addr": "192.168.19.10",
+  "ui": true
+}

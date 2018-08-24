@@ -1,0 +1,9 @@
+{
+  "datacenter": "dc",
+  "data_dir": "D:\\consul_1.2.2_windows_amd64",
+  "log_level": "DEBUG",
+  "node_name": "client1",
+  "server": false,
+  "advertise_addr": "192.168.19.88",
+  "ui": true
+}

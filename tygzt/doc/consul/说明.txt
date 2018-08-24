@@ -1,0 +1,21 @@
+
+
+启动server：consul agent -server -bind=192.168.19.10 -client=192.168.19.10 -bootstrap-expect=1 -data-dir=/usr/local/bin/consul_data/ -node=server1 -ui
+
+-server 表示是以服务端身份启动
+-bind 表示绑定到哪个ip（有些服务器会绑定多块网卡，可以通过bind参数强制指定绑定的ip）
+-client 指定客户端访问的ip(consul有丰富的api接口，这里的客户端指浏览器或调用方)，0.0.0.0表示不限客户端ip
+-bootstrap-expect=3 表示server集群最低节点数为3，低于这个值将工作不正常(注：类似zookeeper一样，通常集群数为奇数，方便选举，consul采用的是raft算法)
+-data-dir 表示指定数据的存放目录（该目录必须存在）
+-node 表示节点在web ui中显示的名称
+启动成功后，终端窗口不要关闭，可以在浏览器里，访问下，类似 http://10.0.xx.55:8500/，正常的话，应该会看到一行文字：Consul Agent。
+为了防止终端关闭后，consul退出，可以在刚才命令上，加点东西，类似：
+nohup xxx  > /dev/null 2>&1 & 
+
+
+
+启动client：
+consul agent -data-dir="D:\consul_1.2.2_windows_amd64" -node=task -advertise=192.168.19.88 -join=192.168.19.10
+
+
+consul agent -config-dir config.json -join=192.168.19.10
