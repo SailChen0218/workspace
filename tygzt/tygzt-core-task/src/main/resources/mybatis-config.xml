@@ -9,5 +9,6 @@
     </settings>
     <mappers>
         <mapper resource="mybatis-mapper/symh/TaskMapper.xml"/>
+        <mapper resource="mybatis-mapper/mydemo/UserMapper.xml"/>
     </mappers>
 </configuration>

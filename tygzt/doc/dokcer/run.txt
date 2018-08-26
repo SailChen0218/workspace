@@ -1,0 +1,18 @@
+docker run -i -t -v /home/software:/mnt/software --privileged=true 5182e96772bf /bin/bash
+
+
+原因是CentOS7中的安全模块selinux把权限禁掉了，
+
+   有以下几种方式解决挂载的目录没有权限的问题：
+   1.在运行容器的时候，给容器加特权，及加上 --privileged=true 参数：
+          docker run -i -t -v /soft:/soft --privileged=true 637fe9ea94f0 /bin/bash
+   2.临时关闭selinux：
+          setenforce 0
+   3.添加selinux规则，改变要挂载的目录的安全性文本
+
+
+在docker中运行consul，
+
+
+docker run -d --restart always -p 8300:8300 -p 8301:8301 -p 8301:8301/udp -p 8302:8302/udp \
+-p 8302:8302 -p 8400:8400 -p 8500:8500 -p 53:53/udp -h server1 5182e96772bf \ -config-dir config-server.json

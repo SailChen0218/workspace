@@ -1,7 +1,9 @@
 package cn.com.servyou.controller;
 
 import cn.com.servyou.common.dto.ResultDto;
+import cn.com.servyou.common.vo.UserVo;
 import cn.com.servyou.service.ITaskService;
+import cn.com.servyou.service.IUserService;
 import cn.com.servyou.task.vo.TaskVo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@RestController
+//@RestController
 public class TaskController {
     private static final Log LOG = LogFactory.getLog(TaskController.class.getName());
 
@@ -49,4 +51,5 @@ public class TaskController {
     public ResultDto<Map<String, String>> getServerInfo() {
         return taskService.getServerInfo();
     }
+
 }

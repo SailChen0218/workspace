@@ -1,7 +1,8 @@
-package cn.com.servyou.service;
+package cn.com.servyou.service.impl;
 
 import cn.com.servyou.common.dto.ResultDto;
 import cn.com.servyou.dao.symh.ITaskDao;
+import cn.com.servyou.service.ITaskService;
 import cn.com.servyou.task.vo.TaskVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service
+//@Service
 public class TaskServiceImpl implements ITaskService {
 
     @Autowired

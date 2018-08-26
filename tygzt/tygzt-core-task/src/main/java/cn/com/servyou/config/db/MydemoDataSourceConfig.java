@@ -3,6 +3,7 @@ package cn.com.servyou.config.db;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -11,80 +12,83 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
 
-public class SymhDataSourceConfig {
-    // 日志
-    private static final Log LOG = LogFactory.getLog(SymhDataSourceConfig.class.getName());
+@Configuration
+@MapperScan(basePackages = "cn.com.servyou.dao.mydemo", sqlSessionTemplateRef = "mydemoSqlSessionTemplate")
+@Slf4j
+public class MydemoDataSourceConfig {
 
-    @Value("${spring.datasource.symh.url}")
+    @Value("${spring.datasource.mydemo.url}")
     private String dbUrl;
 
-    @Value("${spring.datasource.symh.username}")
+    @Value("${spring.datasource.mydemo.username}")
     private String username;
 
-    @Value("${spring.datasource.symh.password}")
+    @Value("${spring.datasource.mydemo.password}")
     private String password;
 
-    @Value("${spring.datasource.symh.driver-class-name}")
+    @Value("${spring.datasource.mydemo.driver-class-name}")
     private String driverClassName;
 
-    @Value("${spring.datasource.symh.initialSize}")
+    @Value("${spring.datasource.mydemo.initialSize}")
     private int initialSize;
 
-    @Value("${spring.datasource.symh.minIdle}")
+    @Value("${spring.datasource.mydemo.minIdle}")
     private int minIdle;
 
-    @Value("${spring.datasource.symh.maxActive}")
+    @Value("${spring.datasource.mydemo.maxActive}")
     private int maxActive;
 
-    @Value("${spring.datasource.symh.maxWait}")
+    @Value("${spring.datasource.mydemo.maxWait}")
     private int maxWait;
 
-    @Value("${spring.datasource.symh.timeBetweenEvictionRunsMillis}")
+    @Value("${spring.datasource.mydemo.timeBetweenEvictionRunsMillis}")
     private int timeBetweenEvictionRunsMillis;
 
-    @Value("${spring.datasource.symh.minEvictableIdleTimeMillis}")
+    @Value("${spring.datasource.mydemo.minEvictableIdleTimeMillis}")
     private int minEvictableIdleTimeMillis;
 
-    @Value("${spring.datasource.symh.validationQuery}")
+    @Value("${spring.datasource.mydemo.validationQuery}")
     private String validationQuery;
 
-    @Value("${spring.datasource.symh.testWhileIdle}")
+    @Value("${spring.datasource.mydemo.testWhileIdle}")
     private boolean testWhileIdle;
 
-    @Value("${spring.datasource.symh.testOnBorrow}")
+    @Value("${spring.datasource.mydemo.testOnBorrow}")
     private boolean testOnBorrow;
 
-    @Value("${spring.datasource.symh.testOnReturn}")
+    @Value("${spring.datasource.mydemo.testOnReturn}")
     private boolean testOnReturn;
 
-    @Value("${spring.datasource.symh.poolPreparedStatements}")
+    @Value("${spring.datasource.mydemo.poolPreparedStatements}")
     private boolean poolPreparedStatements;
 
-    @Value("${spring.datasource.symh.maxPoolPreparedStatementPerConnectionSize}")
+    @Value("${spring.datasource.mydemo.maxPoolPreparedStatementPerConnectionSize}")
     private int maxPoolPreparedStatementPerConnectionSize;
 
-    @Value("${spring.datasource.symh.filters}")
+    @Value("${spring.datasource.mydemo.filters}")
     private String filters;
 
-    @Value("{spring.datasource.symh.connectionProperties}")
+    @Value("{spring.datasource.mydemo.connectionProperties}")
     private String connectionProperties;
 
     //数据源1-引用配置:spring.datasource.primary
-    @Bean(name = "symhdb")
-    @Qualifier("symhdb")
+    @Bean(name = "mydemodb")
+    @Qualifier("mydemodb")
     @Primary
-    public DataSource symhdb() {
+    public DataSource mydemodb() {
         DruidDataSource datasource = new DruidDataSource();
 
         datasource.setUrl(this.dbUrl);
@@ -108,32 +112,32 @@ public class SymhDataSourceConfig {
         try {
             datasource.setFilters(filters);
         } catch (SQLException e) {
-            LOG.error("druid configuration initialization filter", e);
+            log.error("druid configuration initialization filter", e);
         }
         datasource.setConnectionProperties(connectionProperties);
 
         return datasource;
     }
 
-    @Bean(name = "symhSqlSessionFactory")
+    @Bean(name = "mydemoSqlSessionFactory")
     @Primary
-    public SqlSessionFactory symhSqlSessionFactory(@Qualifier("symhdb") DataSource dataSource) throws Exception {
+    public SqlSessionFactory mydemoSqlSessionFactory(@Qualifier("mydemodb") DataSource dataSource) throws Exception {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(dataSource);
         bean.setMapperLocations(new PathMatchingResourcePatternResolver().
-                getResources("classpath:mybatis-mapper/symh/*.xml"));
+                getResources("classpath:mybatis-mapper/mydemo/*.xml"));
         return bean.getObject();
     }
 
-    @Bean(name = "symhTransactionManager")
+    @Bean(name = "mydemoTransactionManager")
     @Primary
-    public DataSourceTransactionManager symhTransactionManager(@Qualifier("symhdb") DataSource dataSource) {
+    public DataSourceTransactionManager mydemoTransactionManager(@Qualifier("mydemodb") DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 
-    @Bean(name = "symhSqlSessionTemplate")
+    @Bean(name = "mydemoSqlSessionTemplate")
     @Primary
-    public SqlSessionTemplate sentinelSqlSessionTemplate(@Qualifier("symhSqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
+    public SqlSessionTemplate sentinelSqlSessionTemplate(@Qualifier("mydemoSqlSessionFactory") SqlSessionFactory sqlSessionFactory) throws Exception {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
 
