@@ -19,3 +19,6 @@ consul agent -data-dir="D:\consul_1.2.2_windows_amd64" -node=task -advertise=192
 
 
 consul agent -config-dir config.json -join=192.168.19.10
+
+
+./consul agent -config-dir config-docker.json

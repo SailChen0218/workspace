@@ -16,3 +16,23 @@ docker run -i -t -v /home/software:/mnt/software --privileged=true 5182e96772bf 
 
 docker run -d --restart always -p 8300:8300 -p 8301:8301 -p 8301:8301/udp -p 8302:8302/udp \
 -p 8302:8302 -p 8400:8400 -p 8500:8500 -p 53:53/udp -h server1 5182e96772bf \ -config-dir config-server.json
+
+
+启动容器：
+docker run -it --name centos 5182e96772bf /bin/bash
+
+
+docker attach centos
+docker start centos
+docker ps
+docker cp /usr/local/bin/consul centos:/opt/consul/consul
+
+docker start centos -p 8300:8300 -p 8301:8301 -p 8301:8301/udp -p 8302:8302/udp -p 8302:8302 -p 8400:8400 -p 8500:8500 -p 53:53/udp -p 8600:8600/udp
+
+docker run -itd --name consul-server1 -p 8300:8300 -p 8301:8301 -p 8301:8301/udp -p 8302:8302/udp -p 8302:8302 -p 8400:8400 -p 8500:8500 -p 8600:8600/udp 7dc5e13f3587
+
+docker commit
+
+docker inspect 'centos' | grep IPAddress
+
+./consul agent -config-dir config-docker.json
