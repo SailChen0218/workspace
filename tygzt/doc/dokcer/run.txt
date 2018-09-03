@@ -36,3 +36,24 @@ docker commit
 docker inspect 'centos' | grep IPAddress
 
 ./consul agent -config-dir config-docker.json
+
+iptables  -t  nat  -nL
+
+
+iptables -t nat -A PREROUTING -d 192.168.19.10 -p tcp --dport 8300 -j DNAT --to-destination 172.17.0.2:8300
+iptables -t nat -A PREROUTING -d 192.168.19.10 -p tcp --dport 8301 -j DNAT --to-destination 172.17.0.2:8301
+iptables -t nat -A PREROUTING -d 192.168.19.10 -p udp --dport 8301 -j DNAT --to-destination 172.17.0.2:8301
+iptables -t nat -A PREROUTING -d 192.168.19.10 -p tcp --dport 8302 -j DNAT --to-destination 172.17.0.2:8302
+iptables -t nat -A PREROUTING -d 192.168.19.10 -p udp --dport 8302 -j DNAT --to-destination 172.17.0.2:8302
+iptables -t nat -A PREROUTING -d 192.168.19.10 -p tcp --dport 8400 -j DNAT --to-destination 172.17.0.2:8400
+iptables -t nat -A PREROUTING -d 192.168.19.10 -p tcp --dport 8500 -j DNAT --to-destination 172.17.0.2:8500
+iptables -t nat -A PREROUTING -d 192.168.19.10 -p udp --dport 8600 -j DNAT --to-destination 172.17.0.2:8600
+
+#删除容器
+docker rm 18dc2c088081
+
+#删除镜像
+docker rm 18dc2c088081
+
+#创建镜像
+docker build -t consul-server:v1.0 .
