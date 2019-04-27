@@ -9,4 +9,5 @@ import java.lang.annotation.*;
 @Inherited
 @Import(EzBeanScannerRegistrar.class)
 public @interface EnableEzdddFramework {
+
 }
