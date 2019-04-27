@@ -1,6 +1,7 @@
 package com.ezddd.common.bean;
 
 import org.springframework.context.annotation.Import;
+
 import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)
@@ -9,5 +10,4 @@ import java.lang.annotation.*;
 @Inherited
 @Import(EzBeanScannerRegistrar.class)
 public @interface EnableEzdddFramework {
-
 }
