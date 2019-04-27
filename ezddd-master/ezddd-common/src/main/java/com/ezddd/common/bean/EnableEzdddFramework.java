@@ -1,3 +1,4 @@
+
 package com.ezddd.common.bean;
 
 import org.springframework.context.annotation.Import;
