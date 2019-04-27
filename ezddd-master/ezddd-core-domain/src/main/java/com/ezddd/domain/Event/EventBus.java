@@ -1,5 +1,7 @@
 package com.ezddd.domain.Event;
 
-public interface EventBus {
+import java.util.EventListener;
 
+public interface EventBus {
+    void publishEvent(Event<?> event) throws Exception;
 }
