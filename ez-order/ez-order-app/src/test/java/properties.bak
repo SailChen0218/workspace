@@ -1,0 +1,94 @@
+#
+## ########################################### 服务注册中心 配置 ##########################################
+#spring.cloud.consul.host=172.16.1.4
+#spring.cloud.consul.port=8500
+#spring.cloud.consul.enabled=true
+#spring.cloud.consul.discovery.enabled=true
+#spring.cloud.consul.discovery.hostname=${server.address}
+#spring.cloud.consul.discovery.serviceName=${spring.application.name}
+#spring.cloud.consul.discovery.health-check-path=/${spring.application.name}/health
+#spring.cloud.consul.discovery.health-check-interval=15s
+#spring.cloud.consul.discovery.prefer-ip-address=true
+#spring.cloud.consul.discovery.port=${server.port}
+#spring.cloud.consul.discovery.instanceId=${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${random.value}}}
+## ########################################### 服务注册中心 配置 ##########################################
+#
+## ############################################# actuator 配置 ############################################
+#info.author=cqf
+#info.server.port=${server.port}
+#info.version=1.0.001-SNAPSHOT
+#
+#management.security.enabled=false
+## ############################################# actuator 配置 ############################################
+#
+#
+## ############################################# DB 配置 ############################################
+##spring.boot.enableautoconfiguration=false
+#spring.datasource.symh.type=com.alibaba.druid.pool.DruidDataSource
+#spring.datasource.symh.url=jdbc:oracle:thin:@192.168.149.186:1521:syrjfxgl
+#spring.datasource.symh.username=symh
+#spring.datasource.symh.password=symh
+#spring.datasource.symh.driver-class-name=oracle.jdbc.OracleDriver
+## 下面为连接池的补充设置，应用到上面所有数据源中
+## 初始化大小，最小，最大
+#spring.datasource.symh.initialSize=5
+#spring.datasource.symh.minIdle=5
+#spring.datasource.symh.maxActive=20
+## 配置获取连接等待超时的时间
+#spring.datasource.symh.maxWait=60000
+## 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+#spring.datasource.symh.timeBetweenEvictionRunsMillis=60000
+## 配置一个连接在池中最小生存的时间，单位是毫秒
+#spring.datasource.symh.minEvictableIdleTimeMillis=300000
+#spring.datasource.symh.validationQuery=SELECT 1 FROM DUAL
+#spring.datasource.symh.testWhileIdle=true
+#spring.datasource.symh.testOnBorrow=false
+#spring.datasource.symh.testOnReturn=false
+## 打开PSCache，并且指定每个连接上PSCache的大小
+#spring.datasource.symh.poolPreparedStatements=true
+#spring.datasource.symh.maxPoolPreparedStatementPerConnectionSize=20
+## 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+#spring.datasource.symh.filters=stat,wall,log4j
+## 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+#spring.datasource.symh.connectionProperties=druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+## 合并多个DruidDataSource的监控数据
+##spring.datasource.useGlobalDataSourceStat=true
+#
+#spring.datasource.orderdb.type=com.alibaba.druid.pool.DruidDataSource
+#spring.datasource.orderdb.url=jdbc:mysql://172.16.1.4:3306/order_db?useUnicode=true&characterEncoding=utf-8
+#spring.datasource.orderdb.username=root
+#spring.datasource.orderdb.password=Admin1234#
+#spring.datasource.orderdb.driver-class-name=com.mysql.jdbc.Driver
+## 下面为连接池的补充设置，应用到上面所有数据源中
+## 初始化大小，最小，最大
+#spring.datasource.orderdb.initialSize=5
+#spring.datasource.orderdb.minIdle=5
+#spring.datasource.orderdb.maxActive=20
+## 配置获取连接等待超时的时间
+#spring.datasource.orderdb.maxWait=60000
+## 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+#spring.datasource.orderdb.timeBetweenEvictionRunsMillis=60000
+## 配置一个连接在池中最小生存的时间，单位是毫秒
+#spring.datasource.orderdb.minEvictableIdleTimeMillis=300000
+#spring.datasource.orderdb.validationQuery=SELECT 1 FROM DUAL
+#spring.datasource.orderdb.testWhileIdle=true
+#spring.datasource.orderdb.testOnBorrow=false
+#spring.datasource.orderdb.testOnReturn=false
+## 打开PSCache，并且指定每个连接上PSCache的大小
+#spring.datasource.orderdb.poolPreparedStatements=true
+#spring.datasource.orderdb.maxPoolPreparedStatementPerConnectionSize=20
+## 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+#spring.datasource.orderdb.filters=stat,wall,log4j
+## 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+#spring.datasource.orderdb.connectionProperties=druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000;druid.stat.JdbcSqlStatValue=LastSlowParameters
+## 合并多个DruidDataSource的监控数据
+##spring.datasource.useGlobalDataSourceStat=true
+## ############################################# DB 配置 ############################################
+#
+## ############################################# mybatis 配置文件 #######################################
+#mybatis.config-location=classpath:mybatis-config.xml
+#
+## 不写 mybatis-config.xml 这个配置文件时可以用下面的配置
+##mybatis.type-aliases-package=com.example.domain
+##mybatis.mapper-locations=classpath:mybatis-mapper/*.xml
+## ############################################# mybatis 配置文件 #######################################

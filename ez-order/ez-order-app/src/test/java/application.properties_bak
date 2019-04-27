@@ -1,0 +1,7 @@
+server.servlet.context-path=/order
+server.address=192.168.0.110
+server.port=8080
+server.session-timeout=60
+#server.error.path=/error
+#spring.session.store-type=none
+#spring.application.name=order
