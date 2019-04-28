@@ -15,7 +15,7 @@ public class DefaultCommandGateway extends AbstractCommandGateway {
 
     @Override
     public AppResult send(Command command) {
-        CommandBus<AppResult> commandBus = commandExecutorRegistry.findCommandBus(command);
+        CommandBus<AppResult> commandBus = commandRegistry.findCommandBus(command);
         Assert.notNull(commandBus, "Commandbus not found.");
         return commandBus.dispatch(command);
     }

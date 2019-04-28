@@ -12,7 +12,7 @@ public class AsynchronousCommandBus extends AbstractCommandBus {
 
     @Override
     public AppResult dispatch(Command cmd) {
-        CommandExecutor<AppResult> commandExecutor = commandExecutorRegistry.findCommandExecutor(cmd);
+        CommandExecutor<AppResult> commandExecutor = commandRegistry.findCommandExecutor(cmd);
         if (commandExecutor == null) {
             return AppResult.valueOfError("001");
         } else {

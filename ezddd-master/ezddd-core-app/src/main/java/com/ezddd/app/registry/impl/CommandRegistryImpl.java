@@ -4,7 +4,7 @@ import com.ezddd.app.command.Command;
 import com.ezddd.app.command.CommandBus;
 import com.ezddd.app.command.CommandExecutor;
 import com.ezddd.app.registry.CommandDefinition;
-import com.ezddd.app.registry.CommandExecutorRegistry;
+import com.ezddd.app.registry.CommandRegistry;
 import com.ezddd.common.annotation.EzComponent;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -15,8 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @EzComponent
-@Order(1)
-public class CommandExecutorRegistryImpl implements CommandExecutorRegistry {
+public class CommandRegistryImpl implements CommandRegistry {
     // <CommandTypeName, CommandExecutor>
     protected static Map<String, CommandDefinition> commandDefinitionHolder = new HashMap<>(16);
 
