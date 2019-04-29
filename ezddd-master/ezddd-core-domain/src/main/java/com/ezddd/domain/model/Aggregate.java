@@ -16,13 +16,11 @@
 
 package com.ezddd.domain.model;
 
-import java.util.Objects;
-
 /**
  *
- * @param <T> The aggregate root type, <I> The identifier type
+ * @param <T> The aggregate root type
  */
-public interface Aggregate<T, I> {
+public interface Aggregate<T> {
 
     /**
      * Get the String representation of the aggregate's type. This defaults to the simple name of the {@link
@@ -33,20 +31,11 @@ public interface Aggregate<T, I> {
     String type();
 
     /**
-     * Get the unique identifier of this aggregate, represented as a String.
-     *
-     * @return The aggregate's identifier as a String
-     */
-    default String identifierAsString() {
-        return Objects.toString(identifier(), null);
-    }
-
-    /**
      * Get the unique identifier of this aggregate
      *
      * @return The aggregate's identifier
      */
-    <I> I identifier();
+    String identifier();
 
     /**
      * Get the aggregate's version. For event sourced aggregates this is identical to the sequence number of the last

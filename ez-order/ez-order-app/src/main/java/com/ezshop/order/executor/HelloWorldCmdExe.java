@@ -1,13 +1,13 @@
 package com.ezshop.order.executor;
 
-import com.ezddd.app.command.AbstractCommandExecutor;
+import com.ezddd.app.command.AbstractCommandHandler;
 import com.ezddd.app.command.Command;
 import com.ezddd.common.annotation.EzCommandExecutor;
 import com.ezddd.common.response.AppResult;
 import com.ezshop.order.command.HelloWorldCmd;
 
 @EzCommandExecutor(commandType = HelloWorldCmd.class)
-public class HelloWorldCmdExe extends AbstractCommandExecutor {
+public class HelloWorldCmdExe extends AbstractCommandHandler {
 
 //    @Autowired
 //    HelloWorldEntity helloWorldEntity;

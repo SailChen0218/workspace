@@ -2,9 +2,9 @@ package com.ezddd.domain.model;
 
 import org.springframework.util.Assert;
 
-public abstract class AbstractAggregate<T, I> implements Aggregate<T, I> {
+public abstract class AbstractAggregate<T> implements Aggregate<T> {
     private String type;
-    private I identifier;
+    private String identifier;
     private Long version;
     private boolean isDeleted;
     private Class<? extends T> rootType;
@@ -30,7 +30,7 @@ public abstract class AbstractAggregate<T, I> implements Aggregate<T, I> {
     }
 
     @Override
-    public I identifier() {
+    public String identifier() {
         return identifier;
     }
 

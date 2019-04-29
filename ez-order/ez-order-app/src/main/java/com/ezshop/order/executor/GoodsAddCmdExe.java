@@ -1,7 +1,7 @@
 package com.ezshop.order.executor;
 
 
-import com.ezddd.app.command.AbstractCommandExecutor;
+import com.ezddd.app.command.AbstractCommandHandler;
 import com.ezddd.app.command.Command;
 import com.ezddd.common.annotation.EzCommandExecutor;
 import com.ezddd.common.annotation.EzRemoting;
@@ -10,7 +10,7 @@ import com.ezshop.domain.service.UploadFile;
 import com.ezshop.order.command.GoodsAddCmd;
 
 @EzCommandExecutor(commandType = GoodsAddCmd.class)
-public class GoodsAddCmdExe extends AbstractCommandExecutor {
+public class GoodsAddCmdExe extends AbstractCommandHandler {
 
     @EzRemoting
     UploadFile uploadFile;

@@ -2,7 +2,7 @@ package com.ezddd.app.registry;
 
 
 import com.ezddd.app.command.CommandBus;
-import com.ezddd.app.command.CommandExecutor;
+import com.ezddd.app.command.CommandHandler;
 import com.ezddd.app.command.impl.DefaultCommandBus;
 import com.ezddd.common.annotation.EzCommandExecutor;
 import org.springframework.beans.factory.BeanFactory;
@@ -10,18 +10,18 @@ import org.springframework.util.Assert;
 
 public class CommandDefinition {
     private String command;
-    private CommandExecutor commandExecutor;
+    private CommandHandler commandHandler;
     private CommandBus commandBus;
 
-    public static CommandDefinition build(CommandExecutor commandExecutor, BeanFactory beanFactory) {
-        Assert.notNull(commandExecutor, "parameter commandExecutor must not be null.");
+    public static CommandDefinition build(CommandHandler commandHandler, BeanFactory beanFactory) {
+        Assert.notNull(commandHandler, "parameter commandHandler must not be null.");
 
-        EzCommandExecutor ezCommandExecutor = commandExecutor.getClass().getAnnotation(EzCommandExecutor.class);
+        EzCommandExecutor ezCommandExecutor = commandHandler.getClass().getAnnotation(EzCommandExecutor.class);
         Assert.notNull(ezCommandExecutor, "EzCommandExecutor annotation not found.");
 
         CommandDefinition commandDefinition = new CommandDefinition();
         commandDefinition.setCommand(ezCommandExecutor.commandType().getName());
-        commandDefinition.setCommandExecutor(commandExecutor);
+        commandDefinition.setCommandHandler(commandHandler);
         if (Object.class.equals(ezCommandExecutor.commandBus())) {
             commandDefinition.setCommandBus(beanFactory.getBean(DefaultCommandBus.class));
         } else {
@@ -39,12 +39,12 @@ public class CommandDefinition {
         this.command = command;
     }
 
-    public CommandExecutor getCommandExecutor() {
-        return commandExecutor;
+    public CommandHandler getCommandHandler() {
+        return commandHandler;
     }
 
-    public void setCommandExecutor(CommandExecutor commandExecutor) {
-        this.commandExecutor = commandExecutor;
+    public void setCommandHandler(CommandHandler commandHandler) {
+        this.commandHandler = commandHandler;
     }
 
     public CommandBus getCommandBus() {
