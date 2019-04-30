@@ -7,4 +7,7 @@ import java.lang.annotation.*;
 @Documented
 @Inherited
 public @interface EzCommand {
+    String commandBus() default "DefaultCommandBus";
+    int priority() default 0;
+    String area() default "standard";
 }

@@ -1,11 +1,10 @@
 package com.ezddd.app.dispatcher;
 
-import com.ezddd.app.command.AbstractCommand;
-import com.ezddd.app.command.Command;
 import com.ezddd.app.registry.AppServiceDefinition;
 import com.ezddd.app.registry.AppServiceRegistry;
 import com.ezddd.app.service.AppService;
-import com.ezddd.common.annotation.EzComponent;
+import com.ezddd.common.command.AbstractCommand;
+import com.ezddd.common.command.Command;
 import com.ezddd.common.response.AppResult;
 import com.ezddd.common.utils.EzBeanUtils;
 import org.slf4j.Logger;

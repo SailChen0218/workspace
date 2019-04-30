@@ -1,13 +1,14 @@
 package com.ezddd.app.service;
 
-import com.ezddd.app.command.Command;
-import com.ezddd.app.command.CommandGateway;
+
+import com.ezddd.common.annotation.EzRemoting;
+import com.ezddd.common.command.Command;
+import com.ezddd.common.command.CommandGateway;
 import com.ezddd.common.response.AppResult;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AbstractAppService implements AppService {
 
-    @Autowired
+    @EzRemoting
     protected CommandGateway commandGateway;
 
     @Override

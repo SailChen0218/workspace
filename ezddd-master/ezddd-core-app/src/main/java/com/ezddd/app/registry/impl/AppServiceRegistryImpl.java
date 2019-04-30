@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @EzComponent
-@Order(1)
 public class AppServiceRegistryImpl implements AppServiceRegistry {
     /**
      * <bizCode, AppServiceDefinition>
