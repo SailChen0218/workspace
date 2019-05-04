@@ -20,11 +20,7 @@
         </dependency>
         <dependency>
             <groupId>com.ezddd</groupId>
-            <artifactId>ezddd-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.ezddd</groupId>
-            <artifactId>ezddd-core-domain</artifactId>
+            <artifactId>ezddd-core</artifactId>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -33,6 +29,12 @@
         <dependency>
             <groupId>com.ezddd.shop</groupId>
             <artifactId>ez-order-domain-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.caucho</groupId>

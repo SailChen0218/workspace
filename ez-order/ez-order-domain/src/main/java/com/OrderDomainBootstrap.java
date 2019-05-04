@@ -1,13 +1,13 @@
 package com;
 
-import com.ezddd.common.bean.EnableEzdddFramework;
+import com.ezddd.core.bean.EnableEzdddDomain;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 
-@EnableEzdddFramework
-@SpringBootApplication(scanBasePackages = {"com.ezddd", "com.ezshop"},
+@EnableEzdddDomain(basePackages = "com.ezshop")
+@SpringBootApplication(scanBasePackages = {"com.ezshop"},
         exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
 public class OrderDomainBootstrap {
     public static void main(String [] args){

@@ -95,26 +95,8 @@
             <!-- EzDDD Framework -->
             <dependency>
                 <groupId>com.ezddd</groupId>
-                <artifactId>ezddd-common</artifactId>
+                <artifactId>ezddd-core</artifactId>
                 <version>${ezddd.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.ezddd</groupId>
-                <artifactId>ezddd-core-app</artifactId>
-                <version>${ezddd.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.ezddd</groupId>
-                <artifactId>ezddd-core-domain</artifactId>
-                <version>${ezddd.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.ezddd.shop</groupId>
-                <artifactId>ez-order-domain-api</artifactId>
-                <version>${project.version}</version>
                 <scope>provided</scope>
             </dependency>
 
@@ -122,6 +104,13 @@
                 <groupId>com.caucho</groupId>
                 <artifactId>hessian</artifactId>
                 <version>4.0.38</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ezddd.shop</groupId>
+                <artifactId>ez-order-domain-api</artifactId>
+                <version>${project.version}</version>
                 <scope>provided</scope>
             </dependency>
 

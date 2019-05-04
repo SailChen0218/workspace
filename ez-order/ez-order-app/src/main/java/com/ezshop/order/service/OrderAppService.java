@@ -1,9 +1,9 @@
 package com.ezshop.order.service;
 
-import com.ezddd.app.service.AbstractAppService;
-import com.ezddd.common.annotation.EzAppBizDetail;
-import com.ezddd.common.annotation.EzAppService;
-import com.ezddd.common.response.AppResult;
+import com.ezddd.core.annotation.EzAppBizDetail;
+import com.ezddd.core.annotation.EzAppService;
+import com.ezddd.core.appservice.AbstractAppService;
+import com.ezddd.core.response.AppResult;
 import com.ezshop.domain.command.order.CreateOrderCmd;
 import com.ezshop.order.constants.BizCodeCST;
 import com.ezshop.order.constants.BizDetailCodeCST;

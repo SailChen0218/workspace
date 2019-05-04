@@ -1,30 +1,24 @@
 package com.ezshop.domain.event;
 
-import com.ezddd.common.annotation.EzEventHandler;
-import com.ezddd.domain.Event.AbstractEventListener;
-import com.ezddd.domain.Event.EventArgs;
-import com.ezshop.domain.aggregate.OrderAggrRoot;
-import com.ezshop.domain.command.order.CreateOrderCmd;
-import com.ezshop.domain.command.order.UpdateOrderCmd;
+import com.ezddd.core.event.AbstractEventListener;
+import com.ezddd.core.event.Event;
+import com.ezddd.core.event.EventStore;
+import com.ezddd.core.annotation.EzComponent;
+import com.ezddd.core.annotation.EzEventHandler;
 
-/**
- * <p>标题: </p>
- * <p>功能描述: </p>
- * <p>
- * <p>版权: 税友软件集团股份有限公司</p>
- * <p>创建时间: 2019/4/30</p>
- * <p>作者：cqf</p>
- * <p>修改历史记录：</p>
- * ====================================================================<br>
- */
+import com.ezshop.domain.aggregate.OrderAggrRoot;
+
+@EzComponent
 public class OrderAggrRootListener extends AbstractEventListener {
 
+    EventStore eventStore;
+
     @EzEventHandler(eventSourcing = false)
-    public void onOrderCreated(OrderAggrRoot sender, EventArgs<CreateOrderCmd> eventArgs) {
-        CreateOrderCmd cmd = eventArgs.getArgs();
+    public String onOrderCreated(Event<OrderAggrRoot> event) {
+        return "onOrderCreated event occurred.";
     }
 
     @EzEventHandler
-    public void onOrderUpdated(OrderAggrRoot sender, EventArgs<UpdateOrderCmd> eventArgs) {
+    public void onOrderUpdated(Event<OrderAggrRoot> event) {
     }
 }

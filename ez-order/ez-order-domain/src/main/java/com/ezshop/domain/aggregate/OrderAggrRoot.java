@@ -1,9 +1,13 @@
 package com.ezshop.domain.aggregate;
 
-import com.ezddd.common.annotation.EzCommandHandler;
-import com.ezddd.domain.annotation.EzAggregate;
-import com.ezddd.domain.annotation.EzIdentifier;
-import com.ezddd.domain.model.AggregateManager;
+import com.ezddd.core.event.Event;
+import com.ezddd.core.event.EventType;
+import com.ezddd.core.aggregate.AggregateFactory;
+import com.ezddd.core.aggregate.AggregateManager;
+import com.ezddd.core.annotation.EzAggregate;
+import com.ezddd.core.annotation.EzCommandHandler;
+import com.ezddd.core.annotation.EzIdentifier;
+
 import com.ezshop.domain.aggregate.entity.BaseEntity;
 import com.ezshop.domain.command.order.CreateOrderCmd;
 import com.ezshop.domain.command.order.UpdateOrderCmd;
@@ -22,11 +26,18 @@ public class OrderAggrRoot extends BaseEntity {
 
     @EzCommandHandler
     public OrderAggrRoot(CreateOrderCmd cmd) {
-        AggregateManager.applyEvent("onOrderCreated", this, cmd);
+        AggregateManager.applyEvent("onOrderCreated", this, cmd, EventType.CREATED);
     }
 
-    @EzCommandHandler()
+    @EzCommandHandler
     public void updateOrder(UpdateOrderCmd cmd) {
-        AggregateManager.applyEvent("onOrderUpdated", this, cmd);
+        AggregateManager.applyEvent("onOrderUpdated", this, cmd, EventType.UPDATED);
     }
+
+    public static class Factory implements AggregateFactory<OrderAggrRoot> {
+        public static OrderAggrRoot createAggregate(String aggregateIdentifier, Event<OrderAggrRoot> firstEvent) {
+            return new OrderAggrRoot(firstEvent.getArgs());
+        }
+    }
+
 }

@@ -31,7 +31,7 @@
     </properties>
 
     <modules>
-        <module>ezddd-common</module>
+        <module>ezddd-core</module>
         <module>ezddd-core-app</module>
         <module>ezddd-core-domain</module>
     </modules>

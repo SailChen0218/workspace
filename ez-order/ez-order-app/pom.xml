@@ -19,24 +19,26 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.ezddd</groupId>
-            <artifactId>ezddd-core-app</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.ezddd</groupId>
-            <artifactId>ezddd-common</artifactId>
         </dependency>
         <dependency>
             <groupId>com.caucho</groupId>
             <artifactId>hessian</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.ezddd</groupId>
+            <artifactId>ezddd-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.ezddd.shop</groupId>
             <artifactId>ez-order-domain-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
