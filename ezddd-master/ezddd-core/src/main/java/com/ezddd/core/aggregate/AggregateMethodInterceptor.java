@@ -5,16 +5,12 @@ import com.ezddd.core.annotation.EzComponent;
 import com.ezddd.core.command.CommandDefinition;
 import com.ezddd.core.command.CommandRegistry;
 import com.ezddd.core.command.CommandType;
-import com.ezddd.core.constants.PropertyKey;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
 
 import java.lang.reflect.Method;
 
-@ConditionalOnProperty(name = PropertyKey.SERVER_TYPE, value = "domain")
 @EzComponent
 public class AggregateMethodInterceptor implements MethodInterceptor {
 

@@ -1,6 +1,5 @@
 package com.ezddd.core.service.impl;
 
-import com.ezddd.core.annotation.EzAggregate;
 import com.ezddd.core.annotation.EzComponent;
 import com.ezddd.core.annotation.EzService;
 import com.ezddd.core.service.ServiceDefinition;

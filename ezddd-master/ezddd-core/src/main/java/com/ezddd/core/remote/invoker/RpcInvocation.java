@@ -2,13 +2,11 @@ package com.ezddd.core.remote.invoker;
 
 import org.springframework.util.StringUtils;
 
-import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RpcInvocation implements Invocation, Serializable {
+public class RpcInvocation implements Invocation {
     private static final long serialVersionUID = -4355285085441097045L;
 
     private String interfaceName;

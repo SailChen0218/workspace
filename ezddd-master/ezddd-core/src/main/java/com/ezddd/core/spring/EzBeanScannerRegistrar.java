@@ -30,11 +30,9 @@ public class EzBeanScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
 
         boolean isApplication = importingClassMetadata.hasAnnotation(EnableEzdddApplication.class.getName());
         if (isApplication) {
-            basePackages.add("com.ezddd.core.bean");
-            basePackages.add("com.ezddd.core.registry");
-            basePackages.add("com.ezddd.core.remote.consumer");
             basePackages.add("com.ezddd.core.appservice");
             basePackages.add("com.ezddd.core.dispatcher");
+            basePackages.add("com.ezddd.core.spring");
 
             AnnotationAttributes annoAttrs = AnnotationAttributes.fromMap(
                     importingClassMetadata.getAnnotationAttributes(EnableEzdddApplication.class.getName()));
@@ -47,18 +45,15 @@ public class EzBeanScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
 
         boolean isDomain = importingClassMetadata.hasAnnotation(EnableEzdddDomain.class.getName());
         if (isDomain) {
-            basePackages.add("com.ezddd.common.aggregate");
-            basePackages.add("com.ezddd.core.bean");
+            basePackages.add("com.ezddd.core.aggregate");
             basePackages.add("com.ezddd.core.command");
             basePackages.add("com.ezddd.core.event");
             basePackages.add("com.ezddd.core.registry");
-            basePackages.add("com.ezddd.core.remote.provider");
+            basePackages.add("com.ezddd.core.remote.protocol");
+            basePackages.add("com.ezddd.core.remote.receiver");
             basePackages.add("com.ezddd.core.repository");
-//        basePackages.add("com.ezddd.common.reponse");
-//        basePackages.add("com.ezddd.common.tunnel");
-//        basePackages.add("com.ezddd.common.utils");
-            basePackages.add("com.ezddd.core.appservice");
-            basePackages.add("com.ezddd.core.dispatcher");
+            basePackages.add("com.ezddd.core.service");
+            basePackages.add("com.ezddd.core.spring");
 
             AnnotationAttributes annoAttrs = AnnotationAttributes.fromMap(
                     importingClassMetadata.getAnnotationAttributes(EnableEzdddDomain.class.getName()));
