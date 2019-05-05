@@ -1,7 +1,7 @@
 package com.ezddd.core.aggregate;
 
 import com.ezddd.core.annotation.EzIdentifier;
-import com.ezddd.core.bean.EzBeanFactoryPostProcessor;
+import com.ezddd.core.spring.EzBeanFactoryPostProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;

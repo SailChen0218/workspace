@@ -1,10 +1,9 @@
-package com.ezddd.core.bean;
+package com.ezddd.core.spring;
 
 import com.ezddd.core.annotation.EzComponent;
 import com.ezddd.core.annotation.EzRemoting;
 import com.ezddd.core.registry.Registry;
-import com.ezddd.core.remote.consumer.RpcProxyFactory;
-import com.ezddd.core.remote.consumer.RpcProxyFactoryRegistry;
+import com.ezddd.core.remote.RpcServiceProxyFactory;
 import com.ezddd.core.utils.EzBeanUtils;
 import com.ezddd.core.utils.EzStringUtils;
 import org.slf4j.Logger;
@@ -100,15 +99,8 @@ public class EzBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
 
                         EzRemoting ezRemoting = field.getAnnotation(EzRemoting.class);
                         if (ezRemoting != null) {
-                            RpcProxyFactory rpcProxyFactory =
-                                    RpcProxyFactoryRegistry.findeRemoteProxyFactory(ezRemoting.rpcType());
-                            if (rpcProxyFactory == null) {
-                                throw new IllegalArgumentException("rpcProxyFactory not found. rpcType:[" +
-                                        ezRemoting.rpcType() + "], bean:[" + beanName + "]");
-                            } else {
-                                Object injectBean = rpcProxyFactory.create(field.getType());
-                                field.set(bean, injectBean);
-                            }
+                            Object injectBean = RpcServiceProxyFactory.create(field.getType(), ezRemoting.rpcType());
+                            field.set(bean, injectBean);
                         }
                     }
                 }
@@ -116,7 +108,6 @@ public class EzBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
                 log.error(ex.getMessage(), ex);
                 throw new BeanInitializationException(ex.getMessage(), ex);
             }
-
         }
     }
 

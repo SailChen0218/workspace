@@ -1,4 +1,4 @@
-package com.ezddd.core.bean;//package com.ezddd.application.bean;
+package com.ezddd.core.spring;//package com.ezddd.application.bean;
 //
 //import com.ezddd.application.annotation.EzAppService;
 //import com.ezddd.application.annotation.EzCommandHandler;

@@ -1,1 +1,1 @@
-org.springframework.boot.SpringApplicationRunListener=com.ezddd.core.bean.EzSpringApplicationRunListener
+org.springframework.boot.SpringApplicationRunListener=com.ezddd.core.spring.EzSpringApplicationRunListener

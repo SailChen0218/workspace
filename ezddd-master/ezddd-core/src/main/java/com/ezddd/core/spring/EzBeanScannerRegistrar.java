@@ -1,4 +1,4 @@
-package com.ezddd.core.bean;
+package com.ezddd.core.spring;
 
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.ResourceLoaderAware;

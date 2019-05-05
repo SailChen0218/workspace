@@ -1,4 +1,4 @@
-package com.ezddd.core.bean;
+package com.ezddd.core.spring;
 
 import org.springframework.context.annotation.Import;
 
@@ -9,6 +9,6 @@ import java.lang.annotation.*;
 @Documented
 @Inherited
 @Import(EzBeanScannerRegistrar.class)
-public @interface EnableEzdddApplication {
+public @interface EnableEzdddDomain {
     String[] basePackages();
 }

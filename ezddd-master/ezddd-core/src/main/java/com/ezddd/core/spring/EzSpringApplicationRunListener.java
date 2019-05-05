@@ -1,4 +1,4 @@
-package com.ezddd.core.bean;
+package com.ezddd.core.spring;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringApplicationRunListener;

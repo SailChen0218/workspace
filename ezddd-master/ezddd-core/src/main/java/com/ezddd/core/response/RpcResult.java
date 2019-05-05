@@ -3,7 +3,7 @@ package com.ezddd.core.response;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DomainResult<T> extends AbstractResult {
+public class RpcResult<T> extends AbstractResult {
     private static final long serialVersionUID = 8824421108721269926L;
 
     private Map<String, Object> attachments;
@@ -40,5 +40,17 @@ public class DomainResult<T> extends AbstractResult {
 
     public void setAttachments(Map<String, Object> map) {
         this.attachments = map == null ? new HashMap<String, Object>() : map;
+    }
+
+    public static <T> RpcResult<T> valueOfError(Throwable exception) {
+        RpcResult<T> result = new RpcResult<T>();
+        result.setException(exception);
+        return result;
+    }
+
+    public static <T> RpcResult<T> valueOfSuccess(T value) {
+        RpcResult<T> result = new RpcResult<>();
+        result.value = value;
+        return result;
     }
 }

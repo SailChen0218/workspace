@@ -2,7 +2,7 @@ package com.ezddd.core.command.impl;
 
 import com.ezddd.core.annotation.EzAggregate;
 import com.ezddd.core.annotation.EzComponent;
-import com.ezddd.core.bean.EzBeanFactoryPostProcessor;
+import com.ezddd.core.spring.EzBeanFactoryPostProcessor;
 import com.ezddd.core.command.CommandDefinition;
 import com.ezddd.core.command.CommandRegistry;
 import org.slf4j.Logger;
@@ -16,7 +16,7 @@ import java.util.Set;
 
 @EzComponent
 public class CommandRegistryImpl implements CommandRegistry {
-    private static final Logger log = LoggerFactory.getLogger(EzBeanFactoryPostProcessor.class);
+    private static final Logger log = LoggerFactory.getLogger(CommandRegistryImpl.class);
     // <CommandTypeName, CommandHandler>
 
     protected static Map<String, CommandDefinition> commandDefinitionHolder = new HashMap<>(16);

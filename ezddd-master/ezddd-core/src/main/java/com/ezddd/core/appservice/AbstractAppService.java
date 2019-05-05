@@ -1,6 +1,5 @@
 package com.ezddd.core.appservice;
 
-
 import com.ezddd.core.annotation.EzRemoting;
 import com.ezddd.core.command.Command;
 import com.ezddd.core.command.CommandGateway;

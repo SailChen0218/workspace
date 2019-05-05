@@ -1,7 +1,7 @@
 package com.ezddd.core.event;
 
 import com.ezddd.core.annotation.EzComponent;
-import com.ezddd.core.bean.EzBeanFactoryPostProcessor;
+import com.ezddd.core.spring.EzBeanFactoryPostProcessor;
 import com.ezddd.core.registry.Registry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

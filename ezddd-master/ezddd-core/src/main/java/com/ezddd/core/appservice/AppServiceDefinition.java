@@ -10,9 +10,7 @@ import java.util.Map;
 
 public class AppServiceDefinition {
     private String bizCode;
-    /**
-     * <bizDetailCode, Method>
-     */
+     // <bizDetailCode, Method>
     private Map<String, Method> bizDetailMethodMap;
     private AppService appService;
 

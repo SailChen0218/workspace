@@ -1,6 +1,6 @@
 package com;
 
-import com.ezddd.core.bean.EnableEzdddDomain;
+import com.ezddd.core.spring.EnableEzdddDomain;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
