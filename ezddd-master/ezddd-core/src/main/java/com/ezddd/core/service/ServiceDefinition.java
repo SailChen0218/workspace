@@ -1,6 +1,6 @@
 package com.ezddd.core.service;
 
-import com.ezddd.core.annotation.EzService;
+import com.ezddd.core.annotation.EzDomainService;
 import com.ezddd.core.remote.RpcType;
 import org.springframework.util.Assert;
 
@@ -9,17 +9,21 @@ public class ServiceDefinition {
     private RpcType rpcType;
     private Object serviceBean;
 
+    private ServiceDefinition() {
+    }
+
     public static ServiceDefinition build(Object serviceBean) {
         Assert.notNull(serviceBean, "parameter serviceBean must not be null.");
         Class<?> serviceBeanClazz = serviceBean.getClass();
-        EzService ezService = serviceBeanClazz.getAnnotation(EzService.class);
-        if (ezService != null) {
+        EzDomainService ezDomainService = serviceBeanClazz.getAnnotation(EzDomainService.class);
+        if (ezDomainService != null) {
             ServiceDefinition serviceDefinition = new ServiceDefinition();
-            serviceDefinition.interfaceType = ezService.interfaceType();
-            serviceDefinition.rpcType = ezService.rpcType();
+            serviceDefinition.interfaceType = ezDomainService.interfaceType();
+            serviceDefinition.rpcType = ezDomainService.rpcType();
+            serviceDefinition.serviceBean = serviceBean;
             return serviceDefinition;
         } else {
-            throw new IllegalArgumentException("EzService annotation not found. bean:" + serviceBeanClazz.getName());
+            throw new IllegalArgumentException("EzDomainService annotation not found. bean:" + serviceBeanClazz.getName());
         }
     }
 

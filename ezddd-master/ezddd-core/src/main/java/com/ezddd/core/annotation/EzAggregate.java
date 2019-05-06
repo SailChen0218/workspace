@@ -6,4 +6,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface EzAggregate {
+    int priority() default 0;
+    String area() default "standard";
 }

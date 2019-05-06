@@ -1,11 +1,11 @@
 package com.ezddd.core.command.impl;
 
-import com.ezddd.core.annotation.EzService;
+import com.ezddd.core.annotation.EzDomainService;
 import com.ezddd.core.command.*;
 import com.ezddd.core.response.AppResult;
 import org.springframework.util.Assert;
 
-@EzService(interfaceType = CommandGateway.class)
+@EzDomainService(interfaceType = CommandGateway.class)
 public class DefaultCommandGateway extends AbstractCommandGateway {
 
     @Override

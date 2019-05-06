@@ -57,6 +57,7 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-context:5.0.8.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-expression:5.0.8.RELEASE" level="project" />
     <orderEntry type="module" module-name="ezddd-core" scope="PROVIDED" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.alibaba:fastjson:1.2.47" level="project" />
     <orderEntry type="module" module-name="ez-order-domain-api" scope="PROVIDED" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.caucho:hessian:4.0.38" level="project" />

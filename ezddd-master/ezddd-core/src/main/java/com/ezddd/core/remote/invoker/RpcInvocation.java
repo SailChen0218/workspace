@@ -2,7 +2,6 @@ package com.ezddd.core.remote.invoker;
 
 import org.springframework.util.StringUtils;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,31 +21,6 @@ public class RpcInvocation implements Invocation {
     public RpcInvocation() {
     }
 
-    public RpcInvocation(Invocation invocation) {
-        this(invocation.getInterfaceName(), invocation.getMethodName(), invocation.getParameterTypes(),
-                invocation.getArguments(), invocation.getAttachments());
-    }
-
-    public RpcInvocation(String interfaceName, Method method, Object[] arguments) {
-        this(interfaceName, method.getName(), method.getParameterTypes(), arguments, null);
-    }
-
-    public RpcInvocation(String interfaceName, Method method, Object[] arguments, Map<String, String> attachment) {
-        this(interfaceName, method.getName(), method.getParameterTypes(), arguments, attachment);
-    }
-
-    public RpcInvocation(String interfaceName, String methodName, Class<?>[] parameterTypes, Object[] arguments) {
-        this(interfaceName, methodName, parameterTypes, arguments, null);
-    }
-
-    public RpcInvocation(String interfaceName, String methodName, Class<?>[] parameterTypes, Object[] arguments, Map<String, String> attachments) {
-        this.interfaceName = interfaceName;
-        this.methodName = methodName;
-        this.parameterTypes = parameterTypes == null ? new Class<?>[0] : parameterTypes;
-        this.arguments = arguments == null ? new Object[0] : arguments;
-        this.attachments = attachments == null ? new HashMap<String, String>() : attachments;
-    }
-
     @Override
     public String getInterfaceName() {
         return interfaceName;
@@ -63,24 +37,6 @@ public class RpcInvocation implements Invocation {
 
     public void setMethodName(String methodName) {
         this.methodName = methodName;
-    }
-
-    @Override
-    public Class<?>[] getParameterTypes() {
-        return parameterTypes;
-    }
-
-    public void setParameterTypes(Class<?>[] parameterTypes) {
-        this.parameterTypes = parameterTypes == null ? new Class<?>[0] : parameterTypes;
-    }
-
-    @Override
-    public Object[] getArguments() {
-        return arguments;
-    }
-
-    public void setArguments(Object[] arguments) {
-        this.arguments = arguments == null ? new Object[0] : arguments;
     }
 
     @Override
@@ -145,5 +101,23 @@ public class RpcInvocation implements Invocation {
             return defaultValue;
         }
         return value;
+    }
+
+    @Override
+    public Class<?>[] getParameterTypes() {
+        return parameterTypes;
+    }
+
+    public void setParameterTypes(Class<?>[] parameterTypes) {
+        this.parameterTypes = parameterTypes;
+    }
+
+    @Override
+    public Object[] getArguments() {
+        return arguments;
+    }
+
+    public void setArguments(Object[] arguments) {
+        this.arguments = arguments;
     }
 }

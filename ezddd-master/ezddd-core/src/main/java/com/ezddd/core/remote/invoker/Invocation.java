@@ -16,10 +16,8 @@ public interface Invocation extends Serializable {
     String getMethodName();
 
     /**
-     * get parameter types.
-     *
-     * @return parameter types.
-     * @serial
+     * get parameter types
+     * @return
      */
     Class<?>[] getParameterTypes();
 

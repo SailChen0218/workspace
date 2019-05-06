@@ -1,8 +1,8 @@
 package com.ezshop.domain.service;
 
-import com.ezddd.core.annotation.EzService;
+import com.ezddd.core.annotation.EzDomainService;
 
-@EzService(interfaceType = UploadFile.class)
+@EzDomainService(interfaceType = UploadFile.class)
 public class UploadFileImpl implements UploadFile {
     @Override
     public String upload() {

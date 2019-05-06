@@ -35,11 +35,12 @@ public class EzBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         this.beanFactory = (DefaultListableBeanFactory) beanFactory;
-        for (AnnotationTypeFilter annotationTypeFilter : EzAnnotationTypeFilter.annotationTypeFilter) {
+        AnnotationTypeFilter[] annotationTypeFilterArray = EzBeanScannerRegistrar.getAnnotationTypeFilter();
+        for (AnnotationTypeFilter annotationTypeFilter : annotationTypeFilterArray) {
             removeAreaUnmatchBeanDefinition(annotationTypeFilter.getAnnotationType());
         }
 
-        for (AnnotationTypeFilter annotationTypeFilter : EzAnnotationTypeFilter.annotationTypeFilter) {
+        for (AnnotationTypeFilter annotationTypeFilter : annotationTypeFilterArray) {
             removeLowPriorityBeanDefinition(annotationTypeFilter.getAnnotationType());
         }
 
@@ -48,10 +49,9 @@ public class EzBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
             registry.registry(beanFactory);
         }
 
-        for (AnnotationTypeFilter annotationTypeFilter : EzAnnotationTypeFilter.annotationTypeFilter) {
+        for (AnnotationTypeFilter annotationTypeFilter : annotationTypeFilterArray) {
             autowireInject(annotationTypeFilter.getAnnotationType());
         }
-
     }
 
     private <A extends Annotation> void removeAreaUnmatchBeanDefinition(Class<A> annotationClazz) {

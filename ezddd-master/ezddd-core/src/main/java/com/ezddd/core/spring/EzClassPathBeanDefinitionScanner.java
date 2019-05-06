@@ -8,9 +8,12 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import java.util.Set;
 
 public class EzClassPathBeanDefinitionScanner extends ClassPathBeanDefinitionScanner {
+    private AnnotationTypeFilter[] annotationTypeFilter;
 
-    public EzClassPathBeanDefinitionScanner(BeanDefinitionRegistry registry) {
+    public EzClassPathBeanDefinitionScanner(BeanDefinitionRegistry registry,
+                                            AnnotationTypeFilter[] annotationTypeFilter) {
         super(registry, true);
+        this.annotationTypeFilter = annotationTypeFilter;
     }
 
     /**
@@ -20,7 +23,7 @@ public class EzClassPathBeanDefinitionScanner extends ClassPathBeanDefinitionSca
      */
     @Override
     public Set<BeanDefinitionHolder> doScan(String... basePackages) {
-        for (AnnotationTypeFilter annotationTypeFilter : EzAnnotationTypeFilter.annotationTypeFilter) {
+        for (AnnotationTypeFilter annotationTypeFilter : annotationTypeFilter) {
             addIncludeFilter(annotationTypeFilter);
         }
         Set<BeanDefinitionHolder> beanDefinitions = super.doScan(basePackages);

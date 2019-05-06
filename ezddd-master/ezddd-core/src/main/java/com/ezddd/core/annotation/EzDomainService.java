@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-public @interface EzService {
+public @interface EzDomainService {
     Class<?> interfaceType();
     RpcType rpcType() default RpcType.HESSIAN;
     int priority() default 0;

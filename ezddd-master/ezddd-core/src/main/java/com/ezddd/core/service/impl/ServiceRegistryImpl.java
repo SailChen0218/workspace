@@ -1,7 +1,7 @@
 package com.ezddd.core.service.impl;
 
 import com.ezddd.core.annotation.EzComponent;
-import com.ezddd.core.annotation.EzService;
+import com.ezddd.core.annotation.EzDomainService;
 import com.ezddd.core.service.ServiceDefinition;
 import com.ezddd.core.service.ServiceRegistry;
 import org.springframework.beans.factory.BeanFactory;
@@ -17,7 +17,7 @@ public class ServiceRegistryImpl implements ServiceRegistry {
     @Override
     public void registry(BeanFactory beanFactory) {
         ConfigurableListableBeanFactory listableBeanFactory = (ConfigurableListableBeanFactory) beanFactory;
-        String[] beanNames = listableBeanFactory.getBeanNamesForAnnotation(EzService.class);
+        String[] beanNames = listableBeanFactory.getBeanNamesForAnnotation(EzDomainService.class);
         if (beanNames != null && beanNames.length > 0) {
             for (int i = 0; i < beanNames.length; i++) {
                 Object bean = listableBeanFactory.getBean(beanNames[i]);

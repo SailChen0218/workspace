@@ -18,8 +18,7 @@ public class CommandDefinition {
     private String commandName;
     private CommandBus commandBus;
     private Class<?> aggregateType;
-    private Method methodOfHandler;
-    private Constructor constructorOfHandler;
+    private Executable methodOfCommandHandler;
     private int grade;
 
     public static Map<String, CommandDefinition> build(Class<?> aggregateType, BeanFactory beanFactory) {
@@ -71,9 +70,9 @@ public class CommandDefinition {
                 commandDefinition.commandBus = beanFactory.getBean(ezCommand.commandBus(), CommandBus.class);
                 commandDefinition.aggregateType = aggregateType;
                 if (method instanceof Method) {
-                    commandDefinition.methodOfHandler = (Method) method;
+                    commandDefinition.methodOfCommandHandler = (Method) method;
                 } else {
-                    commandDefinition.constructorOfHandler = (Constructor) method;
+                    commandDefinition.methodOfCommandHandler = (Constructor) method;
                 }
                 commandDefinition.grade = ezCommand.grade();
                 commandDefinitionMap.put(commandDefinition.commandName, commandDefinition);
@@ -101,15 +100,39 @@ public class CommandDefinition {
         return commandType;
     }
 
-    public Method getMethodOfHandler() {
-        return methodOfHandler;
+    public Executable getMethodOfCommandHandler() {
+        return methodOfCommandHandler;
     }
 
-    public Constructor getConstructorOfHandler() {
-        return constructorOfHandler;
+    public void setMethodOfCommandHandler(Executable methodOfCommandHandler) {
+        this.methodOfCommandHandler = methodOfCommandHandler;
     }
 
     public int getGrade() {
         return grade;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
+
+    public void setCommandType(int commandType) {
+        this.commandType = commandType;
+    }
+
+    public void setCommandName(String commandName) {
+        this.commandName = commandName;
+    }
+
+    public void setCommandBus(CommandBus commandBus) {
+        this.commandBus = commandBus;
+    }
+
+    public void setAggregateType(Class<?> aggregateType) {
+        this.aggregateType = aggregateType;
+    }
+
+    public void setGrade(int grade) {
+        this.grade = grade;
     }
 }
