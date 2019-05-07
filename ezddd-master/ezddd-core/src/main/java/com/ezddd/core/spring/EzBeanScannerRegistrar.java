@@ -1,7 +1,10 @@
 package com.ezddd.core.spring;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.ResourceLoaderAware;
+import org.springframework.context.annotation.AnnotatedBeanDefinitionReader;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.io.ResourceLoader;
@@ -13,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EzBeanScannerRegistrar implements ImportBeanDefinitionRegistrar, ResourceLoaderAware {
-
+    private static final Logger log = LoggerFactory.getLogger(EzBeanFactoryPostProcessor.class);
     private ResourceLoader resourceLoader;
     private static AnnotationTypeFilter[] annotationTypeFilter;
 
@@ -30,7 +33,7 @@ public class EzBeanScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
         AnnotationTypeFilter[] annotationTypeFilter = null;
         boolean isApplication = importingClassMetadata.hasAnnotation(EnableEzdddApplication.class.getName());
         if (isApplication) {
-            this.annotationTypeFilter = EzAnnotationTypeFilter.annotationTypeFilterForApplication;
+            EzBeanScannerRegistrar.annotationTypeFilter = EzAnnotationTypeFilter.annotationTypeFilterForApplication;
             basePackages.add("com.ezddd.core.appservice");
             basePackages.add("com.ezddd.core.dispatcher");
             basePackages.add("com.ezddd.core.spring");
@@ -45,7 +48,7 @@ public class EzBeanScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
 
         boolean isDomain = importingClassMetadata.hasAnnotation(EnableEzdddDomain.class.getName());
         if (isDomain) {
-            this.annotationTypeFilter = EzAnnotationTypeFilter.annotationTypeFilterForDomain;
+            EzBeanScannerRegistrar.annotationTypeFilter = EzAnnotationTypeFilter.annotationTypeFilterForDomain;
             basePackages.add("com.ezddd.core.aggregate");
             basePackages.add("com.ezddd.core.command");
             basePackages.add("com.ezddd.core.event");
@@ -87,6 +90,15 @@ public class EzBeanScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
             scanner.setResourceLoader(resourceLoader);
         }
         scanner.doScan(StringUtils.toStringArray(basePackages));
+
+        AnnotatedBeanDefinitionReader reader = new AnnotatedBeanDefinitionReader(registry);
+
+        AnnotationTypeFilter[] annotationTypeFilterArray = EzBeanScannerRegistrar.getAnnotationTypeFilter();
+        for (AnnotationTypeFilter annotationTypeFilter : annotationTypeFilterArray) {
+            log.info(registry.getClass().getSimpleName() + " will register annotated classes : "
+                    + annotationTypeFilter.getAnnotationType() + " .");
+            reader.registerBean(annotationTypeFilter.getAnnotationType());
+        }
     }
 
 }
