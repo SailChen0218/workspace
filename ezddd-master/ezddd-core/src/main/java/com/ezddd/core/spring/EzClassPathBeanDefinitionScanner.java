@@ -51,6 +51,16 @@ public class EzClassPathBeanDefinitionScanner extends ClassPathBeanDefinitionSca
 //        return super.isCandidateComponent(beanDefinition) & hasAnnotations(beanDefinition);
 //    }
 
+//    @Override
+//    protected boolean checkCandidate(String beanName, BeanDefinition beanDefinition) throws IllegalStateException {
+//        boolean isCandidate = super.checkCandidate(beanName, beanDefinition);
+//        if (isCandidate) {
+//            AnnotatedBeanDefinition annotatedBeanDefinition = (AnnotatedBeanDefinition)beanDefinition;
+//            isCandidate = hasAnnotations(annotatedBeanDefinition);
+//        }
+//        return isCandidate;
+//    }
+
     private boolean hasAnnotations(AnnotatedBeanDefinition beanDefinition) {
         for (AnnotationTypeFilter annotationTypeFilter : annotationTypeFilter) {
             if (beanDefinition.getMetadata().hasAnnotation(annotationTypeFilter.getAnnotationType().getName())) {

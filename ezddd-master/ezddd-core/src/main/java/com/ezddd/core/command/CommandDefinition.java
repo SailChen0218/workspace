@@ -4,13 +4,13 @@ import com.ezddd.core.annotation.EzCommand;
 import com.ezddd.core.annotation.EzCommandHandler;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class CommandDefinition {
     private String domain;
@@ -23,28 +23,32 @@ public class CommandDefinition {
 
     public static Map<String, CommandDefinition> build(Class<?> aggregateType, BeanFactory beanFactory) {
         Assert.notNull(aggregateType, "parameter aggregateType must not be null.");
+        Map<String, CommandDefinition> commandDefinitionMapAll = new HashMap<>(8);
         Map<String, CommandDefinition> commandDefinitionMap = null;
+        List<Executable> executableList = new ArrayList<>(8);
         Method[] methods = aggregateType.getMethods();
-        if (methods != null && methods.length > 0) {
-            for (int i = 0; i < methods.length; i++) {
-                resolveCommandDefinition(commandDefinitionMap, aggregateType, methods[i], beanFactory);
-            }
+        if (methods != null) {
+            executableList.addAll(Arrays.asList(methods));
         }
 
         Constructor<?>[] constructors = aggregateType.getConstructors();
-        if (constructors != null && constructors.length > 0) {
-            for (int i = 0; i < constructors.length; i++) {
-                resolveCommandDefinition(commandDefinitionMap, aggregateType, constructors[i], beanFactory);
+        if (constructors != null) {
+            executableList.addAll(Arrays.asList(constructors));
+        }
+
+        for(Executable executable :executableList) {
+            commandDefinitionMap = resolveCommandDefinition(aggregateType, executable, beanFactory);
+            if (!CollectionUtils.isEmpty(commandDefinitionMap)) {
+                commandDefinitionMapAll.putAll(commandDefinitionMap);
             }
         }
 
-        return commandDefinitionMap;
+        return commandDefinitionMapAll;
     }
 
-    private static void resolveCommandDefinition(Map<String, CommandDefinition> commandDefinitionMap,
-                                                 Class<?> aggregateType,
-                                                 Executable method,
-                                                 BeanFactory beanFactory) {
+    private static Map<String, CommandDefinition> resolveCommandDefinition(
+            Class<?> aggregateType, Executable method, BeanFactory beanFactory) {
+        Map<String, CommandDefinition> commandDefinitionMap = null;
         EzCommandHandler ezCommandHandler = method.getAnnotation(EzCommandHandler.class);
         if (ezCommandHandler != null) {
             Parameter[] parameters = method.getParameters();
@@ -52,7 +56,7 @@ public class CommandDefinition {
                 throw new IllegalArgumentException("There must be on and only one command parameter of " +
                         "commandHandler:[" + method.getName() + "].");
             } else {
-                Class<?> commandClazz = parameters[0].getClass();
+                Class<?> commandClazz = parameters[0].getType();
                 if (commandDefinitionMap == null) {
                     commandDefinitionMap = new HashMap<>();
                 }
@@ -78,6 +82,7 @@ public class CommandDefinition {
                 commandDefinitionMap.put(commandDefinition.commandName, commandDefinition);
             }
         }
+        return commandDefinitionMap;
     }
 
     public String getCommandName() {

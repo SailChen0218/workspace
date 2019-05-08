@@ -8,7 +8,11 @@ import com.ezddd.core.command.CommandRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.support.GenericBeanDefinition;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,27 +24,33 @@ public class CommandRegistryImpl implements CommandRegistry {
     // <CommandTypeName, CommandHandler>
 
     protected static Map<String, CommandDefinition> commandDefinitionHolder = new HashMap<>(16);
+    protected static Map<String, BeanDefinition> aggregateBeanDefinitionHolder = new HashMap<>(16);
 
     @Override
     public void registry(BeanFactory beanFactory) {
-        ConfigurableListableBeanFactory configurableListableBeanFactory = (ConfigurableListableBeanFactory) beanFactory;
-        String[] beanNames = configurableListableBeanFactory.getBeanNamesForAnnotation(EzAggregate.class);
+        DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) beanFactory;
+        String[] beanNames = defaultListableBeanFactory.getBeanNamesForAnnotation(EzAggregate.class);
+        GenericBeanDefinition beanDefinition = null;
         if (beanNames != null && beanNames.length > 0) {
             for (int i = 0; i < beanNames.length; i++) {
-                Object bean = configurableListableBeanFactory.getBean(beanNames[i]);
-                registerCommand(bean, beanFactory);
+                beanDefinition = (GenericBeanDefinition)defaultListableBeanFactory.getBeanDefinition(beanNames[i]);
+                aggregateBeanDefinitionHolder.put(beanNames[i], beanDefinition);
+                defaultListableBeanFactory.removeBeanDefinition(beanNames[i]);
+                registerCommand(beanDefinition, beanFactory);
             }
         }
     }
 
-    public void registerCommand(Object bean, BeanFactory beanFactory) {
-        if (bean != null) {
-            Map<String, CommandDefinition> commandDefinitionMap = CommandDefinition.build(bean.getClass(), beanFactory);
+    public void registerCommand(GenericBeanDefinition beanDefinition, BeanFactory beanFactory) {
+        if (beanDefinition != null) {
+            Map<String, CommandDefinition> commandDefinitionMap =
+                    CommandDefinition.build(beanDefinition.getBeanClass(), beanFactory);
             if (commandDefinitionMap != null) {
-                Set<String> keys = commandDefinitionMap.keySet();
+                Set<String> keys = commandDefinitionHolder.keySet();
                 for (String newKey : commandDefinitionMap.keySet()) {
                     if (keys.contains(newKey)) {
-                        throw new IllegalArgumentException("command :[" + newKey + "] has already exist.");
+                        throw new IllegalArgumentException("command :[" + newKey + "] has already exist. aggregate:"
+                                + commandDefinitionMap.get(newKey).getAggregateType());
                     } else {
                         log.info("command:[" + newKey + "] registration have successfully completed.");
                         commandDefinitionHolder.put(newKey, commandDefinitionMap.get(newKey));

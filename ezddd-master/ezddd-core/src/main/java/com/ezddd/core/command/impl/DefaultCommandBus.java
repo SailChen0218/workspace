@@ -11,6 +11,8 @@ import com.ezddd.core.response.AppResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
+import java.lang.reflect.Executable;
+
 @EzComponent
 public class DefaultCommandBus extends AbstractCommandBus {
 
@@ -26,6 +28,10 @@ public class DefaultCommandBus extends AbstractCommandBus {
         Repository repository = repositoryProvider.repositoryFor(commandDefinition.getAggregateType());
         if (commandDefinition.getCommandType() == CommandType.CREATE) {
             Class<?> factoryClazz = commandDefinition.getAggregateType().getDeclaringClass();
+            Executable executable = commandDefinition.getMethodOfCommandHandler();
+//            if () {
+//
+//            }
 //            factoryClazz.
         }
         return AppResult.valueOfSuccess();

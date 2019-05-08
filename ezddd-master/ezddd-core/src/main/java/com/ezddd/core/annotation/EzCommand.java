@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 public @interface EzCommand {
     String domain();
     int commandType();
-    String commandBus() default "DefaultCommandBus";
+    String commandBus() default "defaultCommandBus";
     int priority() default 0;
     String area() default "standard";
     int grade() default 0;

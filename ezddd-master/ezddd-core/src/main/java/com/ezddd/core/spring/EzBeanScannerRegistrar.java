@@ -93,12 +93,13 @@ public class EzBeanScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
 
         AnnotatedBeanDefinitionReader reader = new AnnotatedBeanDefinitionReader(registry);
 
-        AnnotationTypeFilter[] annotationTypeFilterArray = EzBeanScannerRegistrar.getAnnotationTypeFilter();
-        for (AnnotationTypeFilter annotationTypeFilter : annotationTypeFilterArray) {
-            log.info(registry.getClass().getSimpleName() + " will register annotated classes : "
-                    + annotationTypeFilter.getAnnotationType() + " .");
-            reader.registerBean(annotationTypeFilter.getAnnotationType());
-        }
+//        AnnotationTypeFilter[] annotationTypeFilterArray = EzBeanScannerRegistrar.getAnnotationTypeFilter();
+//        for (AnnotationTypeFilter annotationTypeFilter : annotationTypeFilterArray) {
+//            log.info(registry.getClass().getSimpleName() + " will register annotated classes : "
+//                    + annotationTypeFilter.getAnnotationType() + " .");
+//            reader.registerBean(annotationTypeFilter.getAnnotationType());
+//        }
     }
+
 
 }
