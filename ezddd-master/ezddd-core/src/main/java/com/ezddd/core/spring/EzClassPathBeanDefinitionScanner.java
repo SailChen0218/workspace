@@ -30,8 +30,10 @@ public class EzClassPathBeanDefinitionScanner extends ClassPathBeanDefinitionSca
             this.addIncludeFilter(annotationTypeFilter);
         }
         Set<BeanDefinitionHolder> beanDefinitions = super.doScan(basePackages);
+//        Set<BeanDefinitionHolder> filteredBeanDefinitions = null;
+//
 //        if (beanDefinitions != null && beanDefinitions.size() != 0) {
-//            filteredBeanDefinitions = new HashSet<>();
+//            filteredBeanDefinitions = new HashSet<>(16);
 //            for(BeanDefinitionHolder beanDefinitionHolder: beanDefinitions) {
 //                AnnotatedBeanDefinition annotatedBeanDefinition =
 //                        (AnnotatedBeanDefinition)beanDefinitionHolder.getBeanDefinition();

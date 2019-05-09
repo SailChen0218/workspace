@@ -16,6 +16,7 @@ public class AggregateWrapper<T> extends AbstractAggregate {
         Assert.notNull(concreteComponent, "concreteComponent must not be null.");
         this.concreteComponent = concreteComponent;
         this.identifier = resolveIdentifier(concreteComponent);
+        this.version = 1L;
     }
 
     private String resolveIdentifier(T concreteComponent) {

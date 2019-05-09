@@ -12,7 +12,6 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.CannotLoadBeanClassException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -52,9 +51,9 @@ public class EzBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
             registry.registry(beanFactory);
         }
 
-//        for (AnnotationTypeFilter annotationTypeFilter : annotationTypeFilterArray) {
-//            autowireInject(annotationTypeFilter.getAnnotationType());
-//        }
+        for (AnnotationTypeFilter annotationTypeFilter : annotationTypeFilterArray) {
+            autowireInject(annotationTypeFilter.getAnnotationType());
+        }
     }
 
     private <A extends Annotation> void removeAreaUnmatchBeanDefinition(Class<A> annotationClazz) throws BeansException {
