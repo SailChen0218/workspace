@@ -1,5 +1,7 @@
 package com.ezddd.core.command;
 
-public interface CommandBus<R> {
-    <R> R dispatch(Command cmd);
+import com.ezddd.core.response.CommandResult;
+
+public interface CommandBus {
+    <T> CommandResult<T> dispatch(Command cmd);
 }

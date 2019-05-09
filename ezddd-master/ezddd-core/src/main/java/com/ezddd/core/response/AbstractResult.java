@@ -1,6 +1,6 @@
 package com.ezddd.core.response;
 
-public class AbstractResult<T> implements Result {
+public class AbstractResult<T> implements Result<T> {
     private static final long serialVersionUID = 3898146277943695141L;
 
     protected T value;

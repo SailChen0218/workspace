@@ -1,7 +1,7 @@
 package com.ezddd.core.command;
 
-import com.ezddd.core.response.AppResult;
+import com.ezddd.core.response.CommandResult;
 
-public interface CommandGateway<R> {
-    <R> AppResult<R> send(Command command);
+public interface CommandGateway<T> {
+    CommandResult<T> send(Command command);
 }

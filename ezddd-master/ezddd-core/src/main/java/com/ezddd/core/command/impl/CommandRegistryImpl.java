@@ -2,15 +2,12 @@ package com.ezddd.core.command.impl;
 
 import com.ezddd.core.annotation.EzAggregate;
 import com.ezddd.core.annotation.EzComponent;
-import com.ezddd.core.spring.EzBeanFactoryPostProcessor;
 import com.ezddd.core.command.CommandDefinition;
 import com.ezddd.core.command.CommandRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 

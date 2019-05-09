@@ -1,6 +1,6 @@
 package com.ezddd.core.response;
 
-public class AppResult<T> extends AbstractResult {
+public class AppResult<T> extends AbstractResult<T> {
     private static final long serialVersionUID = -4144208384093622174L;
     /**
      * 业务编号

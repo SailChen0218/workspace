@@ -1,7 +1,7 @@
 package com.ezddd.core.command;
 
-import com.ezddd.core.response.AppResult;
+import com.ezddd.core.response.CommandResult;
 
-public interface CommandHandler<R> {
-    <R> AppResult<R> execute(Command cmd);
+public interface CommandHandler {
+    <T> CommandResult<T> handle(Command command);
 }

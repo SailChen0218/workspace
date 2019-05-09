@@ -1,8 +1,6 @@
 package com.ezddd.core.command;
 
-import java.io.Serializable;
-
-public class AbstractCommand implements Command, Serializable {
+public abstract class AbstractCommand implements Command {
     private static final long serialVersionUID = -7893841488153415564L;
     protected String bizCode;
     protected String bizDetailCode;

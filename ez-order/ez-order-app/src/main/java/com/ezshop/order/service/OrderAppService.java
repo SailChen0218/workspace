@@ -12,7 +12,7 @@ import com.ezshop.order.constants.BizDetailCodeCST;
 public class OrderAppService extends AbstractAppService {
 
     @EzAppBizDetail(bizDetailCode = BizDetailCodeCST.ORDER_CREATE)
-    public AppResult<String> createOrder(CreateOrderCmd cmd) {
+    public AppResult<?> createOrder(CreateOrderCmd cmd) {
         return send(cmd);
     }
 }

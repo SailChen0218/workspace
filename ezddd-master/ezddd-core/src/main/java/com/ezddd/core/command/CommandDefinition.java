@@ -62,12 +62,12 @@ public class CommandDefinition {
                 }
 
                 if (commandDefinitionMap.containsKey(commandClazz.getSimpleName())) {
-                    throw new IllegalArgumentException("command:[" + commandClazz.getSimpleName()
+                    throw new IllegalArgumentException("command:[" + commandClazz.getName()
                             + "] has already exist.");
                 }
 
                 CommandDefinition commandDefinition = new CommandDefinition();
-                commandDefinition.commandName = commandClazz.getSimpleName();
+                commandDefinition.commandName = commandClazz.getName();
                 EzCommand ezCommand = commandClazz.getAnnotation(EzCommand.class);
                 commandDefinition.domain = ezCommand.domain();
                 commandDefinition.commandType = ezCommand.commandType();
