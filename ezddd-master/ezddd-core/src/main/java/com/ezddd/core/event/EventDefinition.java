@@ -7,35 +7,35 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EventHandlerDefinition {
+public class EventDefinition {
     private String eventName;
     private EventListener eventListener;
     private Method mehtodOfHandler;
     private boolean eventSourcing;
 
-    public static Map<String, EventHandlerDefinition> build(EventListener eventListener) {
+    public static Map<String, EventDefinition> build(EventListener eventListener) {
         Assert.notNull(eventListener, "eventListener must not be null.");
-        Map<String, EventHandlerDefinition> eventHandlerDefinitionMap = null;
+        Map<String, EventDefinition> eventHandlerDefinitionMap = null;
         Class<?> clazz = eventListener.getClass();
         Method[] methods = clazz.getMethods();
         if (methods != null && methods.length > 0) {
             for (int i = 0; i < methods.length; i++) {
                 EzEventHandler ezEventHandler = methods[i].getAnnotation(EzEventHandler.class);
                 if (ezEventHandler != null) {
-                    EventHandlerDefinition eventHandlerDefinition = new EventHandlerDefinition();
-                    eventHandlerDefinition.eventName = methods[i].getName();
-                    eventHandlerDefinition.eventListener = eventListener;
-                    eventHandlerDefinition.mehtodOfHandler = methods[i];
-                    eventHandlerDefinition.eventSourcing = ezEventHandler.eventSourcing();
+                    EventDefinition eventDefinition = new EventDefinition();
+                    eventDefinition.eventName = methods[i].getName();
+                    eventDefinition.eventListener = eventListener;
+                    eventDefinition.mehtodOfHandler = methods[i];
+                    eventDefinition.eventSourcing = ezEventHandler.eventSourcing();
                     if (eventHandlerDefinitionMap == null) {
                         eventHandlerDefinitionMap = new HashMap<>();
                     }
 
-                    if (eventHandlerDefinitionMap.containsKey(eventHandlerDefinition.eventName)) {
-                        throw new IllegalArgumentException("event:[" + eventHandlerDefinition.eventName
+                    if (eventHandlerDefinitionMap.containsKey(eventDefinition.eventName)) {
+                        throw new IllegalArgumentException("event:[" + eventDefinition.eventName
                                 + "] has already exist.");
                     } else {
-                        eventHandlerDefinitionMap.put(eventHandlerDefinition.eventName, eventHandlerDefinition);
+                        eventHandlerDefinitionMap.put(eventDefinition.eventName, eventDefinition);
                     }
                 }
             }

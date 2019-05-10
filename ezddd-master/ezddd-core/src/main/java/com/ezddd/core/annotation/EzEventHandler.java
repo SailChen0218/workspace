@@ -7,5 +7,6 @@ import java.lang.annotation.*;
 @Documented
 @Inherited
 public @interface EzEventHandler {
-    boolean eventSourcing() default true;
+    boolean eventSourcing() default false;
+    int eventType();
 }

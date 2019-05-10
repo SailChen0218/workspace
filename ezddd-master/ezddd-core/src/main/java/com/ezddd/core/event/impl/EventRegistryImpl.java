@@ -1,9 +1,9 @@
 package com.ezddd.core.event.impl;
 
 import com.ezddd.core.annotation.EzComponent;
-import com.ezddd.core.event.EventHandlerDefinition;
+import com.ezddd.core.event.EventDefinition;
 import com.ezddd.core.event.EventListener;
-import com.ezddd.core.registry.Registry;
+import com.ezddd.core.event.EventRegistry;
 import com.ezddd.core.spring.EzBeanFactoryPostProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,12 +15,12 @@ import java.util.Map;
 import java.util.Set;
 
 @EzComponent
-public class EventRegistryImpl implements Registry {
+public class EventRegistryImpl implements EventRegistry {
     private static final Logger log = LoggerFactory.getLogger(EzBeanFactoryPostProcessor.class);
     private ConfigurableListableBeanFactory beanFactory;
 
     // <eventName, EventHandler>
-    private Map<String, EventHandlerDefinition> eventHandlerDefinitionHolder = new HashMap<>();
+    private Map<String, EventDefinition> eventDefinitionHolder = new HashMap<>();
 
     @Override
     public void registry(BeanFactory beanFactory) {
@@ -31,22 +31,23 @@ public class EventRegistryImpl implements Registry {
         }
     }
 
-    EventHandlerDefinition findEventHandlerDefinition(String eventName) {
-        return eventHandlerDefinitionHolder.get(eventName);
-    }
-
     public void registerEventHandler(EventListener eventListener) {
-        Map<String, EventHandlerDefinition> eventHandlerDefinitionMap = EventHandlerDefinition.build(eventListener);
-        if (eventHandlerDefinitionMap != null) {
-            Set<String> keys = eventHandlerDefinitionHolder.keySet();
-            for(String newKey: eventHandlerDefinitionMap.keySet()) {
+        Map<String, EventDefinition> eventDefinitionMap = EventDefinition.build(eventListener);
+        if (eventDefinitionMap != null) {
+            Set<String> keys = eventDefinitionHolder.keySet();
+            for(String newKey: eventDefinitionMap.keySet()) {
                 if (keys.contains(newKey)) {
                     throw new IllegalArgumentException("event:[" + newKey + "] has already exist.");
                 } else {
                     log.info("event:[" + newKey + "] registration have successfully completed.");
-                    eventHandlerDefinitionHolder.put(newKey, eventHandlerDefinitionMap.get(newKey));
+                    eventDefinitionHolder.put(newKey, eventDefinitionMap.get(newKey));
                 }
             }
         }
+    }
+
+    @Override
+    public EventDefinition findEventDefinition(String eventName) {
+        return eventDefinitionHolder.get(eventName);
     }
 }

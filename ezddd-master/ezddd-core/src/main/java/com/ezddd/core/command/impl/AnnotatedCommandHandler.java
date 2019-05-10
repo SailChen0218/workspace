@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 @EzComponent
@@ -42,8 +43,11 @@ public class AnnotatedCommandHandler extends AbstractCommandHandler {
             Class<?> aggregateType = commandDefinition.getAggregateType();
             Class<?>[] classArray = aggregateType.getDeclaredClasses();
             try {
-                Method method = classArray[0].getMethod("createAggregate", command.getClass());
-                Object result = method.invoke(null, command);
+                Constructor<?> constructor = command.getClass().getConstructor(command.getClass());
+                Object result = constructor.newInstance(command);
+
+//                Method method = classArray[0].getMethod("createAggregate", command.getClass());
+//                Object result = method.invoke(null, command);
                 AggregateWrapper aggregateWrapper = new AggregateWrapper(result);
                 repository.add(aggregateWrapper);
                 return CommandResult.valueOfSuccess();
