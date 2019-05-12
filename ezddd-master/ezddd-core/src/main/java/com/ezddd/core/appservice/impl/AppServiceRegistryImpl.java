@@ -13,8 +13,9 @@ import java.util.Map;
 
 @EzComponent
 public class AppServiceRegistryImpl implements AppServiceRegistry {
+
     /**
-     * <bizCode, AppServiceDefinition>
+     * Map of *bizCode, AppServiceDefinition*
      */
     protected static Map<String, AppServiceDefinition> appServiceDefinitionHolder = new HashMap<>(16);
     private ConfigurableListableBeanFactory beanFactory;

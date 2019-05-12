@@ -3,7 +3,7 @@ package com.ezddd.core.spring;
 import com.ezddd.core.annotation.EzComponent;
 import com.ezddd.core.annotation.EzRemoting;
 import com.ezddd.core.registry.Registry;
-import com.ezddd.core.remote.RpcServiceProxyFactory;
+import com.ezddd.core.remote.RemoteProxyFactory;
 import com.ezddd.core.utils.EzBeanUtils;
 import com.ezddd.core.utils.EzStringUtils;
 import org.slf4j.Logger;
@@ -191,7 +191,7 @@ public class EzBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
 
                         EzRemoting ezRemoting = field.getAnnotation(EzRemoting.class);
                         if (ezRemoting != null) {
-                            Object injectBean = RpcServiceProxyFactory.create(field.getType(), ezRemoting.rpcType());
+                            Object injectBean = RemoteProxyFactory.create(field.getType(), ezRemoting.protocol());
                             field.set(bean, injectBean);
                         }
                     }

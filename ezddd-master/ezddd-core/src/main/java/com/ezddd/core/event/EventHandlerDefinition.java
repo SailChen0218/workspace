@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EventDefinition {
+public class EventHandlerDefinition {
     private String eventName;
     private EventListener eventListener;
     private Method mehtodOfHandler;

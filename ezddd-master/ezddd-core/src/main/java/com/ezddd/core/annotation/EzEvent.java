@@ -1,7 +1,6 @@
 package com.ezddd.core.annotation;
 
 import com.ezddd.core.constants.Area;
-import com.ezddd.core.remote.protocol.ProtocolType;
 
 import java.lang.annotation.*;
 
@@ -9,9 +8,8 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-public @interface EzDomainService {
-    Class<?> interfaceType();
-    String protocol() default ProtocolType.HESSIAN;
+public @interface EzEvent {
+    String domain();
     int priority() default 0;
     String area() default Area.STANDARD;
 }

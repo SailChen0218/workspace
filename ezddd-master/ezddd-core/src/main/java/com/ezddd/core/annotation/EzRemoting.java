@@ -1,6 +1,6 @@
 package com.ezddd.core.annotation;
 
-import com.ezddd.core.remote.RpcType;
+import com.ezddd.core.remote.protocol.ProtocolType;
 
 import java.lang.annotation.*;
 
@@ -10,5 +10,5 @@ import java.lang.annotation.*;
 @Documented
 @Inherited
 public @interface EzRemoting {
-    RpcType rpcType() default RpcType.HESSIAN;
+    String protocol() default ProtocolType.HESSIAN;
 }

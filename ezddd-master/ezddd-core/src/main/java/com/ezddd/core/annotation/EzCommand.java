@@ -1,5 +1,8 @@
 package com.ezddd.core.annotation;
 
+import com.ezddd.core.command.CommandBusType;
+import com.ezddd.core.constants.Area;
+
 import java.lang.annotation.*;
 
 @Target(ElementType.TYPE)
@@ -9,8 +12,7 @@ import java.lang.annotation.*;
 public @interface EzCommand {
     String domain();
     int commandType();
-    String commandBus() default "defaultCommandBus";
+    String commandBus() default CommandBusType.DEFAULT;
     int priority() default 0;
-    String area() default "standard";
-    int grade() default 0;
+    String area() default Area.STANDARD;
 }

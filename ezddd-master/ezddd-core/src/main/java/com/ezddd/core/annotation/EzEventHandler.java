@@ -1,12 +1,14 @@
 package com.ezddd.core.annotation;
 
+import com.ezddd.core.constants.Area;
+
 import java.lang.annotation.*;
 
-@Target({ElementType.METHOD})
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
 public @interface EzEventHandler {
-    boolean eventSourcing() default false;
-    int eventType();
+    int priority() default 0;
+    String area() default Area.STANDARD;
 }

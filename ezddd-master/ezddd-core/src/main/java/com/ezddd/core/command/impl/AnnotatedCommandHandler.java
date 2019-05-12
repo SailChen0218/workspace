@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 
 @EzComponent
 public class AnnotatedCommandHandler extends AbstractCommandHandler {
@@ -43,7 +42,7 @@ public class AnnotatedCommandHandler extends AbstractCommandHandler {
             Class<?> aggregateType = commandDefinition.getAggregateType();
             Class<?>[] classArray = aggregateType.getDeclaredClasses();
             try {
-                Constructor<?> constructor = command.getClass().getConstructor(command.getClass());
+                Constructor<?> constructor = aggregateType.getConstructor(command.getClass());
                 Object result = constructor.newInstance(command);
 
 //                Method method = classArray[0].getMethod("createAggregate", command.getClass());

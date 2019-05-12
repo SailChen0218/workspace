@@ -1,12 +1,12 @@
 package com.ezddd.core.service;
 
 import com.ezddd.core.annotation.EzDomainService;
-import com.ezddd.core.remote.RpcType;
+import com.ezddd.core.remote.protocol.Protocol;
 import org.springframework.util.Assert;
 
 public class ServiceDefinition {
     private Class<?> interfaceType;
-    private RpcType rpcType;
+    private Protocol.Type protocolType;
     private Object serviceBean;
 
     private ServiceDefinition() {

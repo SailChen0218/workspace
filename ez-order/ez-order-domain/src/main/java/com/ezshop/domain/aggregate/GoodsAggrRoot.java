@@ -2,7 +2,6 @@ package com.ezshop.domain.aggregate;
 
 import com.ezddd.core.aggregate.AggregateFactory;
 import com.ezddd.core.aggregate.AggregateManager;
-import com.ezddd.core.annotation.EzAggregate;
 import com.ezddd.core.annotation.EzCommandHandler;
 import com.ezddd.core.annotation.EzIdentifier;
 import com.ezddd.core.event.Event;

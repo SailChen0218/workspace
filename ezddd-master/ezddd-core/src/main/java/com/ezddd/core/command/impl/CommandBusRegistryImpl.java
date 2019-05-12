@@ -13,11 +13,15 @@ import java.util.Map;
 
 @EzComponent
 public class CommandBusRegistryImpl implements CommandBusRegistry {
-    protected static Map<String, CommandBus> commandDefinitionHolder = new HashMap<>(16);
+
+    /**
+     * Map of *CommandClassName, CommandBus*
+     */
+    protected static Map<String, CommandBus> commandBusHolder = new HashMap<>(16);
 
     @Override
     public CommandBus findCommandBus(String commandName) {
-        return commandDefinitionHolder.get(commandName);
+        return commandBusHolder.get(commandName);
     }
 
     @Override
@@ -30,7 +34,8 @@ public class CommandBusRegistryImpl implements CommandBusRegistry {
                 beanDefinition = (GenericBeanDefinition)defaultListableBeanFactory.getBeanDefinition(beanNames[i]);
                 EzCommand ezCommand = beanDefinition.getBeanClass().getAnnotation(EzCommand.class);
                 CommandBus commandBus = beanFactory.getBean(ezCommand.commandBus(), CommandBus.class);
-                commandDefinitionHolder.put(beanDefinition.getBeanClassName(), commandBus);
+                commandBusHolder.put(beanDefinition.getBeanClassName(), commandBus);
+                defaultListableBeanFactory.removeBeanDefinition(beanNames[i]);
             }
         }
     }

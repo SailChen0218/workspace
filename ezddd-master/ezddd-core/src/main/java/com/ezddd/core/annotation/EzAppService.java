@@ -1,5 +1,7 @@
 package com.ezddd.core.annotation;
 
+import com.ezddd.core.constants.Area;
+
 import java.lang.annotation.*;
 
 @Target(ElementType.TYPE)
@@ -9,5 +11,5 @@ import java.lang.annotation.*;
 public @interface EzAppService {
     String bizCode() default "";
     int priority() default 0;
-    String area() default "standard";
+    String area() default Area.STANDARD;
 }

@@ -1,7 +1,7 @@
 package com.ezddd.core.aggregate;
 
 import com.ezddd.core.annotation.EzComponent;
-import com.ezddd.core.event.AggregateEvent;
+import com.ezddd.core.event.impl.AggregateEventImpl;
 import com.ezddd.core.event.EventArgs;
 import com.ezddd.core.event.EventBus;
 import com.ezddd.core.repository.RepositoryProvider;
@@ -24,7 +24,7 @@ public class AggregateManager {
     public static <S, A> void applyEvent(String eventName, S sender, A args, int eventType) {
         try {
             EventArgs<A> eventArgs = new EventArgs<>(args);
-            AggregateEvent<S> event = AggregateEvent.Factory.createEvent(eventName, sender, eventArgs, eventType);
+            AggregateEventImpl<S> event = AggregateEventImpl.Factory.createEvent(eventName, sender, eventArgs, eventType);
             aggregateManager.defaultEventBus.publish(event);
         } catch (Exception ex) {
         }

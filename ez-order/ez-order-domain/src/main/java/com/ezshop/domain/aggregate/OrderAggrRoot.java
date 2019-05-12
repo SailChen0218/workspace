@@ -9,6 +9,7 @@ import com.ezddd.core.event.EventType;
 import com.ezshop.domain.aggregate.entity.BaseEntity;
 import com.ezshop.domain.command.order.CreateOrderCmd;
 import com.ezshop.domain.command.order.UpdateOrderCmd;
+import com.ezshop.domain.event.OrderAggrRootEvent;
 
 import java.time.Instant;
 
@@ -24,6 +25,7 @@ public class OrderAggrRoot extends BaseEntity {
 
     @EzCommandHandler
     public OrderAggrRoot(CreateOrderCmd cmd) {
+        String event = OrderAggrRootEvent.ON_ORDER_CREATED.toString();
         AggregateManager.applyEvent("onOrderCreated", this, cmd, EventType.CREATED);
     }
 

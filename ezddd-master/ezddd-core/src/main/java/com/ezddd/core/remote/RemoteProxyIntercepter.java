@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
-public class RpcServiceProxyIntercepter implements InvocationHandler {
-    private static final Logger log = LoggerFactory.getLogger(RpcServiceProxyIntercepter.class);
+public class RemoteProxyIntercepter implements InvocationHandler {
+    private static final Logger log = LoggerFactory.getLogger(RemoteProxyIntercepter.class);
     private Invoker invoker;
     private Class<?> interfaceType;
 
@@ -29,7 +29,7 @@ public class RpcServiceProxyIntercepter implements InvocationHandler {
      */
     private Method hashCodeMethod;
 
-    public RpcServiceProxyIntercepter(Class<?> interfaceType, Invoker invoker) {
+    public RemoteProxyIntercepter(Class<?> interfaceType, Invoker invoker) {
         this.interfaceType = interfaceType;
         this.invoker = invoker;
     }
