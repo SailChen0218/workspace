@@ -1,12 +1,12 @@
 package com.ezddd.core.event.impl;
 
-import com.ezddd.core.event.AggregateEvent;
+import com.ezddd.core.event.Event;
 import com.ezddd.core.event.EventArgs;
 import com.ezddd.core.utils.IdentifierUtil;
 
 import java.time.Instant;
 
-public class AggregateEventImpl<S> implements AggregateEvent<S> {
+public class AggregateEventImpl<S> implements Event<S> {
     private static final long serialVersionUID = -6975653243726439083L;
 
     private String eventId;

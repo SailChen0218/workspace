@@ -1,6 +1,6 @@
 package com.ezddd.core.event.impl;
 
-import com.ezddd.core.command.CommandBus;
+import com.ezddd.core.annotation.EzComponent;
 import com.ezddd.core.event.EventBus;
 import com.ezddd.core.event.EventBusRegistry;
 import org.springframework.beans.factory.BeanFactory;
@@ -10,6 +10,7 @@ import org.springframework.beans.factory.support.GenericBeanDefinition;
 import java.util.HashMap;
 import java.util.Map;
 
+@EzComponent
 public class EventBusRegistryImpl implements EventBusRegistry {
 
     /**

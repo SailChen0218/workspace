@@ -5,7 +5,7 @@ import org.springframework.util.Assert;
 import java.lang.reflect.Field;
 import java.util.List;
 
-public class EzBeanUtils {
+public class BeanUtil {
     public static void findFiledsIncludeSuperClass(Class<?> clazz, List<Field> fieldList) {
         Assert.notNull(clazz, "clazz must not be null.");
         Assert.notNull(fieldList, "fieldList must not be null.");

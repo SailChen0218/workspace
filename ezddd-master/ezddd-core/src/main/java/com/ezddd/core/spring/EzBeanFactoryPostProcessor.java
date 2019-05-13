@@ -4,8 +4,8 @@ import com.ezddd.core.annotation.EzComponent;
 import com.ezddd.core.annotation.EzRemoting;
 import com.ezddd.core.registry.Registry;
 import com.ezddd.core.remote.RemoteProxyFactory;
-import com.ezddd.core.utils.EzBeanUtils;
-import com.ezddd.core.utils.EzStringUtils;
+import com.ezddd.core.utils.BeanUtil;
+import com.ezddd.core.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -49,6 +49,10 @@ public class EzBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
         Map<String, Registry> registryMap = beanFactory.getBeansOfType(Registry.class);
         for (Registry registry: registryMap.values()) {
             registry.registry(beanFactory);
+        }
+
+        for (AnnotationTypeFilter annotationTypeFilter : EzAnnotationTypeFilter.annotationTypeOfNoInstantiation) {
+            removeNoInstantiationBeanDefinition(annotationTypeFilter.getAnnotationType());
         }
 
         for (AnnotationTypeFilter annotationTypeFilter : annotationTypeFilterArray) {
@@ -154,7 +158,7 @@ public class EzBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
         try {
             beanFactory.removeBeanDefinition(beanName);
         } catch (NoSuchBeanDefinitionException ex) {
-            beanFactory.removeBeanDefinition(EzStringUtils.toLowerCaseFirstOne(beanName));
+            beanFactory.removeBeanDefinition(StringUtil.toLowerCaseFirstOne(beanName));
         }
     }
 
@@ -164,7 +168,7 @@ public class EzBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
             try {
                 Object bean = beanFactory.getBean(beanName);
                 List<Field> fieldList = new ArrayList<>();
-                EzBeanUtils.findFiledsIncludeSuperClass(bean.getClass(), fieldList);
+                BeanUtil.findFiledsIncludeSuperClass(bean.getClass(), fieldList);
                 if (!CollectionUtils.isEmpty(fieldList)) {
                     for (Field field : fieldList) {
                         field.setAccessible(true);
@@ -199,6 +203,15 @@ public class EzBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
             } catch (IllegalAccessException ex) {
                 log.error(ex.getMessage(), ex);
                 throw new BeanInitializationException(ex.getMessage(), ex);
+            }
+        }
+    }
+
+    private <A extends Annotation> void removeNoInstantiationBeanDefinition(Class<A> annotationClazz) {
+        String[] beanNames = this.beanFactory.getBeanNamesForAnnotation(annotationClazz);
+        if (beanNames != null && beanNames.length > 0) {
+            for (int i = 0; i < beanNames.length; i++) {
+                this.beanFactory.removeBeanDefinition(beanNames[i]);
             }
         }
     }

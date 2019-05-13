@@ -1,12 +1,11 @@
 package com.ezddd.core.service;
 
 import com.ezddd.core.annotation.EzDomainService;
-import com.ezddd.core.remote.protocol.Protocol;
 import org.springframework.util.Assert;
 
 public class ServiceDefinition {
     private Class<?> interfaceType;
-    private Protocol.Type protocolType;
+    private String protocol;
     private Object serviceBean;
 
     private ServiceDefinition() {
@@ -19,7 +18,7 @@ public class ServiceDefinition {
         if (ezDomainService != null) {
             ServiceDefinition serviceDefinition = new ServiceDefinition();
             serviceDefinition.interfaceType = ezDomainService.interfaceType();
-            serviceDefinition.rpcType = ezDomainService.rpcType();
+            serviceDefinition.protocol = ezDomainService.protocol();
             serviceDefinition.serviceBean = serviceBean;
             return serviceDefinition;
         } else {
@@ -35,12 +34,12 @@ public class ServiceDefinition {
         this.interfaceType = interfaceType;
     }
 
-    public RpcType getRpcType() {
-        return rpcType;
+    public String getProtocol() {
+        return protocol;
     }
 
-    public void setRpcType(RpcType rpcType) {
-        this.rpcType = rpcType;
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
     }
 
     public Object getServiceBean() {

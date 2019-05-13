@@ -40,7 +40,7 @@ public class CommandRegistryImpl implements CommandRegistry {
                 commandBeanDefinition = (GenericBeanDefinition)defaultListableBeanFactory.getBeanDefinition(commandBeanNames[i]);
                 commandDefinition = CommandDefinition.build(commandBeanDefinition.getBeanClass(), beanFactory);
                 commandDefinitionHolder.put(commandBeanDefinition.getBeanClassName(), commandDefinition);
-                defaultListableBeanFactory.removeBeanDefinition(commandBeanNames[i]);
+//                defaultListableBeanFactory.removeBeanDefinition(commandBeanNames[i]);
             }
         }
 

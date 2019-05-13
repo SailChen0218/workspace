@@ -1,6 +1,6 @@
 package com.ezddd.core.remote.invoker;
 
-import com.ezddd.core.remote.protocol.Protocol;
+import com.ezddd.core.remote.protocol.ProtocolType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +16,7 @@ public class InvokerRegistry {
 
     static {
         try {
-            invokerHolder.put(Protocol.HESSIAN, new HessainInvoker());
+            invokerHolder.put(ProtocolType.HESSIAN, new HessainInvoker());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

@@ -44,5 +44,23 @@ public abstract class AbstractEventDefinition {
         return true;
     }
 
+    public Class<?> getEventClass() {
+        return this.getClass();
+    }
 
+    public EventListener getEventListener() {
+        return eventListener;
+    }
+
+    public Method getMehtodOfHandler() {
+        return mehtodOfHandler;
+    }
+
+    public void setEventListener(EventListener eventListener) {
+        this.eventListener = eventListener;
+    }
+
+    public void setMehtodOfHandler(Method mehtodOfHandler) {
+        this.mehtodOfHandler = mehtodOfHandler;
+    }
 }

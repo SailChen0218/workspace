@@ -35,7 +35,7 @@ public class CommandBusRegistryImpl implements CommandBusRegistry {
                 EzCommand ezCommand = beanDefinition.getBeanClass().getAnnotation(EzCommand.class);
                 CommandBus commandBus = beanFactory.getBean(ezCommand.commandBus(), CommandBus.class);
                 commandBusHolder.put(beanDefinition.getBeanClassName(), commandBus);
-                defaultListableBeanFactory.removeBeanDefinition(beanNames[i]);
+//                defaultListableBeanFactory.removeBeanDefinition(beanNames[i]);
             }
         }
     }
