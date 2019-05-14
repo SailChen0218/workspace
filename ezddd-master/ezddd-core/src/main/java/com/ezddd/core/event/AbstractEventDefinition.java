@@ -2,7 +2,7 @@ package com.ezddd.core.event;
 
 import java.lang.reflect.Method;
 
-public abstract class AbstractEventDefinition {
+public abstract class AbstractEventDefinition implements EventDefinition {
     private String eventName;
     private int eventType;
     private String eventBus;
@@ -28,30 +28,37 @@ public abstract class AbstractEventDefinition {
         return this.eventName;
     }
 
+    @Override
     public final String getEventName() {
         return eventName;
     }
 
+    @Override
     public final int getEventType() {
         return eventType;
     }
 
+    @Override
     public String getEventBus() {
         return "defaultEventBus";
     }
 
+    @Override
     public boolean isEventSourcing() {
         return true;
     }
 
+    @Override
     public Class<?> getEventClass() {
         return this.getClass();
     }
 
+    @Override
     public EventListener getEventListener() {
         return eventListener;
     }
 
+    @Override
     public Method getMehtodOfHandler() {
         return mehtodOfHandler;
     }

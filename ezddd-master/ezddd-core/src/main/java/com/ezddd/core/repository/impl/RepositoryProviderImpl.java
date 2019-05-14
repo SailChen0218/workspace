@@ -12,10 +12,13 @@ public class RepositoryProviderImpl implements RepositoryProvider {
     private Map<String, Repository> repositoryHolder = new HashMap<>();
 
     @Override
-    public <T> Repository<T> repositoryFor(Class<T> aggregateType) {
-        Repository<T> repository = repositoryHolder.get(aggregateType.getSimpleName());
-        if (repository == null) {
-            repository = new InMemeryRepository<T>(aggregateType);
+    public <T> Repository<T> repositoryFor(Class<?> aggregateType) {
+        Repository<T> repository = null;
+        if (!repositoryHolder.containsKey(aggregateType.getName())) {
+            repository = new InMemeryRepository(aggregateType);
+            repositoryHolder.put(aggregateType.getName(), repository);
+        } else {
+            repository = repositoryHolder.get(aggregateType.getName());
         }
         return repository;
     }

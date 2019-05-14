@@ -34,7 +34,7 @@ public class AnnotatedCommandHandler extends AbstractCommandHandler {
 
         Repository repository = repositoryProvider.repositoryFor(commandDefinition.getAggregateType());
 
-        CommandContext<T> commandContext = CommandContextHolder.currentCommandContext();
+        CommandContext commandContext = CommandContextHolder.currentCommandContext();
         commandContext.setCommandDefinition(commandDefinition);
         commandContext.setRepository(repository);
 
@@ -42,7 +42,7 @@ public class AnnotatedCommandHandler extends AbstractCommandHandler {
             Class<?> aggregateType = commandDefinition.getAggregateType();
             Class<?>[] classArray = aggregateType.getDeclaredClasses();
             try {
-                Constructor<?> constructor = aggregateType.getConstructor(command.getClass());
+                Constructor<?> constructor = aggregateType.getDeclaredConstructor(command.getClass());
                 Object result = constructor.newInstance(command);
 
 //                Method method = classArray[0].getMethod("createAggregate", command.getClass());

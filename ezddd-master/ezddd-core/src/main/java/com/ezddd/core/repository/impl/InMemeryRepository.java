@@ -9,10 +9,10 @@ import org.springframework.util.Assert;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class InMemeryRepository<T> extends AbstractRepository {
+public class InMemeryRepository extends AbstractRepository {
     private static ConcurrentHashMap<String, Aggregate> aggregateHolder = new ConcurrentHashMap<>();
 
-    public InMemeryRepository(Class<T> clazz) {
+    public InMemeryRepository(Class<?> clazz) {
         super(clazz);
     }
 

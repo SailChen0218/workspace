@@ -4,10 +4,10 @@ import com.ezddd.core.command.CommandDefinition;
 import com.ezddd.core.context.CommandContext;
 import com.ezddd.core.repository.Repository;
 
-public class CommandContextImpl<T> implements CommandContext<T> {
+public class CommandContextImpl implements CommandContext {
     private Repository repository;
     private CommandDefinition commandDefinition;
-    private T response;
+    private Object response;
 
     public CommandContextImpl() {
     }
@@ -38,12 +38,12 @@ public class CommandContextImpl<T> implements CommandContext<T> {
     }
 
     @Override
-    public void setResponse(T value) {
+    public <T> void setResponse(T value) {
         this.response = value;
     }
 
     @Override
-    public T getResponse() {
-        return this.response;
+    public <T> T getResponse() {
+        return (T)this.response;
     }
 }

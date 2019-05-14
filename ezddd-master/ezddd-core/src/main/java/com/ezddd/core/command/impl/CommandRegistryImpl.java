@@ -9,9 +9,11 @@ import com.ezddd.core.command.CommandDefinition;
 import com.ezddd.core.command.CommandRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
+import org.springframework.util.Assert;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
@@ -40,7 +42,6 @@ public class CommandRegistryImpl implements CommandRegistry {
                 commandBeanDefinition = (GenericBeanDefinition)defaultListableBeanFactory.getBeanDefinition(commandBeanNames[i]);
                 commandDefinition = CommandDefinition.build(commandBeanDefinition.getBeanClass(), beanFactory);
                 commandDefinitionHolder.put(commandBeanDefinition.getBeanClassName(), commandDefinition);
-//                defaultListableBeanFactory.removeBeanDefinition(commandBeanNames[i]);
             }
         }
 
@@ -49,20 +50,24 @@ public class CommandRegistryImpl implements CommandRegistry {
         if (aggregateBeanNames != null && aggregateBeanNames.length > 0) {
             for (int i = 0; i < aggregateBeanNames.length; i++) {
                 aggregateBeanDefinition = (GenericBeanDefinition)defaultListableBeanFactory.getBeanDefinition(aggregateBeanNames[i]);
-                this.populateAggregateInfo(aggregateBeanDefinition.getBeanClass());
-                defaultListableBeanFactory.removeBeanDefinition(aggregateBeanNames[i]);
+                try {
+                    Class<?> aggregateType = Class.forName(aggregateBeanDefinition.getBeanClass().getName());
+                    this.populateAggregateInfo(aggregateType);
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e.getMessage(), e);
+                }
             }
         }
     }
 
     private void populateAggregateInfo(Class<?> aggregateType) {
         List<Executable> executableList = new ArrayList<>(8);
-        Method[] methods = aggregateType.getMethods();
+        Method[] methods = aggregateType.getDeclaredMethods();
         if (methods != null) {
             executableList.addAll(Arrays.asList(methods));
         }
 
-        Constructor<?>[] constructors = aggregateType.getConstructors();
+        Constructor<?>[] constructors = aggregateType.getDeclaredConstructors();
         if (constructors != null) {
             executableList.addAll(Arrays.asList(constructors));
         }
@@ -107,6 +112,16 @@ public class CommandRegistryImpl implements CommandRegistry {
 
     @Override
     public CommandDefinition findCommandDefinition(String commandName) {
+        if (!commandDefinitionHolder.containsKey(commandName)) {
+            throw new IllegalArgumentException("Can not found the CommandDefinition of command:[" +
+                    commandName + "]. ");
+        } else {
+            CommandDefinition commandDefinition = commandDefinitionHolder.get(commandName);
+            Assert.notNull(commandDefinition.getAggregateType(),
+                    "The AggregateType is null. CommandDefinition:[" + commandName + "]. ");
+            Assert.notNull(commandDefinition.getMethodOfCommandHandler(),
+                    "The MethodOfCommandHandler is null. CommandDefinition:[" + commandName + "]. ");
+        }
         return commandDefinitionHolder.get(commandName);
     }
 }
