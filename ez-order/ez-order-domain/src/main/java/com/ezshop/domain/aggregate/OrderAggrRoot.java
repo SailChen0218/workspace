@@ -1,6 +1,5 @@
 package com.ezshop.domain.aggregate;
 
-import com.ezddd.core.aggregate.AggregateFactory;
 import com.ezddd.core.aggregate.AggregateManager;
 import com.ezddd.core.annotation.EzAggregate;
 import com.ezddd.core.annotation.EzCommandHandler;
@@ -22,19 +21,13 @@ public class OrderAggrRoot extends BaseEntity {
     private String postAddress;
 
     @EzCommandHandler
-    protected OrderAggrRoot(CreateOrderCmd cmd) throws Exception {
+    public OrderAggrRoot(CreateOrderCmd cmd) throws Exception {
         AggregateManager.apply("onOrderCreated", this, cmd);
     }
 
     @EzCommandHandler
     public void updateOrder(UpdateOrderCmd cmd) throws Exception{
         AggregateManager.apply("onOrderUpdated", this, cmd);
-    }
-
-    public static class Factory implements AggregateFactory<OrderAggrRoot> {
-        public static OrderAggrRoot createAggregate(CreateOrderCmd cmd) throws Exception{
-            return new OrderAggrRoot(cmd);
-        }
     }
 
     public String getId() {

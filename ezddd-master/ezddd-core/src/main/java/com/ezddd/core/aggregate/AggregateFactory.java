@@ -15,7 +15,7 @@ public interface AggregateFactory<T> {
      *                            creation of the aggregate, or a snapshot event
      * @return an aggregate root ready for initialization using a DomainEventStream.
      */
-    static <T> T createAggregateRoot(String aggregateIdentifier, Event<T> firstEvent) {
+     static <T> T create(String aggregateIdentifier, Event<T> firstEvent) {
         return null;
     }
 }

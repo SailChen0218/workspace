@@ -10,4 +10,16 @@ public class UpdateOrderCmd extends AbstractCommand {
     private String id;
     private String commodity;
     private String postAddress;
+
+    public String getId() {
+        return id;
+    }
+
+    public String getCommodity() {
+        return commodity;
+    }
+
+    public String getPostAddress() {
+        return postAddress;
+    }
 }

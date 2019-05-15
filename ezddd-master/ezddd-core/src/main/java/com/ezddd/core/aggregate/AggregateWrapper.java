@@ -45,6 +45,5 @@ public class AggregateWrapper<T> extends AbstractAggregate {
                 throw new RuntimeException(e);
             }
         }
-
     }
 }
