@@ -1,6 +1,5 @@
 package com.ezddd.core.command.impl;
 
-import com.esotericsoftware.reflectasm.FieldAccess;
 import com.ezddd.core.aggregate.AggregateWrapper;
 import com.ezddd.core.annotation.EzComponent;
 import com.ezddd.core.command.*;
@@ -40,13 +39,9 @@ public class AnnotatedCommandHandler extends AbstractCommandHandler {
         commandContext.setRepository(repository);
 
         if (commandDefinition.getCommandType() == CommandType.CREATE) {
-            Class<?> aggregateType = commandDefinition.getAggregateType();
-            Class<?>[] classArray = aggregateType.getDeclaredClasses();
             try {
-                Constructor<?> constructor = aggregateType.getDeclaredConstructor(command.getClass());
+                Constructor<?> constructor = (Constructor)commandDefinition.getMethodOfCommandHandler();
                 Object result = constructor.newInstance(command);
-                FieldAccess fieldAccess = FieldAccess.get(aggregateType);
-
 //                Method method = classArray[0].getMethod("createAggregate", command.getClass());
 //                Object result = method.invoke(null, command);
                 AggregateWrapper aggregateWrapper = new AggregateWrapper(result);

@@ -8,7 +8,6 @@ import com.ezddd.core.event.Event;
 import com.ezddd.core.event.EventListener;
 import com.ezddd.core.event.EventRegistry;
 import com.ezddd.core.spring.EzBeanFactoryPostProcessor;
-import com.ezddd.core.utils.ClassUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
@@ -61,7 +60,6 @@ public class EventRegistryImpl implements EventRegistry {
                 this.registerEventHandler(beanDefinition.getBeanClass());
             }
         }
-
 
         this.populateEventListenerInfo();
     }

@@ -5,7 +5,6 @@ import com.ezddd.core.event.EventBus;
 import com.ezddd.core.event.EventBusRegistry;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import org.springframework.beans.factory.support.GenericBeanDefinition;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,12 +27,10 @@ public class EventBusRegistryImpl implements EventBusRegistry {
         DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) beanFactory;
         String[] beanNames = defaultListableBeanFactory.getBeanNamesForType(EventBus.class);
 
-        GenericBeanDefinition beanDefinition = null;
         if (beanNames != null && beanNames.length > 0) {
             for (int i = 0; i < beanNames.length; i++) {
-                beanDefinition = (GenericBeanDefinition)defaultListableBeanFactory.getBeanDefinition(beanNames[i]);
                 EventBus eventBus = beanFactory.getBean(beanNames[i], EventBus.class);
-                eventBusHolder.put(beanDefinition.getBeanClassName(), eventBus);
+                eventBusHolder.put(beanNames[i], eventBus);
             }
         }
     }

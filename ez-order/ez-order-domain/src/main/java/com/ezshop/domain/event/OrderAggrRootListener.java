@@ -6,21 +6,16 @@ import com.ezddd.core.annotation.EzEventHandler;
 import com.ezddd.core.event.AbstractEventListener;
 import com.ezddd.core.event.Event;
 import com.ezddd.core.repository.Repository;
-import com.ezddd.core.repository.RepositoryProvider;
 import com.ezddd.core.utils.IdentifierUtil;
 import com.ezshop.domain.aggregate.OrderAggrRoot;
 import com.ezshop.domain.command.order.CreateOrderCmd;
 import com.ezshop.domain.command.order.UpdateOrderCmd;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 
 @EzComponent
 public class OrderAggrRootListener extends AbstractEventListener {
     private Repository<OrderAggrRoot> repository = null;
-
-    @Autowired
-    RepositoryProvider repositoryProvider;
 
     @PostConstruct
     public void init() {
@@ -37,8 +32,6 @@ public class OrderAggrRootListener extends AbstractEventListener {
         orderAggrRoot.setPostAddress(cmd.getPostAddress());
         repository.addWithWrapper(orderAggrRoot);
     }
-
-
 
     @EzEventHandler
     public void onOrderUpdated(Event<OrderAggrRoot> event) {
