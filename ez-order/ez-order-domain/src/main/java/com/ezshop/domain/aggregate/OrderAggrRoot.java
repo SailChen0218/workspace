@@ -8,15 +8,12 @@ import com.ezshop.domain.aggregate.entity.BaseEntity;
 import com.ezshop.domain.command.order.CreateOrderCmd;
 import com.ezshop.domain.command.order.UpdateOrderCmd;
 
-import java.time.Instant;
-
 @EzAggregate
 public class OrderAggrRoot extends BaseEntity {
     private static final long serialVersionUID = 5488832782823340677L;
 
     @EzIdentifier
     private String id;
-    private Instant createTime;
     private String commodity;
     private String postAddress;
 
@@ -36,14 +33,6 @@ public class OrderAggrRoot extends BaseEntity {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public Instant getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Instant createTime) {
-        this.createTime = createTime;
     }
 
     public String getCommodity() {

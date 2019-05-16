@@ -9,7 +9,7 @@ import java.util.Map;
 
 @EzComponent
 public class RepositoryProviderImpl implements RepositoryProvider {
-    private Map<String, Repository> repositoryHolder = new HashMap<>();
+    private static Map<String, Repository> repositoryHolder = new HashMap<>();
 
     @Override
     public <T> Repository<T> repositoryFor(Class<?> aggregateType) {

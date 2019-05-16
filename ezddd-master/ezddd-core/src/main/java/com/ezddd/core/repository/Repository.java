@@ -1,25 +1,6 @@
-/*
- * Copyright (c) 2010-2018. Axon Framework
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.ezddd.core.repository;
 
-import com.ezddd.core.aggregate.Aggregate;
 import com.ezddd.core.aggregate.AggregateNotFoundException;
-
-import java.util.concurrent.Callable;
 
 /**
  * The repository provides an abstraction of the storage of aggregates.
@@ -37,7 +18,7 @@ public interface Repository<T> {
      *
      * @throws AggregateNotFoundException if aggregate with given id cannot be found
      */
-    Aggregate<T> load(String aggregateIdentifier) throws AggregateNotFoundException;
+    T load(String aggregateIdentifier) throws AggregateNotFoundException;
 
     /**
      * Load the aggregate with the given unique identifier.
@@ -48,21 +29,11 @@ public interface Repository<T> {
      *
      * @throws AggregateNotFoundException if aggregate with given id cannot be found
      */
-    Aggregate<T> load(String aggregateIdentifier, Long expectedVersion) throws AggregateNotFoundException;
+    T load(String aggregateIdentifier, Long expectedVersion) throws AggregateNotFoundException;
 
-    /**
-     * Creates a new managed instance for the aggregate, using the given {@code factoryMethod}
-     * to instantiate the aggregate's root.
-     *
-     * @param factoryMethod The method to create the aggregate's root instance
-     * @return an Aggregate instance describing the aggregate's state
-     *
-     * @throws Exception when the factoryMethod throws an exception
-     */
-    Aggregate<T> newInstance(Callable<T> factoryMethod) throws Exception;
+    void create(T aggregate);
 
-    void add(Aggregate<T> aggregate);
-    void addWithWrapper(Object aggregate);
+    void update(T aggregate);
 
     void remove(String aggregateIdentifier) throws AggregateNotFoundException;
 }

@@ -113,7 +113,7 @@ public class EzBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
                     int subBeanPriority = getPriorityOfBean(subBeanDefinition, annotationClazz);
                     if (beanPriority == subBeanPriority) {
                         throw new IllegalArgumentException("bean:" + beanDefinition.getBeanClassName() +
-                                " should not have thesame priority with bean:" + subBeanDefinition.getBeanClassName());
+                                " should not have the same priority with bean:" + subBeanDefinition.getBeanClassName());
                     } else if (beanPriority < subBeanPriority) {
                         removeBeanDefineByName(beanName);
                         beanDefinition = subBeanDefinition;

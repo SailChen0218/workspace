@@ -1,6 +1,5 @@
 package com.ezddd.core.command.impl;
 
-import com.ezddd.core.aggregate.AggregateWrapper;
 import com.ezddd.core.annotation.EzComponent;
 import com.ezddd.core.command.*;
 import com.ezddd.core.context.CommandContext;
@@ -15,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 
 @EzComponent
 public class AnnotatedCommandHandler extends AbstractCommandHandler {
@@ -31,29 +31,22 @@ public class AnnotatedCommandHandler extends AbstractCommandHandler {
         String commandName = command.getClass().getName();
         CommandDefinition commandDefinition = commandRegistry.findCommandDefinition(commandName);
         Assert.notNull(commandDefinition, "can't find the commandDefinition by command:[" + commandName + "]");
-
-        Repository repository = repositoryProvider.repositoryFor(commandDefinition.getAggregateType());
-
         CommandContext commandContext = CommandContextHolder.currentCommandContext();
         commandContext.setCommandDefinition(commandDefinition);
-        commandContext.setRepository(repository);
 
-        if (commandDefinition.getCommandType() == CommandType.CREATE) {
-            try {
-                Constructor<?> constructor = (Constructor)commandDefinition.getMethodOfCommandHandler();
-                Object result = constructor.newInstance(command);
-//                Method method = classArray[0].getMethod("createAggregate", command.getClass());
-//                Object result = method.invoke(null, command);
-                AggregateWrapper aggregateWrapper = new AggregateWrapper(result);
-                repository.add(aggregateWrapper);
-                return CommandResult.valueOfSuccess();
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-                return CommandResult.valueOfError(e);
+        try {
+            if (commandDefinition.getCommandType() == CommandType.CREATE) {
+                Constructor constructor = (Constructor)commandDefinition.getMethodOfCommandHandler();
+                constructor.newInstance(command);
+            } else {
+                Method method = (Method) commandDefinition.getMethodOfCommandHandler();
+                method.invoke(command);
             }
+            return CommandResult.valueOfSuccess();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return CommandResult.valueOfError(e);
         }
-
-        return null;
     }
 
 }

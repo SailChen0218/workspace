@@ -3,15 +3,14 @@ package com.ezddd.core.aggregate;
 import org.springframework.util.Assert;
 
 public abstract class AbstractAggregate<T> implements Aggregate<T> {
-    protected String type;
+    protected Class<T> rootType;
     protected String identifier;
     protected Long version;
     protected boolean isDeleted;
-    protected Class<? extends T> rootType;
 
-    @Override
-    public String type() {
-        return type;
+    public AbstractAggregate(){
+        this.version = 1L;
+        this.isDeleted = false;
     }
 
     @Override

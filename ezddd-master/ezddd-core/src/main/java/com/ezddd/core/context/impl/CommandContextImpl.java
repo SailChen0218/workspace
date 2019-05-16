@@ -18,16 +18,6 @@ public class CommandContextImpl implements CommandContext {
     }
 
     @Override
-    public Repository getRepository() {
-        return this.repository;
-    }
-
-    @Override
-    public void setRepository(Repository repository) {
-        this.repository = repository;
-    }
-
-    @Override
     public void setCommandDefinition(CommandDefinition commandDefinition) {
         this.commandDefinition = commandDefinition;
     }
