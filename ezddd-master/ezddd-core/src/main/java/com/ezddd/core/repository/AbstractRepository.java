@@ -1,20 +1,28 @@
 package com.ezddd.core.repository;
 
-import com.esotericsoftware.reflectasm.FieldAccess;
 import com.ezddd.core.annotation.EzIdentifier;
+import com.ezddd.core.utils.ClassUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.util.Assert;
 
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractRepository<T> implements Repository<T> {
     protected Class<T> aggregateType;
-    private FieldAccess fieldAccess;
-    private String identifierFiled;
-
+    private Field identifierFiled;
+    private Method identifierReadMehtod;
     public AbstractRepository(Class<T> aggregateType) {
         Assert.notNull("aggregateType must not be null. ");
         this.aggregateType = aggregateType;
-        resolveIdentifier();
+        resolveIdentifierField();
+
+        PropertyDescriptor propertyDescriptor =
+                BeanUtils.getPropertyDescriptor(aggregateType, identifierFiled.getName());
+        identifierReadMehtod = propertyDescriptor.getReadMethod();
     }
 
     public Class<T> getAggregateType() {
@@ -22,30 +30,25 @@ public abstract class AbstractRepository<T> implements Repository<T> {
     }
 
     protected String getIdentifierFrom(T aggregate) {
-        if (fieldAccess == null) {
-            this.fieldAccess = FieldAccess.get(this.aggregateType);
-        }
-
-        return (String)this.fieldAccess.get(aggregate, identifierFiled);
+        return ClassUtil.invokeMehtod(aggregate, identifierReadMehtod);
     }
 
-    private void resolveIdentifier() {
-        Field[] fields = aggregateType.getDeclaredFields();
-        if (fields == null || fields.length == 0) {
+    private void resolveIdentifierField() {
+        List<Field> fieldList = new ArrayList<>();
+        ClassUtil.findFiledsIncludeSuperClass(aggregateType, fieldList);
+        if (fieldList.size() == 0) {
             throw new IllegalArgumentException("aggregateType should have identifier field.");
         } else {
-            Field identifierField = null;
-            for (int i = 0; i < fields.length; i++) {
-                EzIdentifier ezIdentifier = fields[i].getAnnotation(EzIdentifier.class);
+            for (int i = 0; i < fieldList.size(); i++) {
+                EzIdentifier ezIdentifier = fieldList.get(i).getAnnotation(EzIdentifier.class);
                 if (ezIdentifier != null) {
-                    if (identifierField != null) {
+                    if (this.identifierFiled != null) {
                         throw new IllegalArgumentException("concreteComponent should have only one identifier field.");
                     } else {
-                        identifierField = fields[i];
+                        this.identifierFiled = fieldList.get(i);
                     }
                 }
             }
-            this.identifierFiled = identifierField.getName();
         }
     }
 }

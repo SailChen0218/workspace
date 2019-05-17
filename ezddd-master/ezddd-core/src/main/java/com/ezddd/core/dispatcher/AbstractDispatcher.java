@@ -6,7 +6,7 @@ import com.ezddd.core.appservice.AppServiceRegistry;
 import com.ezddd.core.command.AbstractCommand;
 import com.ezddd.core.command.Command;
 import com.ezddd.core.response.AppResult;
-import com.ezddd.core.utils.BeanUtil;
+import com.ezddd.core.utils.ClassUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -67,7 +67,7 @@ public abstract class AbstractDispatcher implements Dispatcher {
 
     private void parseCommand(Command cmd, Map<String, Object> parameters, Class<?> clazz) throws IllegalAccessException {
         List<Field> fields = new ArrayList<>(16);
-        BeanUtil.findFiledsIncludeSuperClass(clazz, fields);
+        ClassUtil.findFiledsIncludeSuperClass(clazz, fields);
         Field field = null;
         if (fields.size() != 0) {
             for (int i = 0; i < fields.size(); i++) {

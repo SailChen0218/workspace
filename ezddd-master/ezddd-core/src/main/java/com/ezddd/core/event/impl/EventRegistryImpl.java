@@ -7,7 +7,10 @@ import com.ezddd.core.event.AbstractEventDefinition;
 import com.ezddd.core.event.Event;
 import com.ezddd.core.event.EventListener;
 import com.ezddd.core.event.EventRegistry;
+import com.ezddd.core.repository.Repository;
+import com.ezddd.core.repository.RepositoryFactory;
 import com.ezddd.core.spring.EzBeanFactoryPostProcessor;
+import com.ezddd.core.utils.ClassUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
@@ -38,12 +41,12 @@ public class EventRegistryImpl implements EventRegistry {
 
     @Override
     public void registry(BeanFactory beanFactory) {
-        this.beanFactory = (ConfigurableListableBeanFactory)beanFactory;
+        this.beanFactory = (ConfigurableListableBeanFactory) beanFactory;
         GenericBeanDefinition beanDefinition = null;
         String[] beanNames = this.beanFactory.getBeanNamesForAnnotation(EzEvent.class);
         if (beanNames != null && beanNames.length > 0) {
             for (int i = 0; i < beanNames.length; i++) {
-                beanDefinition = (GenericBeanDefinition)this.beanFactory.getBeanDefinition(beanNames[i]);
+                beanDefinition = (GenericBeanDefinition) this.beanFactory.getBeanDefinition(beanNames[i]);
                 if (AbstractEventDefinition.class.isAssignableFrom(beanDefinition.getBeanClass())) {
                     this.registerEvent(beanDefinition.getBeanClass());
                 } else {
@@ -56,7 +59,7 @@ public class EventRegistryImpl implements EventRegistry {
         String[] eventListenerBeanNames = this.beanFactory.getBeanNamesForType(EventListener.class);
         if (eventListenerBeanNames != null && eventListenerBeanNames.length > 0) {
             for (int i = 0; i < eventListenerBeanNames.length; i++) {
-                beanDefinition = (GenericBeanDefinition)this.beanFactory.getBeanDefinition(eventListenerBeanNames[i]);
+                beanDefinition = (GenericBeanDefinition) this.beanFactory.getBeanDefinition(eventListenerBeanNames[i]);
                 this.registerEventHandler(beanDefinition.getBeanClass());
             }
         }
@@ -71,7 +74,7 @@ public class EventRegistryImpl implements EventRegistry {
             if (fields != null && fields.length > 0) {
                 for (int i = 0; i < fields.length; i++) {
                     if (AbstractEventDefinition.class.isAssignableFrom(fields[i].getType())) {
-                        eventDefinition = (AbstractEventDefinition)fields[i].get(null);
+                        eventDefinition = (AbstractEventDefinition) fields[i].get(null);
                         eventDefinitionHolder.put(eventDefinition.getEventName(), eventDefinition);
                     }
                 }
@@ -111,7 +114,8 @@ public class EventRegistryImpl implements EventRegistry {
                             eventListenerDefinitionOld.getMehtodOfHandler().getName() + "]. ");
                 }
 
-                EventListener eventListener = (EventListener)beanFactory.getBean(eventListenerType);
+                EventListener eventListener = (EventListener) beanFactory.getBean(eventListenerType);
+                initEventListener(eventListener);
                 EventListenerDefinition eventListenerDefinition = new EventListenerDefinition();
                 eventListenerDefinition.setEventListener(eventListener);
                 eventListenerDefinition.setMehtodOfHandler(methods[i]);
@@ -123,7 +127,7 @@ public class EventRegistryImpl implements EventRegistry {
     private void populateEventListenerInfo() {
         if (eventDefinitionHolder.size() > 0) {
             Set<String> eventDefinitionHolderKeys = eventDefinitionHolder.keySet();
-            for (String eventDefinitionKey: eventDefinitionHolderKeys) {
+            for (String eventDefinitionKey : eventDefinitionHolderKeys) {
                 AbstractEventDefinition abstractEventDefinition = eventDefinitionHolder.get(eventDefinitionKey);
                 EventListenerDefinition eventListenerDefinition = eventListenerDefinitionHolder.get(abstractEventDefinition.getEventName());
                 if (eventListenerDefinition == null) {
@@ -172,4 +176,18 @@ public class EventRegistryImpl implements EventRegistry {
             this.mehtodOfHandler = mehtodOfHandler;
         }
     }
+
+    private void initEventListener(EventListener eventListener) {
+        Class<?> eventListenerType = eventListener.getClass();
+        RepositoryFactory repositoryFactory = beanFactory.getBean(RepositoryFactory.class);
+        String aggrTypeName = eventListenerType.getTypeParameters()[0].getBounds()[0].getTypeName();
+
+        Class<?> aggrType = ClassUtil.forName(aggrTypeName);
+        ClassUtil.setField(eventListener, "aggregateType", aggrType);
+
+        Repository repository = repositoryFactory.getRepository(aggrType);
+        ClassUtil.setField(eventListener, "repository", repository);
+    }
+
+
 }

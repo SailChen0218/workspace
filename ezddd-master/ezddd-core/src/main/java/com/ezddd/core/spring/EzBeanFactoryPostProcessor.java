@@ -4,7 +4,7 @@ import com.ezddd.core.annotation.EzComponent;
 import com.ezddd.core.annotation.EzRemoting;
 import com.ezddd.core.registry.Registry;
 import com.ezddd.core.remote.RemoteProxyFactory;
-import com.ezddd.core.utils.BeanUtil;
+import com.ezddd.core.utils.ClassUtil;
 import com.ezddd.core.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.CannotLoadBeanClassException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -169,7 +168,7 @@ public class EzBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
             try {
                 Object bean = beanFactory.getBean(beanName);
                 List<Field> fieldList = new ArrayList<>();
-                BeanUtil.findFiledsIncludeSuperClass(bean.getClass(), fieldList);
+                ClassUtil.findFiledsIncludeSuperClass(bean.getClass(), fieldList);
                 if (!CollectionUtils.isEmpty(fieldList)) {
                     for (Field field : fieldList) {
                         field.setAccessible(true);

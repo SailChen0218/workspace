@@ -48,7 +48,9 @@ public class InMemeryRepository<T> extends AbstractRepository<T> {
 
     @Override
     public void update(T aggregate) {
-
+        String identifier = this.getIdentifierFrom(aggregate);
+        AggregateWrapper aggregateWrapper = aggregateHolder.get(identifier);
+        //TODO
     }
 
     @Override

@@ -2,17 +2,17 @@ package com.ezddd.core.repository.impl;
 
 import com.ezddd.core.annotation.EzComponent;
 import com.ezddd.core.repository.Repository;
-import com.ezddd.core.repository.RepositoryProvider;
+import com.ezddd.core.repository.RepositoryFactory;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @EzComponent
-public class RepositoryProviderImpl implements RepositoryProvider {
-    private static Map<String, Repository> repositoryHolder = new HashMap<>();
+public class RepositoryFactoryImpl implements RepositoryFactory {
+    private static Map<String, Repository> repositoryHolder = new ConcurrentHashMap<>();
 
     @Override
-    public <T> Repository<T> repositoryFor(Class<?> aggregateType) {
+    public <T> Repository<T> getRepository(Class<?> aggregateType) {
         Repository<T> repository = null;
         if (!repositoryHolder.containsKey(aggregateType.getName())) {
             repository = new InMemeryRepository(aggregateType);

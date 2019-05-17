@@ -16,7 +16,7 @@
 
 package com.ezddd.core.repository;
 
-public interface RepositoryProvider {
+public interface RepositoryFactory {
 
     /**
      * Provides a repository for given aggregate type.
@@ -25,5 +25,5 @@ public interface RepositoryProvider {
      * @param <T>           type of the aggregate
      * @return repository given for aggregate type
      */
-    <T> Repository<T> repositoryFor(Class<?> aggregateType);
+    <T> Repository<T> getRepository(Class<?> aggregateType);
 }
