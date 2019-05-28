@@ -18,6 +18,7 @@ import java.util.List;
 public class EzBeanScannerRegistrar implements ImportBeanDefinitionRegistrar, ResourceLoaderAware {
     private static final Logger log = LoggerFactory.getLogger(EzBeanFactoryPostProcessor.class);
     private ResourceLoader resourceLoader;
+
     private static AnnotationTypeFilter[] annotationTypeFilter;
 
     public static AnnotationTypeFilter[] getAnnotationTypeFilter() {
@@ -30,7 +31,6 @@ public class EzBeanScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
         List<String> basePackages = new ArrayList<String>();
-        AnnotationTypeFilter[] annotationTypeFilter = null;
         boolean isApplication = importingClassMetadata.hasAnnotation(EnableEzdddApplication.class.getName());
         if (isApplication) {
             EzBeanScannerRegistrar.annotationTypeFilter = EzAnnotationTypeFilter.annotationTypeFilterForApplication;
@@ -58,6 +58,7 @@ public class EzBeanScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
             basePackages.add("com.ezddd.core.repository");
             basePackages.add("com.ezddd.core.service");
             basePackages.add("com.ezddd.core.spring");
+            basePackages.add("com.ezddd.extension");
             AnnotationAttributes annoAttrs = AnnotationAttributes.fromMap(
                     importingClassMetadata.getAnnotationAttributes(EnableEzdddDomain.class.getName()));
             for (String pkg : annoAttrs.getStringArray("basePackages")) {
@@ -67,7 +68,7 @@ public class EzBeanScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
             }
         }
 
-        doScann(registry, basePackages);
+        doScann(registry, basePackages, annotationTypeFilter);
     }
 
     /**
@@ -83,7 +84,7 @@ public class EzBeanScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
      * @param registry
      * @param basePackages
      */
-    private void doScann(BeanDefinitionRegistry registry, List<String> basePackages) {
+    private void doScann(BeanDefinitionRegistry registry, List<String> basePackages, AnnotationTypeFilter[] annotationTypeFilter) {
         EzClassPathBeanDefinitionScanner scanner = new EzClassPathBeanDefinitionScanner(registry, annotationTypeFilter);
         // this check is needed in Spring 3.1
         if (resourceLoader != null) {
@@ -91,7 +92,7 @@ public class EzBeanScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
         }
         scanner.doScan(StringUtils.toStringArray(basePackages));
 
-        AnnotatedBeanDefinitionReader reader = new AnnotatedBeanDefinitionReader(registry);
+//        AnnotatedBeanDefinitionReader reader = new AnnotatedBeanDefinitionReader(registry);
 
 //        AnnotationTypeFilter[] annotationTypeFilterArray = EzBeanScannerRegistrar.getAnnotationTypeFilter();
 //        for (AnnotationTypeFilter annotationTypeFilter : annotationTypeFilterArray) {

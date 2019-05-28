@@ -1,6 +1,6 @@
 package com.ezshop.order.service;
 
-import com.ezddd.core.annotation.EzAppBizDetail;
+import com.ezddd.core.annotation.EzAppMapping;
 import com.ezddd.core.annotation.EzAppService;
 import com.ezddd.core.appservice.AbstractAppService;
 import com.ezddd.core.response.AppResult;
@@ -11,7 +11,7 @@ import com.ezshop.order.constants.BizDetailCodeCST;
 @EzAppService(bizCode = BizCodeCST.ORDER)
 public class OrderAppService extends AbstractAppService {
 
-    @EzAppBizDetail(bizDetailCode = BizDetailCodeCST.ORDER_CREATE)
+    @EzAppMapping(bizDetailCode = BizDetailCodeCST.ORDER_CREATE)
     public AppResult<?> createOrder(CreateOrderCmd cmd) {
         return send(cmd);
     }

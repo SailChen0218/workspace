@@ -4,7 +4,6 @@ import com.ezddd.core.remote.protocol.ProtocolType;
 
 import java.lang.annotation.*;
 
-
 @Target({ElementType.TYPE, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

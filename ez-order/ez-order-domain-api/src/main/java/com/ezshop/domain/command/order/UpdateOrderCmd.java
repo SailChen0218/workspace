@@ -7,12 +7,12 @@ import com.ezddd.core.command.CommandType;
 @EzCommand(domain = "order", commandType = CommandType.UPDATE)
 public class UpdateOrderCmd extends AbstractCommand {
     private static final long serialVersionUID = 3458724402444187156L;
-    private String id;
+    private String orderId;
     private String commodity;
     private String postAddress;
 
-    public String getId() {
-        return id;
+    public String getOrderId() {
+        return orderId;
     }
 
     public String getCommodity() {

@@ -42,4 +42,20 @@ public abstract class AbstractAggregate<T> implements Aggregate<T> {
             return false;
         }
     }
+
+    public void setRootType(Class<T> rootType) {
+        this.rootType = rootType;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
 }

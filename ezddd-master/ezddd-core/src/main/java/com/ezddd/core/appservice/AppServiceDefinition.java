@@ -1,6 +1,6 @@
 package com.ezddd.core.appservice;
 
-import com.ezddd.core.annotation.EzAppBizDetail;
+import com.ezddd.core.annotation.EzAppMapping;
 import com.ezddd.core.annotation.EzAppService;
 import org.springframework.util.Assert;
 
@@ -27,7 +27,7 @@ public class AppServiceDefinition {
 
         Method[] methods = clazz.getMethods();
         for (int i = 0; i < methods.length; i++) {
-            EzAppBizDetail ezAppBizDetails = methods[i].getAnnotation(EzAppBizDetail.class);
+            EzAppMapping ezAppBizDetails = methods[i].getAnnotation(EzAppMapping.class);
             if (ezAppBizDetails != null) {
                 String bizDetailCode = ezAppBizDetails.bizDetailCode();
                 if (bizDetailMethodMap.containsKey(bizDetailCode)) {

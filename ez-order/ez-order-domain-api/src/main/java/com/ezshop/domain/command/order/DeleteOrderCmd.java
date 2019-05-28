@@ -7,5 +7,9 @@ import com.ezddd.core.command.CommandType;
 @EzCommand(domain = "order", commandType = CommandType.DELETE)
 public class DeleteOrderCmd extends AbstractCommand {
     private static final long serialVersionUID = -6599816723422549033L;
-    private String id;
+    private String orderId;
+
+    public String getOrderId() {
+        return orderId;
+    }
 }

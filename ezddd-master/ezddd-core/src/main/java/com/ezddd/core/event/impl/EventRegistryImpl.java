@@ -7,10 +7,7 @@ import com.ezddd.core.event.AbstractEventDefinition;
 import com.ezddd.core.event.Event;
 import com.ezddd.core.event.EventListener;
 import com.ezddd.core.event.EventRegistry;
-import com.ezddd.core.repository.Repository;
-import com.ezddd.core.repository.RepositoryFactory;
 import com.ezddd.core.spring.EzBeanFactoryPostProcessor;
-import com.ezddd.core.utils.ClassUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
@@ -115,7 +112,6 @@ public class EventRegistryImpl implements EventRegistry {
                 }
 
                 EventListener eventListener = (EventListener) beanFactory.getBean(eventListenerType);
-                initEventListener(eventListener);
                 EventListenerDefinition eventListenerDefinition = new EventListenerDefinition();
                 eventListenerDefinition.setEventListener(eventListener);
                 eventListenerDefinition.setMehtodOfHandler(methods[i]);
@@ -157,10 +153,10 @@ public class EventRegistryImpl implements EventRegistry {
     }
 
     private final class EventListenerDefinition {
-        private com.ezddd.core.event.EventListener eventListener;
+        private EventListener eventListener;
         private Method mehtodOfHandler;
 
-        public com.ezddd.core.event.EventListener getEventListener() {
+        public EventListener getEventListener() {
             return eventListener;
         }
 
@@ -176,18 +172,4 @@ public class EventRegistryImpl implements EventRegistry {
             this.mehtodOfHandler = mehtodOfHandler;
         }
     }
-
-    private void initEventListener(EventListener eventListener) {
-        Class<?> eventListenerType = eventListener.getClass();
-        RepositoryFactory repositoryFactory = beanFactory.getBean(RepositoryFactory.class);
-        String aggrTypeName = eventListenerType.getTypeParameters()[0].getBounds()[0].getTypeName();
-
-        Class<?> aggrType = ClassUtil.forName(aggrTypeName);
-        ClassUtil.setField(eventListener, "aggregateType", aggrType);
-
-        Repository repository = repositoryFactory.getRepository(aggrType);
-        ClassUtil.setField(eventListener, "repository", repository);
-    }
-
-
 }
