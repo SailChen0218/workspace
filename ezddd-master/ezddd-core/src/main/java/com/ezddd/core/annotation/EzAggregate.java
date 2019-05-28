@@ -1,9 +1,6 @@
 package com.ezddd.core.annotation;
 
 import com.ezddd.core.constants.Area;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Conditional;
 
 import java.lang.annotation.*;
 

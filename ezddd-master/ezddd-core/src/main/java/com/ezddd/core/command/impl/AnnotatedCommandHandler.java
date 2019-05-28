@@ -4,7 +4,6 @@ import com.ezddd.core.annotation.EzComponent;
 import com.ezddd.core.command.*;
 import com.ezddd.core.context.CommandContext;
 import com.ezddd.core.context.CommandContextHolder;
-import com.ezddd.core.repository.RepositoryFactory;
 import com.ezddd.core.response.CommandResult;
 import com.ezddd.core.spring.EzBeanFactoryPostProcessor;
 import org.slf4j.Logger;
@@ -17,13 +16,10 @@ import java.lang.reflect.Method;
 
 @EzComponent
 public class AnnotatedCommandHandler extends AbstractCommandHandler {
-    private static final Logger log = LoggerFactory.getLogger(EzBeanFactoryPostProcessor.class);
+    private static final Logger log = LoggerFactory.getLogger(AnnotatedCommandHandler.class);
 
     @Autowired
     CommandRegistry commandRegistry;
-
-    @Autowired
-    RepositoryFactory repositoryFactory;
 
     @Override
     public <T> CommandResult<T> handle(Command command) {

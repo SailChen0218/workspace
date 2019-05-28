@@ -8,7 +8,7 @@ import com.ezshop.domain.aggregate.entity.BaseEntity;
 
 import java.time.Instant;
 
-public class GoodsAggrRoot extends BaseEntity {
+public class GoodsAggroot extends BaseEntity {
     private static final long serialVersionUID = 5488832782823340677L;
 
     @EzIdentifier
@@ -18,7 +18,7 @@ public class GoodsAggrRoot extends BaseEntity {
     private String postAddress;
 
     @EzCommandHandler
-    public GoodsAggrRoot() {
+    public GoodsAggroot() {
 //        AggregateManager.applyEvent("onGoodsCreated", this, cmd, EventType.CREATED);
     }
 
@@ -27,9 +27,9 @@ public class GoodsAggrRoot extends BaseEntity {
 //        AggregateManager.applyEvent("onGoodsUpdated", this, cmd, EventType.UPDATED);
 //    }
 
-    public static class Factory implements AggregateFactory<GoodsAggrRoot> {
-        public static GoodsAggrRoot create(String aggregateIdentifier, Event<GoodsAggrRoot> firstEvent) {
-            return new GoodsAggrRoot();
+    public static class Factory implements AggregateFactory<GoodsAggroot> {
+        public static GoodsAggroot create(String aggregateIdentifier, Event<GoodsAggroot> firstEvent) {
+            return new GoodsAggroot();
         }
     }
 

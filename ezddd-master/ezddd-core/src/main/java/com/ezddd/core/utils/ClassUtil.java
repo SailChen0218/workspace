@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -52,7 +53,7 @@ public class ClassUtil {
                                 final Class[] classes, final Object[] objects) {
         try {
             Method method = getMethod(obj.getClass(), methodName, classes);
-            method.setAccessible(true);// 调用private方法的关键一句话
+            method.setAccessible(true);
             return method.invoke(obj, objects);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -151,5 +152,10 @@ public class ClassUtil {
             throw new IllegalArgumentException(
                     "Failed to invoke " + method.getName() + " method. ", e);
         }
+    }
+
+    public static <A extends Annotation> A findAnnotation(Class<?> clazz, Class<A> annotationType) {
+        Assert.notNull(clazz, "clazz must not be null.");
+        return clazz.getAnnotation(annotationType);
     }
 }

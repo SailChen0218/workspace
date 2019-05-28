@@ -6,7 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 public class AggregateWrapper<T> extends AbstractAggregate {
+    private static final long serialVersionUID = -6678899096227606860L;
     private static final Logger log = LoggerFactory.getLogger(EzBeanFactoryPostProcessor.class);
+
     private T concreteComponent;
 
     public AggregateWrapper (T concreteComponent) {
@@ -20,4 +22,7 @@ public class AggregateWrapper<T> extends AbstractAggregate {
         return this.concreteComponent;
     }
 
+    public void setConcreteComponent(T concreteComponent) {
+        this.concreteComponent = concreteComponent;
+    }
 }

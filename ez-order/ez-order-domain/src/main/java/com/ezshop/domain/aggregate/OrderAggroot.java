@@ -9,16 +9,16 @@ import com.ezshop.domain.command.order.CreateOrderCmd;
 import com.ezshop.domain.command.order.UpdateOrderCmd;
 
 @EzAggregate
-public class OrderAggrRoot extends BaseEntity {
+public class OrderAggroot extends BaseEntity {
     private static final long serialVersionUID = 5488832782823340677L;
 
     @EzIdentifier
-    private String id;
+    private String orderId;
     private String commodity;
     private String postAddress;
 
     @EzCommandHandler
-    public OrderAggrRoot(CreateOrderCmd cmd) throws Exception {
+    public OrderAggroot(CreateOrderCmd cmd) throws Exception {
         AggregateManager.apply("onOrderCreated", this, cmd);
     }
 
@@ -27,12 +27,12 @@ public class OrderAggrRoot extends BaseEntity {
         AggregateManager.apply("onOrderUpdated", this, cmd);
     }
 
-    public String getId() {
-        return id;
+    public String getOrderId() {
+        return orderId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     public String getCommodity() {

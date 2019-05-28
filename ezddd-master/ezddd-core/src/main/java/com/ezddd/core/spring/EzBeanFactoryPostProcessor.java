@@ -2,6 +2,7 @@ package com.ezddd.core.spring;
 
 import com.ezddd.core.annotation.EzComponent;
 import com.ezddd.core.annotation.EzRemoting;
+import com.ezddd.core.constants.Area;
 import com.ezddd.core.registry.Registry;
 import com.ezddd.core.remote.RemoteProxyFactory;
 import com.ezddd.core.utils.ClassUtil;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
@@ -55,9 +57,9 @@ public class EzBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
             removeNoInstantiationBeanDefinition(annotationTypeFilter.getAnnotationType());
         }
 
-        for (AnnotationTypeFilter annotationTypeFilter : annotationTypeFilterArray) {
-            autowireInject(annotationTypeFilter.getAnnotationType());
-        }
+//        for (AnnotationTypeFilter annotationTypeFilter : annotationTypeFilterArray) {
+//            autowireInject(annotationTypeFilter.getAnnotationType());
+//        }
     }
 
     private <A extends Annotation> void removeAreaUnmatchBeanDefinition(Class<A> annotationClazz) throws BeansException {
@@ -72,7 +74,7 @@ public class EzBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
                     beanDefinition.resolveBeanClass(Thread.currentThread().getContextClassLoader());
                     A Annotation = beanDefinition.getBeanClass().getAnnotation(annotationClazz);
                     String beanArea = getAreaOfAnnotation(Annotation);
-                    if (!"standard".equals(beanArea) && !beanArea.equals(area)) {
+                    if (!Area.STANDARD.equals(beanArea) && !beanArea.equals(area)) {
                         removeBeanDefineByName(beanName);
                     }
                 }
@@ -162,50 +164,50 @@ public class EzBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
         }
     }
 
-    private <A extends Annotation> void autowireInject(Class<A> annotationClazz) throws BeansException {
-        String[] beanNames = beanFactory.getBeanNamesForAnnotation(annotationClazz);
-        for (String beanName : beanNames) {
-            try {
-                Object bean = beanFactory.getBean(beanName);
-                List<Field> fieldList = new ArrayList<>();
-                ClassUtil.findFiledsIncludeSuperClass(bean.getClass(), fieldList);
-                if (!CollectionUtils.isEmpty(fieldList)) {
-                    for (Field field : fieldList) {
-                        field.setAccessible(true);
-                        if (field.get(bean) != null) {
-                            continue;
-                        }
-
-                        Autowired autowired = field.getAnnotation(Autowired.class);
-                        if (autowired != null) {
-                            String[] injectBeanNames = beanFactory.getBeanNamesForType(field.getType());
-                            if (injectBeanNames == null || injectBeanNames.length == 0) {
-                                throw new IllegalArgumentException("Can not find the corresponding " +
-                                        "type of autowired filed:[" + field.getName() + "] when inject bean:[" +
-                                        beanName + "]");
-                            } else if (injectBeanNames.length > 1) {
-                                throw new IllegalArgumentException("Find multiple matching " +
-                                        "classes of autowired filed:[" + field.getName() + "] when inject bean:[" +
-                                        beanName + "]");
-                            } else {
-                                Object injectBean = beanFactory.getBean(injectBeanNames[0]);
-                                field.set(bean, injectBean);
-                            }
-                        }
-
-                        EzRemoting ezRemoting = field.getAnnotation(EzRemoting.class);
-                        if (ezRemoting != null) {
-                            Object injectBean = RemoteProxyFactory.create(field.getType(), ezRemoting.protocol());
-                            field.set(bean, injectBean);
-                        }
-                    }
-                }
-            } catch (IllegalAccessException ex) {
-                log.error(ex.getMessage(), ex);
-                throw new BeanInitializationException(ex.getMessage(), ex);
-            }
-        }
-    }
+//    private <A extends Annotation> void autowireInject(Class<A> annotationClazz) throws BeansException {
+//        String[] beanNames = beanFactory.getBeanNamesForAnnotation(annotationClazz);
+//        for (String beanName : beanNames) {
+//            try {
+//                Object bean = beanFactory.getBean(beanName);
+//                List<Field> fieldList = new ArrayList<>();
+//                ClassUtil.findFiledsIncludeSuperClass(bean.getClass(), fieldList);
+//                if (!CollectionUtils.isEmpty(fieldList)) {
+//                    for (Field field : fieldList) {
+//                        field.setAccessible(true);
+//                        if (field.get(bean) != null) {
+//                            continue;
+//                        }
+//
+//                        Autowired autowired = field.getAnnotation(Autowired.class);
+//                        if (autowired != null) {
+//                            String[] injectBeanNames = beanFactory.getBeanNamesForType(field.getType());
+//                            if (injectBeanNames == null || injectBeanNames.length == 0) {
+//                                throw new IllegalArgumentException("Can not find the corresponding " +
+//                                        "type of autowired filed:[" + field.getName() + "] when inject bean:[" +
+//                                        beanName + "]");
+//                            } else if (injectBeanNames.length > 1) {
+//                                throw new IllegalArgumentException("Find multiple matching " +
+//                                        "classes of autowired filed:[" + field.getName() + "] when inject bean:[" +
+//                                        beanName + "]");
+//                            } else {
+//                                Object injectBean = beanFactory.getBean(injectBeanNames[0]);
+//                                field.set(bean, injectBean);
+//                            }
+//                        }
+//
+//                        EzRemoting ezRemoting = field.getAnnotation(EzRemoting.class);
+//                        if (ezRemoting != null) {
+//                            Object injectBean = RemoteProxyFactory.create(field.getType(), ezRemoting.protocol());
+//                            field.set(bean, injectBean);
+//                        }
+//                    }
+//                }
+//            } catch (IllegalAccessException ex) {
+//                log.error(ex.getMessage(), ex);
+//                throw new BeanInitializationException(ex.getMessage(), ex);
+//            }
+//        }
+//    }
 
     private <A extends Annotation> void removeNoInstantiationBeanDefinition(Class<A> annotationClazz) {
         String[] beanNames = this.beanFactory.getBeanNamesForAnnotation(annotationClazz);

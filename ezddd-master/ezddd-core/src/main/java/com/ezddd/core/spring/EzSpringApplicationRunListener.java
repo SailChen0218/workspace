@@ -12,26 +12,27 @@ public class EzSpringApplicationRunListener implements SpringApplicationRunListe
 
     @Override
     public void starting() {
-        System.out.println("EzSpringApplicationRunListener starting()");
+        System.out.println("starting()");
     }
 
     @Override
     public void environmentPrepared(ConfigurableEnvironment environment) {
-        System.out.println("EzSpringApplicationRunListener  environmentPrepared()");
+        System.out.println("environmentPrepared()");
     }
 
     @Override
     public void contextPrepared(ConfigurableApplicationContext context) {
+        System.out.println("contextPrepared()");
     }
 
     @Override
     public void contextLoaded(ConfigurableApplicationContext context) {
-
+        System.out.println("contextLoaded()");
     }
 
     @Override
     public void started(ConfigurableApplicationContext context) {
-
+        System.out.println("started()");
     }
 
     @Override

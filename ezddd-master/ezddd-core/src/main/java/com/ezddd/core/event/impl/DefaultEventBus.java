@@ -13,10 +13,18 @@ public class DefaultEventBus extends AbstractEventBus {
     @Autowired
     EventRegistry eventRegistry;
 
+    @Autowired
+    EventStore eventStore;
+
     @Override
     public void publish(Event event) throws Exception {
         Assert.notNull(event, "event must not be null.");
+
         EventDefinition eventDefinition = eventRegistry.findEventDefinition(event.getEventName());
+        if (eventDefinition.isEventSourcing()) {
+            // store event
+            eventStore.appendEvent(event);
+        }
         EventListener eventListener = eventDefinition.getEventListener();
         Method method = eventDefinition.getMehtodOfHandler();
         method.invoke(eventListener, event);
