@@ -2,18 +2,16 @@ package com.ezddd.core.context.impl;
 
 import com.ezddd.core.command.CommandDefinition;
 import com.ezddd.core.context.CommandContext;
-import com.ezddd.core.repository.Repository;
 
-public class CommandContextImpl implements CommandContext {
-    private Repository repository;
+public class CommandContextImpl<T> implements CommandContext<T> {
     private CommandDefinition commandDefinition;
-    private Object response;
+    private T aggregateRoot;
 
     public CommandContextImpl() {
     }
 
-    public CommandContextImpl(Repository repository, CommandDefinition commandDefinition) {
-        this.repository = repository;
+    public CommandContextImpl(CommandDefinition commandDefinition, T aggregateRoot) {
+        this.aggregateRoot = aggregateRoot;
         this.commandDefinition = commandDefinition;
     }
 
@@ -28,12 +26,12 @@ public class CommandContextImpl implements CommandContext {
     }
 
     @Override
-    public <T> void setResponse(T value) {
-        this.response = value;
+    public void setAggregateRoot(T value) {
+
     }
 
     @Override
-    public <T> T getResponse() {
-        return (T)this.response;
+    public T getAggregateRoot() {
+        return null;
     }
 }

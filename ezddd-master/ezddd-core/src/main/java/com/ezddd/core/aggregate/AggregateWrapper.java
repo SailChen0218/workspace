@@ -1,6 +1,7 @@
 package com.ezddd.core.aggregate;
 
 import com.ezddd.core.spring.EzBeanFactoryPostProcessor;
+import com.ezddd.core.utils.AggregateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -13,9 +14,10 @@ public class AggregateWrapper<T> extends AbstractAggregate {
 
     public AggregateWrapper (T concreteComponent) {
         super();
-
         Assert.notNull(concreteComponent, "concreteComponent must not be null.");
         this.concreteComponent = concreteComponent;
+        this.identifier = AggregateUtil.getIdentifierFrom(concreteComponent);
+        this.version = AggregateUtil.getVersionFrom(concreteComponent);
     }
 
     public T getConcreteComponent() {

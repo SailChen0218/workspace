@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @EzComponent
 public class InMemeryEventStore implements EventStore {
@@ -30,7 +31,8 @@ public class InMemeryEventStore implements EventStore {
         if (eventMap.containsKey(identifier)) {
             eventList = eventMap.get(identifier);
         } else {
-            eventList = new ArrayList<>();
+            eventList = new CopyOnWriteArrayList<>();
+            eventMap.put(identifier, eventList);
         }
         eventList.add(event);
     }

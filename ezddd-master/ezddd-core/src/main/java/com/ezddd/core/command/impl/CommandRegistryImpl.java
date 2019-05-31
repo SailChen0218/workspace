@@ -5,11 +5,13 @@ import com.ezddd.core.annotation.EzCommand;
 import com.ezddd.core.annotation.EzCommandHandler;
 import com.ezddd.core.annotation.EzComponent;
 import com.ezddd.core.command.Command;
+import com.ezddd.core.command.CommandBus;
 import com.ezddd.core.command.CommandDefinition;
 import com.ezddd.core.command.CommandRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.util.Assert;
@@ -29,26 +31,27 @@ public class CommandRegistryImpl implements CommandRegistry {
      */
     protected static Map<String, CommandDefinition> commandDefinitionHolder = new HashMap<>(16);
 
+    private DefaultListableBeanFactory beanFactory;
+
     @Override
     public void registry(BeanFactory beanFactory) {
-        DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) beanFactory;
-
-        String[] commandBeanNames = defaultListableBeanFactory.getBeanNamesForAnnotation(EzCommand.class);
+        this.beanFactory = (DefaultListableBeanFactory) beanFactory;
+        String[] commandBeanNames = this.beanFactory.getBeanNamesForAnnotation(EzCommand.class);
         GenericBeanDefinition commandBeanDefinition = null;
         CommandDefinition commandDefinition = null;
         if (commandBeanNames != null && commandBeanNames.length > 0) {
             for (int i = 0; i < commandBeanNames.length; i++) {
-                commandBeanDefinition = (GenericBeanDefinition)defaultListableBeanFactory.getBeanDefinition(commandBeanNames[i]);
+                commandBeanDefinition = (GenericBeanDefinition)this.beanFactory.getBeanDefinition(commandBeanNames[i]);
                 commandDefinition = CommandDefinition.build(commandBeanDefinition.getBeanClass(), beanFactory);
                 commandDefinitionHolder.put(commandBeanDefinition.getBeanClassName(), commandDefinition);
             }
         }
 
-        String[] aggregateBeanNames = defaultListableBeanFactory.getBeanNamesForAnnotation(EzAggregate.class);
+        String[] aggregateBeanNames = this.beanFactory.getBeanNamesForAnnotation(EzAggregate.class);
         GenericBeanDefinition aggregateBeanDefinition = null;
         if (aggregateBeanNames != null && aggregateBeanNames.length > 0) {
             for (int i = 0; i < aggregateBeanNames.length; i++) {
-                aggregateBeanDefinition = (GenericBeanDefinition)defaultListableBeanFactory.getBeanDefinition(aggregateBeanNames[i]);
+                aggregateBeanDefinition = (GenericBeanDefinition)this.beanFactory.getBeanDefinition(aggregateBeanNames[i]);
                 try {
                     Class<?> aggregateType = Class.forName(aggregateBeanDefinition.getBeanClass().getName());
                     this.populateAggregateInfo(aggregateType);
@@ -120,7 +123,18 @@ public class CommandRegistryImpl implements CommandRegistry {
                     "The AggregateType is null. CommandDefinition:[" + commandName + "]. ");
             Assert.notNull(commandDefinition.getMethodOfCommandHandler(),
                     "The MethodOfCommandHandler is null. CommandDefinition:[" + commandName + "]. ");
+
+            if (commandDefinition.getCommandBus() == null) {
+                CommandBus commandBus = (CommandBus) beanFactory.getBean(commandDefinition.getCommandBusName());
+                if (commandBus == null) {
+                    throw new IllegalArgumentException("The bean fo CommandBus not found, CommandDefinition:[" +
+                            commandName + "]. ");
+                } else {
+                    commandDefinition.setCommandBus(commandBus);
+                }
+            }
+
+            return commandDefinition;
         }
-        return commandDefinitionHolder.get(commandName);
     }
 }

@@ -15,27 +15,60 @@ import java.util.Map;
 public class CommandBusRegistryImpl implements CommandBusRegistry {
 
     /**
-     * Map of *CommandClassName, CommandBus*
+     * Map of *CommandClassName, CommandBusDefinition*
      */
-    protected static Map<String, CommandBus> commandBusHolder = new HashMap<>(16);
+    protected static Map<String, CommandBusDefinition> commandBusDefinitionHolder = new HashMap<>(16);
+
+
+    private DefaultListableBeanFactory beanFactory;
 
     @Override
     public CommandBus findCommandBus(String commandName) {
-        return commandBusHolder.get(commandName);
+        if (commandBusDefinitionHolder.containsKey(commandName)) {
+            CommandBusDefinition commandBusDefinition = commandBusDefinitionHolder.get(commandName);
+            CommandBus commandBus = (CommandBus) this.beanFactory.getBean(commandBusDefinition.getCommandBusName());
+            commandBusDefinition.setCommandBus(commandBus);
+            return commandBus;
+        } else {
+            throw new IllegalArgumentException("CommandBus not found, commandName:[" + commandName + "]. ");
+        }
     }
 
     @Override
     public void registry(BeanFactory beanFactory) {
-        DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) beanFactory;
-        String[] beanNames = defaultListableBeanFactory.getBeanNamesForAnnotation(EzCommand.class);
+        this.beanFactory = (DefaultListableBeanFactory) beanFactory;
+        String[] beanNames = this.beanFactory.getBeanNamesForAnnotation(EzCommand.class);
         GenericBeanDefinition beanDefinition = null;
         if (beanNames != null && beanNames.length > 0) {
             for (int i = 0; i < beanNames.length; i++) {
-                beanDefinition = (GenericBeanDefinition)defaultListableBeanFactory.getBeanDefinition(beanNames[i]);
+                beanDefinition = (GenericBeanDefinition) this.beanFactory.getBeanDefinition(beanNames[i]);
                 EzCommand ezCommand = beanDefinition.getBeanClass().getAnnotation(EzCommand.class);
-                CommandBus commandBus = beanFactory.getBean(ezCommand.commandBus(), CommandBus.class);
-                commandBusHolder.put(beanDefinition.getBeanClassName(), commandBus);
+                CommandBusDefinition commandBusDefinition = new CommandBusDefinition();
+                commandBusDefinition.setCommandBusName(ezCommand.commandBus());
+                commandBusDefinitionHolder.put(beanDefinition.getBeanClassName(), commandBusDefinition);
             }
         }
     }
+
+    private class CommandBusDefinition {
+        private String commandBusName;
+        private CommandBus commandBus;
+
+        public CommandBus getCommandBus() {
+            return commandBus;
+        }
+
+        public void setCommandBus(CommandBus commandBus) {
+            this.commandBus = commandBus;
+        }
+
+        public String getCommandBusName() {
+            return commandBusName;
+        }
+
+        public void setCommandBusName(String commandBusName) {
+            this.commandBusName = commandBusName;
+        }
+    }
+
 }

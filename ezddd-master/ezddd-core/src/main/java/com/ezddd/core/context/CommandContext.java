@@ -3,9 +3,9 @@ package com.ezddd.core.context;
 import com.ezddd.core.command.CommandDefinition;
 import com.ezddd.core.repository.Repository;
 
-public interface CommandContext extends Context {
+public interface CommandContext<T> extends Context {
     void setCommandDefinition(CommandDefinition commandDefinition);
     CommandDefinition getCommandDefinition();
-    <T> void setResponse(T value);
-    <T> T getResponse();
+    void setAggregateRoot(T value);
+    T getAggregateRoot();
 }

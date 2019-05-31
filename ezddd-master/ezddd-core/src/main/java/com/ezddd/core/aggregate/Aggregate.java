@@ -12,7 +12,7 @@ public interface Aggregate<T> extends Serializable {
 
     Long version();
 
-    boolean isDeleted();
-
-    Class<? extends T> rootType();
+//    boolean isDeleted();
+//
+//    Class<? extends T> rootType();
 }

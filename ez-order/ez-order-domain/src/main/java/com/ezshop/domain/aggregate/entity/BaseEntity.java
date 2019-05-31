@@ -7,10 +7,10 @@ import java.time.Instant;
 
 public abstract class BaseEntity implements Serializable, Cloneable {
     @EzVersion
-    private long version;
-    private Instant createTime;
-    private Instant updateTime;
-    private boolean isDeleted;
+    protected long version;
+    protected Instant createTime;
+    protected Instant updateTime;
+    protected boolean deleted;
 
     public long getVersion() {
         return version;
@@ -36,11 +36,11 @@ public abstract class BaseEntity implements Serializable, Cloneable {
         this.updateTime = updateTime;
     }
 
-    public boolean isDeleted() {
-        return isDeleted;
+    public boolean getDeleted() {
+        return deleted;
     }
 
     public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
+        this.deleted = deleted;
     }
 }

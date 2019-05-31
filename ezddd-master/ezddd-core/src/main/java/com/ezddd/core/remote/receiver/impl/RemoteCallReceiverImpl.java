@@ -3,6 +3,7 @@ package com.ezddd.core.remote.receiver.impl;
 import com.ezddd.core.annotation.EzComponent;
 import com.ezddd.core.remote.invoker.Invocation;
 import com.ezddd.core.remote.receiver.IRemoteCallReceiver;
+import com.ezddd.core.response.CommandResult;
 import com.ezddd.core.response.RpcResult;
 import com.ezddd.core.service.ServiceDefinition;
 import com.ezddd.core.service.ServiceRegistry;
@@ -14,8 +15,8 @@ import org.springframework.util.Assert;
 import java.lang.reflect.Method;
 
 @EzComponent
-public class RemoteCallServerImpl implements IRemoteCallReceiver {
-    private static final Logger log = LoggerFactory.getLogger(RemoteCallServerImpl.class);
+public class RemoteCallReceiverImpl implements IRemoteCallReceiver {
+    private static final Logger log = LoggerFactory.getLogger(RemoteCallReceiverImpl.class);
 
     @Autowired
     ServiceRegistry serviceRegistry;

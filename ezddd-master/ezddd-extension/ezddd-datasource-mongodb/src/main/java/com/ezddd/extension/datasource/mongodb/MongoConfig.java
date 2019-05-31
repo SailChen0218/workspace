@@ -101,7 +101,7 @@ public class MongoConfig {
         MongoClientOptions.Builder builder = new MongoClientOptions.Builder();
         builder.connectionsPerHost(this.maxConnectionsPerHost);
         builder.minConnectionsPerHost(this.minConnectionsPerHost);
-        if (StringUtils.isEmpty(this.replicaSet)) {
+        if (!StringUtils.isEmpty(this.replicaSet)) {
             builder.requiredReplicaSetName(this.replicaSet);
         }
 

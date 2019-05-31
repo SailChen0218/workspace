@@ -15,17 +15,17 @@ public class AppServiceDefinition {
      * Map of *bizDetailCode, Method*
      */
     private Map<String, Method> bizDetailMethodMap;
+
+    private Class<?> appServiceType;
     private AppService appService;
 
-    public static AppServiceDefinition build(AppService appService) {
-        Assert.notNull(appService, "parameter appService must not be null.");
+    public static AppServiceDefinition build(Class<?> appServiceType) {
+        Assert.notNull(appServiceType, "parameter appServiceType must not be null.");
         AppServiceDefinition appServiceDefinition = new AppServiceDefinition();
         Map<String, Method> bizDetailMethodMap = new HashMap<>();
-        Class<?> clazz = appService.getClass();
-        EzAppService ezAppService = clazz.getAnnotation(EzAppService.class);
+        EzAppService ezAppService = appServiceType.getAnnotation(EzAppService.class);
         appServiceDefinition.setBizCode(ezAppService.bizCode());
-
-        Method[] methods = clazz.getMethods();
+        Method[] methods = appServiceType.getMethods();
         for (int i = 0; i < methods.length; i++) {
             EzAppMapping ezAppBizDetails = methods[i].getAnnotation(EzAppMapping.class);
             if (ezAppBizDetails != null) {
@@ -38,7 +38,7 @@ public class AppServiceDefinition {
             }
         }
         appServiceDefinition.setBizDetailMethodMap(bizDetailMethodMap);
-        appServiceDefinition.setAppService(appService);
+        appServiceDefinition.setAppServiceType(appServiceType);
         return appServiceDefinition;
     }
 
@@ -69,5 +69,13 @@ public class AppServiceDefinition {
 
     public void setAppService(AppService appService) {
         this.appService = appService;
+    }
+
+    public Class<?> getAppServiceType() {
+        return appServiceType;
+    }
+
+    public void setAppServiceType(Class<?> appServiceType) {
+        this.appServiceType = appServiceType;
     }
 }

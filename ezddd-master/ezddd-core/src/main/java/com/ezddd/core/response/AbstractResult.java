@@ -27,6 +27,6 @@ public class AbstractResult<T> implements Result<T> {
 
     @Override
     public boolean hasException() {
-        return false;
+        return exception != null;
     }
 }

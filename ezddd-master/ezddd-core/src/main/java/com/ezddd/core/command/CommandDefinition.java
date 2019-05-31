@@ -1,18 +1,26 @@
 package com.ezddd.core.command;
 
 import com.ezddd.core.annotation.EzCommand;
+import com.ezddd.core.utils.ClassUtil;
+import com.ezddd.core.utils.CommandUtil;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.Executable;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CommandDefinition {
     private String domain;
     private int commandType;
     private String commandName;
     private CommandBus commandBus;
+    private String commandBusName;
     private Class<?> aggregateType;
     private Executable methodOfCommandHandler;
+    private Field identifierField;
+    private Field versionField;
 
     public static CommandDefinition build(Class<?> commandType, BeanFactory beanFactory) {
         Assert.notNull(commandType, "parameter commandType must not be null.");
@@ -20,7 +28,11 @@ public class CommandDefinition {
         EzCommand ezCommand = commandType.getAnnotation(EzCommand.class);
         commandDefinition.domain = ezCommand.domain();
         commandDefinition.commandType = ezCommand.commandType();
-        commandDefinition.commandBus = beanFactory.getBean(ezCommand.commandBus(), CommandBus.class);
+        commandDefinition.commandBusName = ezCommand.commandBus();
+        List<Field> fieldList = new ArrayList<>();
+        ClassUtil.findFiledsIncludeSuperClass(commandType, fieldList);
+        commandDefinition.identifierField = CommandUtil.getIdentifierField(fieldList);
+        commandDefinition.versionField = CommandUtil.getVersionField(fieldList);
         return commandDefinition;
     }
 
@@ -72,4 +84,27 @@ public class CommandDefinition {
         this.aggregateType = aggregateType;
     }
 
+    public String getCommandBusName() {
+        return commandBusName;
+    }
+
+    public void setCommandBusName(String commandBusName) {
+        this.commandBusName = commandBusName;
+    }
+
+    public Field getIdentifierField() {
+        return identifierField;
+    }
+
+    public void setIdentifierField(Field identifierField) {
+        this.identifierField = identifierField;
+    }
+
+    public Field getVersionField() {
+        return versionField;
+    }
+
+    public void setVersionField(Field versionField) {
+        this.versionField = versionField;
+    }
 }

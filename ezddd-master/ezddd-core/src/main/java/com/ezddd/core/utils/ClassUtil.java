@@ -158,4 +158,5 @@ public class ClassUtil {
         Assert.notNull(clazz, "clazz must not be null.");
         return clazz.getAnnotation(annotationType);
     }
+
 }

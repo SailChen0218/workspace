@@ -7,13 +7,15 @@ public interface EventDefinition {
 
     int getEventType();
 
-    String getEventBus();
+    Class<?> getEventBusType();
 
     boolean isEventSourcing();
 
     Class<?> getEventClass();
 
-    EventListener getEventListener();
+    Class<?> getEventListenerType();
 
     Method getMehtodOfHandler();
+
+    EventListener getEventListener();
 }

@@ -7,7 +7,7 @@ public class DataObject implements Serializable {
     private long version;
     private Instant createTime;
     private Instant updateTime;
-    private boolean isDeleted;
+    private boolean deleted;
 
     public long getVersion() {
         return version;
@@ -33,11 +33,11 @@ public class DataObject implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public boolean isDeleted() {
-        return isDeleted;
+    public boolean getDeleted() {
+        return deleted;
     }
 
     public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
+        this.deleted = deleted;
     }
 }

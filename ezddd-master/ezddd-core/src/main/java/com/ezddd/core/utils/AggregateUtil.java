@@ -22,15 +22,13 @@ public class AggregateUtil {
     public static String getIdentifierFrom(Object aggregate) {
         Class<?> aggregateType = aggregate.getClass();
         AggregateDefinition aggregateDefinition = AggregateUtil.findAggregateDefinition(aggregateType);
-        return ClassUtil.invokeMehtod(aggregate,
-                aggregateDefinition.identifierReadMehtod, aggregateDefinition.identifierFiled);
+        return ClassUtil.invokeMehtod(aggregate, aggregateDefinition.identifierReadMehtod);
     }
 
-    public static String getVersionFrom(Object aggregate) {
+    public static long getVersionFrom(Object aggregate) {
         Class<?> aggregateType = aggregate.getClass();
         AggregateDefinition aggregateDefinition = AggregateUtil.findAggregateDefinition(aggregateType);
-        return ClassUtil.invokeMehtod(aggregate,
-                aggregateDefinition.versionReadMethod, aggregateDefinition.versionFiled);
+        return ClassUtil.invokeMehtod(aggregate, aggregateDefinition.versionReadMethod);
     }
 
     private static <T> AggregateDefinition<T> findAggregateDefinition(Class<T> aggregateType) {

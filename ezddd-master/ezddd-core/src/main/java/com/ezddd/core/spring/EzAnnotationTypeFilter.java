@@ -23,12 +23,4 @@ public class EzAnnotationTypeFilter {
             new AnnotationTypeFilter(EzEvent.class)
     };
 
-    public static final AnnotationTypeFilter[] annotationTypeDepend = {
-            new AnnotationTypeFilter(EzComponent.class),
-            new AnnotationTypeFilter(EzAggregate.class),
-            new AnnotationTypeFilter(EzDomainService.class),
-            new AnnotationTypeFilter(EzCommand.class),
-            new AnnotationTypeFilter(EzEvent.class)
-    };
-
 }

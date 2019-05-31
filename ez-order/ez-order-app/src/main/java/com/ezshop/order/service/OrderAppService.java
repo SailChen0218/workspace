@@ -5,14 +5,19 @@ import com.ezddd.core.annotation.EzAppService;
 import com.ezddd.core.appservice.AbstractAppService;
 import com.ezddd.core.response.AppResult;
 import com.ezshop.domain.command.order.CreateOrderCmd;
-import com.ezshop.order.constants.BizCodeCST;
-import com.ezshop.order.constants.BizDetailCodeCST;
+import com.ezshop.order.constants.BizCode;
+import com.ezshop.order.constants.BizDetailCode;
 
-@EzAppService(bizCode = BizCodeCST.ORDER)
+@EzAppService(bizCode = BizCode.ORDER)
 public class OrderAppService extends AbstractAppService {
 
-    @EzAppMapping(bizDetailCode = BizDetailCodeCST.ORDER_CREATE)
+    @EzAppMapping(bizDetailCode = BizDetailCode.CREATE)
     public AppResult<?> createOrder(CreateOrderCmd cmd) {
+        return send(cmd);
+    }
+
+    @EzAppMapping(bizDetailCode = BizDetailCode.UPDATE)
+    public AppResult<?> updateOrder(CreateOrderCmd cmd) {
         return send(cmd);
     }
 }

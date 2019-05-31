@@ -115,7 +115,8 @@ public class BeanCopyUtils {
             Method writeMethod = targetPd.getWriteMethod();
             if (writeMethod != null) {
                 try {
-                    Field targetField = targetClazz.getDeclaredField(targetPd.getName());
+
+                    Field targetField = ClassUtil.findFiledIncludeSuperClass(targetClazz, targetPd.getName());
                     PropertyDescriptor sourcePd = BeanUtils.getPropertyDescriptor(sourceClazz, targetPd.getName());
                     Object value = null;
                     if (sourcePd != null) {

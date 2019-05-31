@@ -7,19 +7,19 @@ import com.ezddd.core.annotation.EzUnitOfWork;
 import com.ezddd.core.repository.AbstractRepository;
 import com.ezddd.core.tunnel.TunnelFunctional.TunnelCreate;
 import com.ezddd.core.tunnel.TunnelFunctional.TunnelFind;
-import com.ezddd.core.tunnel.TunnelFunctional.TunnelSave;
 import com.ezddd.core.tunnel.TunnelFunctional.TunnelRemove;
+import com.ezddd.core.tunnel.TunnelFunctional.TunnelSave;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 public abstract class CachedRepository<T> extends AbstractRepository<T> {
 
+    @Autowired
+    protected AggregateStore aggregateStore;
+
     public CachedRepository(Class<T> aggregateType) {
         super(aggregateType);
     }
-
-    @Autowired
-    AggregateStore aggregateStore;
 
     public T loadFromCache(String identifier) throws AggregateNotFoundException {
         if (isExists(identifier)) {

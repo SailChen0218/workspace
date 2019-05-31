@@ -45,7 +45,7 @@ public class EventRegistryImpl implements EventRegistry {
             for (int i = 0; i < beanNames.length; i++) {
                 beanDefinition = (GenericBeanDefinition) this.beanFactory.getBeanDefinition(beanNames[i]);
                 if (AbstractEventDefinition.class.isAssignableFrom(beanDefinition.getBeanClass())) {
-                    this.registerEvent(beanDefinition.getBeanClass());
+                    this.registerEventDefinition(beanDefinition.getBeanClass());
                 } else {
                     throw new IllegalArgumentException("EzEvent annotation should be used in " +
                             "the EventDefinition Class. ");
@@ -64,7 +64,7 @@ public class EventRegistryImpl implements EventRegistry {
         this.populateEventListenerInfo();
     }
 
-    private void registerEvent(Class<?> eventDefinitionType) {
+    private void registerEventDefinition(Class<?> eventDefinitionType) {
         try {
             AbstractEventDefinition eventDefinition = null;
             Field[] fields = eventDefinitionType.getFields();
@@ -111,9 +111,9 @@ public class EventRegistryImpl implements EventRegistry {
                             eventListenerDefinitionOld.getMehtodOfHandler().getName() + "]. ");
                 }
 
-                EventListener eventListener = (EventListener) beanFactory.getBean(eventListenerType);
                 EventListenerDefinition eventListenerDefinition = new EventListenerDefinition();
-                eventListenerDefinition.setEventListener(eventListener);
+                eventListenerDefinition.setEventListener(null);
+                eventListenerDefinition.setEventListenerType(eventListenerType);
                 eventListenerDefinition.setMehtodOfHandler(methods[i]);
                 eventListenerDefinitionHolder.put(eventName, eventListenerDefinition);
             }
@@ -131,6 +131,7 @@ public class EventRegistryImpl implements EventRegistry {
                             abstractEventDefinition.getEventName() + "]. ");
                 } else {
                     abstractEventDefinition.setEventListener(eventListenerDefinition.getEventListener());
+                    abstractEventDefinition.setEventListenerType(eventListenerDefinition.getEventListenerType());
                     abstractEventDefinition.setMehtodOfHandler(eventListenerDefinition.getMehtodOfHandler());
                 }
             }
@@ -143,18 +144,24 @@ public class EventRegistryImpl implements EventRegistry {
             throw new NullPointerException("eventName must not be null. ");
         }
 
-        AbstractEventDefinition result = eventDefinitionHolder.get(eventName);
-        if (result != null) {
-            return result;
+        if (eventDefinitionHolder.containsKey(eventName)) {
+            AbstractEventDefinition eventDefinition = eventDefinitionHolder.get(eventName);
+            if (eventDefinition.getEventListener() == null) {
+                EventListener eventListener =
+                        (EventListener) this.beanFactory.getBean(eventDefinition.getEventListenerType());
+                eventDefinition.setEventListener(eventListener);
+            }
+            return eventDefinition;
+        } else {
+            throw new IllegalArgumentException(
+                    "There is no event named " + eventName + " exists. ");
         }
-
-        throw new IllegalArgumentException(
-                "There is no event named " + eventName + " exists. ");
     }
 
     private final class EventListenerDefinition {
         private EventListener eventListener;
         private Method mehtodOfHandler;
+        private Class<?> eventListenerType;
 
         public EventListener getEventListener() {
             return eventListener;
@@ -170,6 +177,14 @@ public class EventRegistryImpl implements EventRegistry {
 
         public void setMehtodOfHandler(Method mehtodOfHandler) {
             this.mehtodOfHandler = mehtodOfHandler;
+        }
+
+        public Class<?> getEventListenerType() {
+            return eventListenerType;
+        }
+
+        public void setEventListenerType(Class<?> eventListenerType) {
+            this.eventListenerType = eventListenerType;
         }
     }
 }

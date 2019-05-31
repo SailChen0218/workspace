@@ -19,7 +19,6 @@ public class DefaultEventBus extends AbstractEventBus {
     @Override
     public void publish(Event event) throws Exception {
         Assert.notNull(event, "event must not be null.");
-
         EventDefinition eventDefinition = eventRegistry.findEventDefinition(event.getEventName());
         if (eventDefinition.isEventSourcing()) {
             // store event

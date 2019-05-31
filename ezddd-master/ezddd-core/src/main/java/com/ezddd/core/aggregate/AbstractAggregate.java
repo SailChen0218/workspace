@@ -3,14 +3,14 @@ package com.ezddd.core.aggregate;
 import org.springframework.util.Assert;
 
 public abstract class AbstractAggregate<T> implements Aggregate<T> {
-    protected Class<T> rootType;
+//    protected Class<T> rootType;
     protected String identifier;
     protected Long version;
-    protected boolean isDeleted;
+//    protected boolean isDeleted;
 
     public AbstractAggregate(){
-        this.version = 1L;
-        this.isDeleted = false;
+//        this.version = 1L;
+//        this.isDeleted = false;
     }
 
     @Override
@@ -18,15 +18,15 @@ public abstract class AbstractAggregate<T> implements Aggregate<T> {
         return version;
     }
 
-    @Override
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    @Override
-    public Class<? extends T> rootType() {
-        return rootType;
-    }
+//    @Override
+//    public boolean isDeleted() {
+//        return isDeleted;
+//    }
+//
+//    @Override
+//    public Class<? extends T> rootType() {
+//        return rootType;
+//    }
 
     @Override
     public String identifier() {
@@ -43,9 +43,9 @@ public abstract class AbstractAggregate<T> implements Aggregate<T> {
         }
     }
 
-    public void setRootType(Class<T> rootType) {
-        this.rootType = rootType;
-    }
+//    public void setRootType(Class<T> rootType) {
+//        this.rootType = rootType;
+//    }
 
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
@@ -55,7 +55,7 @@ public abstract class AbstractAggregate<T> implements Aggregate<T> {
         this.version = version;
     }
 
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
-    }
+//    public void setDeleted(boolean deleted) {
+//        isDeleted = deleted;
+//    }
 }

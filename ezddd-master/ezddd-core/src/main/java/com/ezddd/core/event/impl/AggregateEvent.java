@@ -21,15 +21,11 @@ public class AggregateEvent<S> implements Event<S> {
     protected AggregateEvent(String eventName, S sender, EventArgs args, int eventType) {
         this.eventId = AggregateUtil.generateID();
         this.eventName = eventName;
-        this.sender = sender;
         this.eventArgs = args;
         this.eventType = eventType;
         this.timestamp = Instant.now();
-        if (eventType != EventType.CREATED) {
-            this.identifier = AggregateUtil.getIdentifierFrom(sender);
-        } else {
-            this.identifier = AggregateUtil.generateID();
-        }
+        this.sender = sender;
+        this.identifier = AggregateUtil.getIdentifierFrom(sender);
     }
 
     @Override
