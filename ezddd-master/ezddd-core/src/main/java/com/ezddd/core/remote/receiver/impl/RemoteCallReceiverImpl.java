@@ -3,7 +3,6 @@ package com.ezddd.core.remote.receiver.impl;
 import com.ezddd.core.annotation.EzComponent;
 import com.ezddd.core.remote.invoker.Invocation;
 import com.ezddd.core.remote.receiver.IRemoteCallReceiver;
-import com.ezddd.core.response.CommandResult;
 import com.ezddd.core.response.RpcResult;
 import com.ezddd.core.service.ServiceDefinition;
 import com.ezddd.core.service.ServiceRegistry;
@@ -12,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 @EzComponent
@@ -37,9 +37,15 @@ public class RemoteCallReceiverImpl implements IRemoteCallReceiver {
             Method method = serviceDefinition.getInterfaceType().getMethod(invocation.getMethodName(), parameterTypes);
             Object result = method.invoke(serviceBean, argumentsForInvoke);
             return RpcResult.valueOfSuccess((T)result);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return RpcResult.valueOfError(e);
+        } catch (NoSuchMethodException e) {
+            log.error("NoSuchMethodException occurred when invoke " + invocation.getInterfaceName(), e);
+            return RpcResult.valueOfError(e.getCause());
+        } catch (IllegalAccessException e) {
+            log.error("IllegalAccessException occurred when invoke " + invocation.getInterfaceName(), e);
+            return RpcResult.valueOfError(e.getCause());
+        } catch (InvocationTargetException e) {
+            log.error("InvocationTargetException occurred when invoke " + invocation.getInterfaceName(), e);
+            return RpcResult.valueOfError(e.getTargetException());
         }
     }
 

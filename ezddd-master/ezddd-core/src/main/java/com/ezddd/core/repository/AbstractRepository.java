@@ -1,16 +1,13 @@
 package com.ezddd.core.repository;
 
-import org.springframework.util.Assert;
+public abstract class AbstractRepository<E> implements Repository<E> {
+    protected Class<E> aggregateType;
 
-public abstract class AbstractRepository<T> implements Repository<T> {
-    protected Class<T> aggregateType;
-
-    public AbstractRepository(Class<T> aggregateType) {
-        Assert.notNull("aggregateType must not be null. ");
-        this.aggregateType = aggregateType;
+    public Class<E> getAggregateType() {
+        return aggregateType;
     }
 
-    public Class<T> getAggregateType() {
-        return aggregateType;
+    public void setAggregateType(Class<E> aggregateType) {
+        this.aggregateType = aggregateType;
     }
 }

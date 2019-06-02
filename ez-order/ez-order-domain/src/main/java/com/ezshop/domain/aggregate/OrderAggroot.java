@@ -7,6 +7,7 @@ import com.ezddd.core.annotation.EzIdentifier;
 import com.ezddd.core.utils.AggregateUtil;
 import com.ezshop.domain.aggregate.entity.BaseEntity;
 import com.ezshop.domain.command.order.CreateOrderCmd;
+import com.ezshop.domain.command.order.DeleteOrderCmd;
 import com.ezshop.domain.command.order.UpdateOrderCmd;
 
 import java.time.Instant;
@@ -19,6 +20,9 @@ public class OrderAggroot extends BaseEntity {
     private String orderId;
     private String commodity;
     private String postAddress;
+
+    public OrderAggroot() {
+    }
 
     @EzCommandHandler
     public OrderAggroot(CreateOrderCmd cmd) throws Exception {
@@ -37,6 +41,12 @@ public class OrderAggroot extends BaseEntity {
         this.commodity = cmd.getCommodity();
         this.postAddress = cmd.getPostAddress();
         AggregateManager.apply("onOrderUpdated", this, cmd);
+    }
+
+    @EzCommandHandler
+    public void deleteOrder(DeleteOrderCmd cmd) throws Exception {
+        this.deleted = true;
+        AggregateManager.apply("onOrderDeleted", this, cmd);
     }
 
     public String getOrderId() {

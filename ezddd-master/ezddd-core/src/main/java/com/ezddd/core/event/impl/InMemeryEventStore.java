@@ -4,7 +4,6 @@ import com.ezddd.core.annotation.EzComponent;
 import com.ezddd.core.event.Event;
 import com.ezddd.core.event.EventStore;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,7 +24,7 @@ public class InMemeryEventStore implements EventStore {
     }
 
     @Override
-    public void appendEvent(Event event) throws Exception {
+    public void appendEvent(Event event) {
         String identifier = event.getIdentifier();
         List<Event> eventList = null;
         if (eventMap.containsKey(identifier)) {

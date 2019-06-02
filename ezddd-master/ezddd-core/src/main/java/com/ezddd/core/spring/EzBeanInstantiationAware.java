@@ -5,6 +5,8 @@ import com.ezddd.core.annotation.EzComponent;
 import com.ezddd.core.annotation.EzDomainService;
 import com.ezddd.core.annotation.EzRemoting;
 import com.ezddd.core.remote.RemoteProxyFactory;
+import com.ezddd.core.repository.AbstractRepository;
+import com.ezddd.core.repository.Repository;
 import com.ezddd.core.utils.ClassUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,15 +35,20 @@ public class EzBeanInstantiationAware implements BeanPostProcessor, ApplicationC
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        if (!hasEzAnnotation(bean)) {
+            return bean;
+        }
+
+        if (Repository.class.isAssignableFrom(bean.getClass())) {
+            this.populateRepository(bean);
+        }
+
         return populateAutowiredProperty(bean, beanName);
     }
 
     private Object populateAutowiredProperty(Object bean, String beanName) {
         try {
 
-            if (!hasEzAnnotation(bean)) {
-                return bean;
-            }
 
             List<Field> fieldList = new ArrayList<>();
             ClassUtil.findFiledsIncludeSuperClass(bean.getClass(), fieldList);
@@ -80,6 +89,15 @@ public class EzBeanInstantiationAware implements BeanPostProcessor, ApplicationC
         } else {
             return false;
         }
+    }
+
+    private void populateRepository(Object bean) {
+        Class<?> repositoryType = bean.getClass();
+        Type genericSuperclass = repositoryType.getGenericSuperclass();
+        Type[] actualTypeArguments = ((ParameterizedType) genericSuperclass).getActualTypeArguments();
+        String aggrootTypeName = actualTypeArguments[0].getTypeName();
+        Class<?> aggrootType = ClassUtil.forName(aggrootTypeName);
+        ((AbstractRepository) bean).setAggregateType(aggrootType);
     }
 
 }

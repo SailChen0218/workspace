@@ -107,6 +107,7 @@ public class CommandRegistryImpl implements CommandRegistry {
                         commandDefinition.getMethodOfCommandHandler().getName() + "]. ");
             }
 
+            commandDefinition.setCommandName(commandType.getName());
             commandDefinition.setAggregateType(aggregateType);
             commandDefinition.setMethodOfCommandHandler(method);
         }

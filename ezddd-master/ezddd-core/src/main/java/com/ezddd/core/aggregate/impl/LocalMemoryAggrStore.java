@@ -13,7 +13,7 @@ public class LocalMemoryAggrStore implements AggregateStore {
 
     @Override
     public <T> Aggregate<T> find(String identifier) {
-        if (!aggregateHolder.contains(identifier)) {
+        if (!aggregateHolder.containsKey(identifier)) {
             return null;
         } else {
             return SerializationUtil.readFromByteArray(aggregateHolder.get(identifier));

@@ -15,10 +15,14 @@ public class DefaultEventGateway implements EventGateway {
     EventRegistry eventRegistry;
 
     @Override
-    public void publish(Event event) throws Exception {
-        Assert.notNull(event, "event must not be null.");
-        EventDefinition eventDefinition = eventRegistry.findEventDefinition(event.getEventName());
-        EventBus eventBus = eventBusRegistry.findEventBus(eventDefinition.getEventBusType());
-        eventBus.publish(event);
+    public void publish(Event event) throws EventPublishFailedException {
+        try {
+            Assert.notNull(event, "event must not be null.");
+            EventDefinition eventDefinition = eventRegistry.findEventDefinition(event.getEventName());
+            EventBus eventBus = eventBusRegistry.findEventBus(eventDefinition.getEventBusType());
+            eventBus.publish(event);
+        } catch (Exception ex) {
+            throw new EventPublishFailedException("failed to publish event:" + event.getEventName(), ex.getCause());
+        }
     }
 }

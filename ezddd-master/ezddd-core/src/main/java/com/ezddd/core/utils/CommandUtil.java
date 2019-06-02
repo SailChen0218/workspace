@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 public class CommandUtil {
+
     public static Field getIdentifierField(List<Field> fieldList) {
         Field identifierFiled = null;
         if (fieldList.size() == 0) {
@@ -44,4 +45,5 @@ public class CommandUtil {
         }
         return versionFiled;
     }
+
 }

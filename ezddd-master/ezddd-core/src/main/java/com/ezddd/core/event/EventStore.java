@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface EventStore {
     List<Event> listEventsByIdentifier(Object identifier);
-    void appendEvent(Event event) throws Exception;
+    void appendEvent(Event event);
 }

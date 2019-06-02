@@ -8,13 +8,13 @@ import com.ezddd.core.response.CommandResult;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @EzComponent
-public class DefaultCommandBus<T> extends AbstractCommandBus<T> {
+public class DefaultCommandBus extends AbstractCommandBus {
 
     @Autowired
     CommandHandler commandHandler;
 
     @Override
-    public CommandResult<T> dispatch(Command command) {
+    public CommandResult<?> dispatch(Command command) {
         return commandHandler.handle(command);
     }
 

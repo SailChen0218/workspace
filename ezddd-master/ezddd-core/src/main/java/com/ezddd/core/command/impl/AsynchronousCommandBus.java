@@ -6,10 +6,10 @@ import com.ezddd.core.command.Command;
 import com.ezddd.core.response.CommandResult;
 
 @EzComponent
-public class AsynchronousCommandBus<T> extends AbstractCommandBus<T> {
+public class AsynchronousCommandBus extends AbstractCommandBus {
 
     @Override
-    public CommandResult<T> dispatch(Command cmd) {
+    public CommandResult<?> dispatch(Command cmd) {
         return null;
     }
 }

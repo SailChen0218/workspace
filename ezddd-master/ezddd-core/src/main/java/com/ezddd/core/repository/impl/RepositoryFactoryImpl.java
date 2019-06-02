@@ -25,7 +25,7 @@
 //            if (tunnel == null) {
 //                throw new IllegalArgumentException("tunnel not found. aggregateType:" + aggregateType.getName());
 //            }
-//            repository = new CachedRepository(aggregateType, tunnel);
+//            repository = new AbstractCachedRepository(aggregateType, tunnel);
 //            repositoryHolder.put(aggregateType.getName(), repository);
 //        } else {
 //            repository = repositoryHolder.get(aggregateType.getName());

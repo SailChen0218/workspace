@@ -28,7 +28,7 @@ public class AggregateManager {
         manager.eventRegistry = this.eventRegistry;
     }
 
-    public static <S, A> void apply(String eventName, S sender, A args) throws Exception {
+    public static <S, A> void apply(String eventName, S sender, A args) throws EventPublishFailedException {
         EventArgs<A> eventArgs = new EventArgs<>(args);
         EventDefinition eventDefinition = manager.eventRegistry.findEventDefinition(eventName);
         Event<S> event = AggregateEvent.Factory.createEvent(

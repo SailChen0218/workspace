@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>ezddd-datasource-mongodb</module>
+        <module>ezddd-mq-rocketmq</module>
     </modules>
 
     <dependencies>

@@ -81,7 +81,7 @@ public class EzClassPathBeanDefinitionScanner extends ClassPathBeanDefinitionSca
             if (hasEzAnnotation(beanClass)) {
                 beanDefinition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_NAME);
                 beanDefinition.setAutowireCandidate(true);
-                beanDefinition.setDependencyCheck(AbstractBeanDefinition.DEPENDENCY_CHECK_ALL);
+//                beanDefinition.setDependencyCheck(AbstractBeanDefinition.DEPENDENCY_CHECK_ALL);
             }
         }
     }

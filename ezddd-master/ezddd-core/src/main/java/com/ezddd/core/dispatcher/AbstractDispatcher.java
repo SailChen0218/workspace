@@ -60,10 +60,10 @@ public abstract class AbstractDispatcher implements Dispatcher {
             }
         } catch (IllegalAccessException e) {
             log.error(e.getMessage(), e);
-            return AppResult.valueOfError("001");
+            return AppResult.valueOfError(e.getMessage(), "E9999");
         } catch (InvocationTargetException e) {
             log.error(e.getMessage(), e);
-            return AppResult.valueOfError("001");
+            return AppResult.valueOfError(e.getCause().getMessage(), "E9999");
         }
     }
 

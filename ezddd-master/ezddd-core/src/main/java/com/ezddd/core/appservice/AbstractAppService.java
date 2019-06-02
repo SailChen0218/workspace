@@ -12,12 +12,16 @@ public abstract class AbstractAppService implements AppService {
     protected CommandGateway commandGateway;
 
     @Override
-    public <T> AppResult<T> send(Command command) {
-        CommandResult<T> commandResult = commandGateway.send(command);
-        if (commandResult.hasException()) {
-            return AppResult.valueOfError("001", commandResult.getException().getMessage());
+    public CommandResult<?> send(Command command) {
+        return commandGateway.send(command);
+    }
+
+    public AppResult<?> send(Command command, String successCode, String errorCode, Object[] params) {
+        CommandResult result = send(command);
+        if (!result.isSuccess()) {
+            return AppResult.valueOfError(result.getExceptionContent(), errorCode, params);
         } else {
-            return AppResult.valueOfSuccess(commandResult.getValue());
+            return AppResult.valueOfSuccess(result.getValue(), successCode, params);
         }
     }
 }

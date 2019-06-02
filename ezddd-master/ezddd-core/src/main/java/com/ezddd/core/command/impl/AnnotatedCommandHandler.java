@@ -1,6 +1,6 @@
 package com.ezddd.core.command.impl;
 
-import com.ezddd.core.aggregate.AggregateWrapper;
+import com.ezddd.core.aggregate.AggregateNotFoundException;
 import com.ezddd.core.annotation.EzComponent;
 import com.ezddd.core.command.*;
 import com.ezddd.core.context.CommandContext;
@@ -8,7 +8,6 @@ import com.ezddd.core.context.CommandContextHolder;
 import com.ezddd.core.repository.Repository;
 import com.ezddd.core.repository.RepositoryRegistry;
 import com.ezddd.core.response.CommandResult;
-import com.ezddd.core.spring.EzBeanFactoryPostProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import org.springframework.util.Assert;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 @EzComponent
@@ -29,13 +29,13 @@ public class AnnotatedCommandHandler extends AbstractCommandHandler {
     RepositoryRegistry repositoryRegistry;
 
     @Override
-    public <T> CommandResult<T> handle(Command command) {
+    public CommandResult<?> handle(Command command) {
         String commandName = command.getClass().getName();
         CommandDefinition commandDefinition = commandRegistry.findCommandDefinition(commandName);
         Assert.notNull(commandDefinition, "can't find the commandDefinition by command:[" + commandName + "]");
         CommandContext commandContext = CommandContextHolder.currentCommandContext();
         commandContext.setCommandDefinition(commandDefinition);
-
+        Object result = null;
         try {
             if (commandDefinition.getCommandType() == CommandType.CREATE) {
                 Constructor constructor = (Constructor) commandDefinition.getMethodOfCommandHandler();
@@ -44,35 +44,50 @@ public class AnnotatedCommandHandler extends AbstractCommandHandler {
                 Class<?> aggregateType = commandDefinition.getAggregateType();
                 Repository repository = repositoryRegistry.findRepository(aggregateType);
                 if (repository == null) {
-                    throw new IllegalArgumentException("repository not found. aggregateType:"
-                            + aggregateType.getName());
+                    return CommandResult.valueOfError("repository not found. aggregateType:" + aggregateType.getName());
                 }
 
+                Object identifier = null;
                 Field identifierField = commandDefinition.getIdentifierField();
-                Object identifier = identifierField.get(command);
-                if (identifier == null) {
-                    throw new IllegalArgumentException("target identifier must not be null. command:"
+                if (identifierField == null) {
+                    return CommandResult.valueOfError("target identifier must not be null. command:"
                             + commandDefinition.getCommandName());
+                } else {
+                    identifierField.setAccessible(true);
+                    identifier = identifierField.get(command);
                 }
 
+                Object aggregateRoot = null;
                 Field versionField = commandDefinition.getVersionField();
-                Object version = versionField.get(command);
-                if (version == null) {
-                    throw new IllegalArgumentException("target version must not be null. command:"
-                            + commandDefinition.getCommandName());
-                }
+                if (versionField != null) {
+                    versionField.setAccessible(true);
+                    Object version = versionField.get(command);
+                    if (version == null) {
+                        return CommandResult.valueOfError("target version must not be null. command:"
+                                + commandDefinition.getCommandName());
+                    }
 
-                Long versionLong = Long.parseLong(versionField.get(command).toString());
-                Object aggregateRoot = repository.load(identifier.toString(), versionLong);
+                    Long versionLong = Long.parseLong(versionField.get(command).toString());
+                    aggregateRoot = repository.load(identifier.toString(), versionLong);
+                } else {
+                    aggregateRoot = repository.load(identifier.toString());
+                }
 
                 Method method = (Method) commandDefinition.getMethodOfCommandHandler();
-                method.invoke(aggregateRoot, command);
+                result = method.invoke(aggregateRoot, command);
             }
-            return CommandResult.valueOfSuccess();
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            return CommandResult.valueOfSuccess(result);
+        } catch (IllegalAccessException e) {
+            log.error("IllegalAccessException occurred when execution command:" + commandName, e);
+            return CommandResult.valueOfError(e.getCause());
+        } catch (InstantiationException e) {
+            log.error("InstantiationException occurred when execution command:" + commandName, e);
+            return CommandResult.valueOfError(e.getCause());
+        } catch (InvocationTargetException e) {
+            log.error("InvocationTargetException occurred when execution command:" + commandName, e);
+            return CommandResult.valueOfError(e.getTargetException());
+        } catch (AggregateNotFoundException e) {
             return CommandResult.valueOfError(e);
         }
     }
-
 }

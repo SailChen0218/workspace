@@ -1,13 +1,14 @@
 package com.ezshop.infra.tunnel.dataobject;
 
 import com.ezddd.core.tunnel.DataObject;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "order")
 public class OrderAggrootDo extends DataObject {
     private static final long serialVersionUID = -1915674260118652718L;
-    @Indexed(unique = true)
+    @Id
     private String orderId;
     private String commodity;
     private String postAddress;
