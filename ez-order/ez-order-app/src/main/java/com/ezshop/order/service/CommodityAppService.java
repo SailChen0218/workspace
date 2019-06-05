@@ -5,9 +5,6 @@ import com.ezddd.core.annotation.EzAppService;
 import com.ezddd.core.appservice.AbstractAppService;
 import com.ezddd.core.response.AppResult;
 import com.ezshop.domain.command.commodity.CreateCommodityCmd;
-import com.ezshop.domain.command.order.CreateOrderCmd;
-import com.ezshop.domain.command.order.DeleteOrderCmd;
-import com.ezshop.domain.command.order.UpdateOrderCmd;
 import com.ezshop.order.constants.BizCode;
 import com.ezshop.order.constants.BizDetailCode;
 

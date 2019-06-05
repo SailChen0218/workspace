@@ -9,7 +9,7 @@ public interface EventDefinition {
 
     Class<?> getEventBusType();
 
-    boolean isEventSourcing();
+    Boolean isEventSourcing();
 
     Class<?> getEventClass();
 

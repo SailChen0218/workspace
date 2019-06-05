@@ -17,16 +17,18 @@ public class DefaultEventBus extends AbstractEventBus {
     EventStore eventStore;
 
     @Override
-    public void publish(Event event) throws Exception {
+    public void publish(Event event) throws EventPulishFailedException {
         Assert.notNull(event, "event must not be null.");
-        EventDefinition eventDefinition = eventRegistry.findEventDefinition(event.getEventName());
-        if (eventDefinition.isEventSourcing()) {
-            // store event
-            eventStore.appendEvent(event);
+        try {
+            EventDefinition eventDefinition = eventRegistry.findEventDefinition(event.getEventName());
+            if (eventDefinition.isEventSourcing()) {
+                // store event
+                eventStore.appendEvent(event);
+            }
+            EventInvoker.handle(event, eventDefinition);
+        } catch (Exception e) {
+            throw new EventPulishFailedException(e);
         }
-        EventListener eventListener = eventDefinition.getEventListener();
-        Method method = eventDefinition.getMehtodOfHandler();
-        method.invoke(eventListener, event);
     }
 
 }

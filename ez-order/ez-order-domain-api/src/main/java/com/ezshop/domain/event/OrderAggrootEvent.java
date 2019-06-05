@@ -10,7 +10,7 @@ public class OrderAggrootEvent extends AbstractEventDefinition {
     public static final OrderAggrootEvent onOrderDeleted =
             new OrderAggrootEvent("onOrderDeleted") {
                 @Override
-                public boolean isEventSourcing() {
+                public Boolean isEventSourcing() {
                     return false;
                 }
             };

@@ -3,7 +3,7 @@ package com.ezddd.extension.mq.rocketmq;
 import com.ezddd.core.annotation.EzComponent;
 import com.ezddd.core.event.Event;
 import com.ezddd.core.event.impl.AggregateEvent;
-import com.ezddd.core.mq.AggregateEventProducer;
+import com.ezddd.core.mq.AbstractEventProducer;
 import com.ezddd.core.response.MqSendResult;
 import com.ezddd.core.utils.SerializationUtil;
 import org.apache.rocketmq.client.exception.MQBrokerException;
@@ -20,14 +20,19 @@ import org.springframework.util.Assert;
 import javax.annotation.PostConstruct;
 
 @EzComponent
-public class RmqAggregateEventProducer extends AggregateEventProducer {
-    private static final Logger log = LoggerFactory.getLogger(RmqAggregateEventProducer.class);
+public class RmqEventProducer extends AbstractEventProducer {
+    private static final Logger log = LoggerFactory.getLogger(RmqEventProducer.class);
 
     private DefaultMQProducer producer;
 
     @PostConstruct
     public void init() throws MQClientException {
-        producer = new DefaultMQProducer("ProducerGroupName");
+        producer = new DefaultMQProducer("RmqEventProducer");
+        producer.setInstanceName("RmqEventProducer1");
+        producer.setRetryTimesWhenSendAsyncFailed(3);
+        producer.setNamesrvAddr("172.16.1.4:9876");
+        //30000 milliseconds
+        producer.setSendMsgTimeout(10000);
         producer.start();
     }
 
@@ -41,7 +46,7 @@ public class RmqAggregateEventProducer extends AggregateEventProducer {
                     event.getEventName(),
                     SerializationUtil.writeToByteArray(event));
 
-            SendResult sendResult = producer.send(message);
+            SendResult sendResult = producer.send(message, 10000);
             if (sendResult.getSendStatus() == SendStatus.SEND_OK) {
                 return MqSendResult.valueOfSuccess();
             } else {
@@ -52,19 +57,19 @@ public class RmqAggregateEventProducer extends AggregateEventProducer {
             }
         } catch (MQClientException e) {
             log.error(e.getErrorMessage(), e);
-            return MqSendResult.valueOfError(e.getCause());
+            return MqSendResult.valueOfError(e);
         } catch (RemotingException e) {
             log.error(e.getMessage(), e);
-            return MqSendResult.valueOfError(e.getCause());
+            return MqSendResult.valueOfError(e);
         } catch (MQBrokerException e) {
             log.error(e.getErrorMessage(), e);
-            return MqSendResult.valueOfError(e.getCause());
+            return MqSendResult.valueOfError(e);
         } catch (InterruptedException e) {
             log.error(e.getMessage(), e);
-            return MqSendResult.valueOfError(e.getCause());
+            return MqSendResult.valueOfError(e);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            return MqSendResult.valueOfError(e.getCause());
+            return MqSendResult.valueOfError(e);
         }
     }
 }

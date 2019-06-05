@@ -11,6 +11,7 @@ public class MqSendResult<T> implements Serializable {
 
     public static <T> MqSendResult<T> valueOfSuccess() {
         MqSendResult<T> result = new MqSendResult<>();
+        result.success = true;
         return result;
     }
 

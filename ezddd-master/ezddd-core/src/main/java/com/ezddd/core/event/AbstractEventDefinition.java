@@ -1,17 +1,16 @@
 package com.ezddd.core.event;
 
-import com.ezddd.core.event.impl.DefaultEventBus;
-
 import java.lang.reflect.Method;
 
 public abstract class AbstractEventDefinition implements EventDefinition {
     private String eventName;
     private int eventType;
-    private boolean eventSourcing;
+    private Boolean eventSourcing;
     private Class<?> eventBusType;
     private EventListener eventListener;
     private Class<?> eventListenerType;
     private Method mehtodOfHandler;
+    private Class<?> eventBeanType;
 
     protected AbstractEventDefinition(String eventName) {
         if (eventName == null) {
@@ -25,16 +24,16 @@ public abstract class AbstractEventDefinition implements EventDefinition {
     private int resolveEventType(String eventName) {
         String eventType = eventName.substring(eventName.length() - 7, eventName.length());
         switch (eventType) {
-            case "Created":
+            case EventType.CREATED_:
                 return EventType.CREATED;
-            case "Editing":
+            case EventType.EDITING_:
                 return EventType.EDITING;
-            case "Updated":
+            case EventType.UPDATED_:
                 return EventType.UPDATED;
-            case "Deleted":
+            case EventType.DELETED_:
                 return EventType.DELETED;
             default:
-                if ("Viewed".equals(eventType.substring(1, 7))) {
+                if (EventType.VIEWED_.equals(eventType.substring(1, 7))) {
                     return EventType.VIEWED;
                 }
         }
@@ -52,22 +51,22 @@ public abstract class AbstractEventDefinition implements EventDefinition {
 
     @Override
     public final String getEventName() {
-        return eventName;
+        return this.eventName;
     }
 
     @Override
     public final int getEventType() {
-        return eventType;
+        return this.eventType;
     }
 
     @Override
     public Class<?> getEventBusType() {
-        return DefaultEventBus.class;
+        return this.eventBusType;
     }
 
     @Override
-    public boolean isEventSourcing() {
-        return true;
+    public Boolean isEventSourcing() {
+        return this.eventSourcing;
     }
 
     @Override
@@ -100,5 +99,29 @@ public abstract class AbstractEventDefinition implements EventDefinition {
 
     public void setEventListenerType(Class<?> eventListenerType) {
         this.eventListenerType = eventListenerType;
+    }
+
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
+    }
+
+    public void setEventType(int eventType) {
+        this.eventType = eventType;
+    }
+
+    public void setEventSourcing(Boolean eventSourcing) {
+        this.eventSourcing = eventSourcing;
+    }
+
+    public void setEventBusType(Class<?> eventBusType) {
+        this.eventBusType = eventBusType;
+    }
+
+    public Class<?> getEventBeanType() {
+        return eventBeanType;
+    }
+
+    public void setEventBeanType(Class<?> eventBeanType) {
+        this.eventBeanType = eventBeanType;
     }
 }

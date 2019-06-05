@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 
+import com.esotericsoftware.kryo.pool.KryoPool;
 import org.apache.commons.codec.binary.Base64;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
@@ -15,6 +16,7 @@ import com.esotericsoftware.kryo.io.Output;
 public class SerializationUtil {
     private static final String DEFAULT_ENCODING = "UTF-8";
 
+    //TODO:kryo不是线程安全的，这里用ThreadLocal进行隔离，但效率太低，还是得用kryo线程池的方式好些。
     //每个线程的 Kryo 实例
     private static final ThreadLocal<Kryo> kryoLocal = new ThreadLocal<Kryo>() {
         @Override
@@ -192,5 +194,14 @@ public class SerializationUtil {
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    private KryoPool newKryoPool() {
+        return new KryoPool.Builder(() -> {
+            final Kryo kryo = new Kryo();
+            kryo.setInstantiatorStrategy(new Kryo.DefaultInstantiatorStrategy(
+                    new StdInstantiatorStrategy()));
+            return kryo;
+        }).softReferences().build();
     }
 }

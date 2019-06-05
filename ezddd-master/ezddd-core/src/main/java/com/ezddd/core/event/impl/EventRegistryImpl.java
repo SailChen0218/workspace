@@ -23,7 +23,7 @@ import java.util.Set;
 
 @EzComponent
 public class EventRegistryImpl implements EventRegistry {
-    private static final Logger log = LoggerFactory.getLogger(EzBeanFactoryPostProcessor.class);
+    private static final Logger log = LoggerFactory.getLogger(EventRegistryImpl.class);
     private ConfigurableListableBeanFactory beanFactory;
 
     /**
@@ -64,14 +64,31 @@ public class EventRegistryImpl implements EventRegistry {
         this.populateEventListenerInfo();
     }
 
-    private void registerEventDefinition(Class<?> eventDefinitionType) {
+    private void registerEventDefinition(Class<?> eventBeanType) {
         try {
+            EzEvent ezEvent = eventBeanType.getAnnotation(EzEvent.class);
+            if (ezEvent == null) {
+                throw new IllegalArgumentException("eventBean should annotated by EzEvent. eventBeanType:"
+                        + eventBeanType.getName());
+            }
+
+            Boolean isEventSourcing = ezEvent.eventSourcing();
+            Class<?> eventBusType = ezEvent.eventBusType();
+
             AbstractEventDefinition eventDefinition = null;
-            Field[] fields = eventDefinitionType.getFields();
+            Field[] fields = eventBeanType.getFields();
+
             if (fields != null && fields.length > 0) {
                 for (int i = 0; i < fields.length; i++) {
                     if (AbstractEventDefinition.class.isAssignableFrom(fields[i].getType())) {
                         eventDefinition = (AbstractEventDefinition) fields[i].get(null);
+                        if (eventDefinition.isEventSourcing() == null) {
+                            eventDefinition.setEventSourcing(isEventSourcing);
+                        }
+                        if (eventDefinition.getEventBusType() == null) {
+                            eventDefinition.setEventBusType(eventBusType);
+                        }
+                        eventDefinition.setEventBeanType(eventBeanType);
                         eventDefinitionHolder.put(eventDefinition.getEventName(), eventDefinition);
                     }
                 }
