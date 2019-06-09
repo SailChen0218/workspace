@@ -132,6 +132,7 @@ public class ClassUtil {
 
     public static <T> T getFieldValue(Object target, Field field) {
         try {
+            field.setAccessible(true);
             return (T) field.get(target);
         } catch (IllegalAccessException e) {
             log.error(e.getMessage(), e);

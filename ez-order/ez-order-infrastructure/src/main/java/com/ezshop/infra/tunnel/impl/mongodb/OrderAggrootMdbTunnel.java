@@ -5,6 +5,7 @@ import com.ezshop.infra.tunnel.OrderAggrootTunnel;
 import com.ezshop.infra.tunnel.dataobject.OrderAggrootDo;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 @EzComponent
 public class OrderAggrootMdbTunnel extends AbstractAggrootMdbTunnel<OrderAggrootDo> implements OrderAggrootTunnel {
@@ -13,5 +14,15 @@ public class OrderAggrootMdbTunnel extends AbstractAggrootMdbTunnel<OrderAggroot
     public void init() {
         this.collection = "order";
         this.aggrootDoType = OrderAggrootDo.class;
+    }
+
+    @Override
+    public List<OrderAggrootDo> queryOrderAggrootList() {
+        return mongoTemplate.findAll(OrderAggrootDo.class);
+    }
+
+    @Override
+    public OrderAggrootDo queryOrderAggroot(String orderId) {
+        return mongoTemplate.findById(orderId, OrderAggrootDo.class);
     }
 }

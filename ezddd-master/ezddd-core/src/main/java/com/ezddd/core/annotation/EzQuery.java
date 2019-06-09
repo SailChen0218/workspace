@@ -2,10 +2,10 @@ package com.ezddd.core.annotation;
 
 import java.lang.annotation.*;
 
-@Target(ElementType.METHOD)
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-public @interface EzAppMapping {
-    String bizDetailCode() default "";
+public @interface EzQuery {
+    String domain();
 }

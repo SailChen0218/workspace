@@ -22,13 +22,15 @@ public class AggregateUtil {
     public static String getIdentifierFrom(Object aggregate) {
         Class<?> aggregateType = aggregate.getClass();
         AggregateDefinition aggregateDefinition = AggregateUtil.findAggregateDefinition(aggregateType);
-        return ClassUtil.invokeMehtod(aggregate, aggregateDefinition.identifierReadMehtod);
+//        return ClassUtil.invokeMehtod(aggregate, aggregateDefinition.identifierReadMehtod);
+        return ClassUtil.getFieldValue(aggregate, aggregateDefinition.identifierFiled);
     }
 
     public static long getVersionFrom(Object aggregate) {
         Class<?> aggregateType = aggregate.getClass();
         AggregateDefinition aggregateDefinition = AggregateUtil.findAggregateDefinition(aggregateType);
-        return ClassUtil.invokeMehtod(aggregate, aggregateDefinition.versionReadMethod);
+//        return ClassUtil.invokeMehtod(aggregate, aggregateDefinition.versionReadMethod);
+        return ClassUtil.getFieldValue(aggregate, aggregateDefinition.versionFiled);
     }
 
     private static <T> AggregateDefinition<T> findAggregateDefinition(Class<T> aggregateType) {
@@ -74,18 +76,18 @@ public class AggregateUtil {
                 }
             }
         }
-
-        PropertyDescriptor propertyDescriptor =
-                BeanUtils.getPropertyDescriptor(aggregateType, identifierFiled.getName());
-        Method identifierReadMehtod = propertyDescriptor.getReadMethod();
+//
+//        PropertyDescriptor propertyDescriptor =
+//                BeanUtils.getPropertyDescriptor(aggregateType, identifierFiled.getName());
+//        Method identifierReadMehtod = propertyDescriptor.getReadMethod();
         aggregateDefinition.setIdentifierFiled(identifierFiled);
-        aggregateDefinition.setIdentifierReadMehtod(identifierReadMehtod);
+//        aggregateDefinition.setIdentifierReadMehtod(identifierReadMehtod);
 
-        propertyDescriptor =
-                BeanUtils.getPropertyDescriptor(aggregateType, versionFiled.getName());
-        Method versionReadMethod = propertyDescriptor.getReadMethod();
+//        propertyDescriptor =
+//                BeanUtils.getPropertyDescriptor(aggregateType, versionFiled.getName());
+//        Method versionReadMethod = propertyDescriptor.getReadMethod();
         aggregateDefinition.setVersionFiled(versionFiled);
-        aggregateDefinition.setVersionReadMethod(versionReadMethod);
+//        aggregateDefinition.setVersionReadMethod(versionReadMethod);
         return aggregateDefinition;
     }
 

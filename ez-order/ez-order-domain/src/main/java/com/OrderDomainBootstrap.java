@@ -1,7 +1,6 @@
 package com;
 
 import com.ezddd.core.spring.EnableEzdddDomain;
-import com.ezddd.core.spring.bootstrap.AbstractDomainBootstrap;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;

@@ -7,6 +7,7 @@ import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.beans.PropertyDescriptor;
@@ -17,6 +18,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * <p>标题: </p>
@@ -30,16 +34,18 @@ import java.util.List;
  */
 public class BeanCopyUtils {
     private static final Logger log = LoggerFactory.getLogger(BeanCopyUtils.class);
+    private static final Map<String, ClassPropertyDescriptor> classPropertyDescriptorMap = new ConcurrentHashMap<>();
 
     /**
      * 根据类型复制List
+     *
      * @param source
      * @param clz
      * @param <S>
      * @param <T>
      * @return
      */
-    public static <S, T> T cloneByProperties(S source, Class<T> clz){
+    public static <S, T> T cloneByProperties(S source, Class<T> clz) {
         if (source == null) {
             return null;
         } else {
@@ -51,15 +57,16 @@ public class BeanCopyUtils {
 
     /**
      * 根据类型复制List
+     *
      * @param sourceList
      * @param clz
      * @param <S>
      * @param <T>
      * @return
      */
-    public static <S, T> List<T> cloneListByProperties(List<S> sourceList, Class<T> clz){
+    public static <S, T> List<T> cloneListByProperties(List<S> sourceList, Class<T> clz) {
         List<T> targetList = new ArrayList<>(sourceList.size());
-        for (S source: sourceList) {
+        for (S source : sourceList) {
             T t = cloneByProperties(source, clz);
             targetList.add(t);
         }
@@ -68,6 +75,7 @@ public class BeanCopyUtils {
 
     /**
      * 属性复制
+     *
      * @param source the source bean
      * @param target the target bean
      * @throws BeansException if the copying failed
@@ -110,78 +118,127 @@ public class BeanCopyUtils {
             }
         }
 
-        PropertyDescriptor[] targetPds = BeanUtils.getPropertyDescriptors(targetClazz);
-        for (PropertyDescriptor targetPd: targetPds) {
-            Method writeMethod = targetPd.getWriteMethod();
-            if (writeMethod != null) {
-                try {
+        ClassPropertyDescriptor targetCpd = getClassPropertyDescriptor(targetClazz);
+        ClassPropertyDescriptor sourceCpd = getClassPropertyDescriptor(sourceClazz);
 
-                    Field targetField = ClassUtil.findFiledIncludeSuperClass(targetClazz, targetPd.getName());
-                    PropertyDescriptor sourcePd = BeanUtils.getPropertyDescriptor(sourceClazz, targetPd.getName());
-                    Object value = null;
-                    if (sourcePd != null) {
-                        Method readMethod = sourcePd.getReadMethod();
-                        if (readMethod != null) {
-                            if (!Modifier.isPublic(readMethod.getDeclaringClass().getModifiers())) {
-                                readMethod.setAccessible(true);
-                            }
-                            value = readMethod.invoke(source);
-                        }
-                    }
+        Map<String, Field> targgetPropertyFieldMap = targetCpd.getPropertyFieldMap();
+        for (String propertyName : targgetPropertyFieldMap.keySet()) {
+            try {
 
-                    if (isTransformBaseCode) {
-                        value = transformBaseCode(source, sourceClazz, value, targetField, types, codeFields, nameFields);
-                    }
-
-                    TransformDate transformDate = targetField.getAnnotation(TransformDate.class);
-                    if (transformDate != null) {
-                        Field sourceField = sourceClazz.getDeclaredField(sourcePd.getName());
-                        value = transformDate(sourceField, value, transformDate);
-                    }
-
-                    if (isTransformNullToDefault) {
-                        value = transformNullToDefault(targetField, value, clazzs, defaultValues);
-                    }
-
-                    if (!Modifier.isPublic(writeMethod.getDeclaringClass().getModifiers())) {
-                        writeMethod.setAccessible(true);
-                    }
-                    writeMethod.invoke(target, value);
-
-                } catch (Throwable ex) {
-                    throw new FatalBeanException(
-                            "Could not copy property '" + targetPd.getName() + "' from source to target", ex);
+                Field targetField = targetCpd.getPropertyFiled(propertyName);
+                Field sourceFiled = sourceCpd.getPropertyFiled(propertyName);
+                Object value = null;
+                if (sourceFiled != null) {
+                    value = ClassUtil.getFieldValue(source, sourceFiled);
                 }
+
+//            if (isTransformBaseCode) {
+//                value = transformBaseCode(source, sourceClazz, value, targetField, types, codeFields, nameFields);
+//            }
+
+                ConvertDate convertDate = targetField.getAnnotation(ConvertDate.class);
+                if (convertDate != null) {
+                    Field sourceField = sourceCpd.getPropertyFiled(propertyName);
+                    try {
+                        value = convertDate(sourceField, value, convertDate);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (isTransformNullToDefault) {
+                    value = transformNullToDefault(targetField, value, clazzs, defaultValues);
+                }
+
+                targetField.setAccessible(true);
+                targetField.set(target, value);
+            } catch (IllegalAccessException ex) {
+                throw new FatalBeanException(
+                        "Could not copy property '" + propertyName + "' from source to target", ex);
             }
         }
+
+
+//        for (PropertyDescriptor targetPd: targetPds) {
+//            Method writeMethod = targetPd.getWriteMethod();
+//            if (writeMethod != null) {
+//                try {
+//
+//                    Field targetField = ClassUtil.findFiledIncludeSuperClass(targetClazz, targetPd.getName());
+//                    PropertyDescriptor sourcePd = BeanUtils.getPropertyDescriptor(sourceClazz, targetPd.getName());
+//                    Object value = null;
+//                    if (sourcePd != null) {
+//                        Method readMethod = sourcePd.getReadMethod();
+//                        if (readMethod != null) {
+//                            if (!Modifier.isPublic(readMethod.getDeclaringClass().getModifiers())) {
+//                                readMethod.setAccessible(true);
+//                            }
+//                            value = readMethod.invoke(source);
+//                        }
+//                    }
+//
+//                    if (isTransformBaseCode) {
+//                        value = transformBaseCode(source, sourceClazz, value, targetField, types, codeFields, nameFields);
+//                    }
+//
+//                    ConvertDate convertDate = targetField.getAnnotation(ConvertDate.class);
+//                    if (convertDate != null) {
+//                        Field sourceField = sourceClazz.getDeclaredField(sourcePd.getName());
+//                        value = transformDate(sourceField, value, convertDate);
+//                    }
+//
+//                    if (isTransformNullToDefault) {
+//                        value = transformNullToDefault(targetField, value, clazzs, defaultValues);
+//                    }
+//
+//                    if (!Modifier.isPublic(writeMethod.getDeclaringClass().getModifiers())) {
+//                        writeMethod.setAccessible(true);
+//                    }
+//                    writeMethod.invoke(target, value);
+//
+//                } catch (Throwable ex) {
+//                    throw new FatalBeanException(
+//                            "Could not copy property '" + targetPd.getName() + "' from source to target", ex);
+//                }
+//            }
+//        }
     }
 
     /**
      * 日期格式转换
+     *
      * @param sourceField
      * @param value
      * @param dateFormatAnnotation
      * @throws Exception
      */
-    private static Object transformDate(Field sourceField, Object value, TransformDate dateFormatAnnotation) throws Exception {
+    private static Object convertDate(Field sourceField, Object value, ConvertDate dateFormatAnnotation) throws Exception {
         try {
-            if (!StringUtils.isEmpty(value)) {
-                // 根据注释格式转换日期字段格式
-                SimpleDateFormat targetFormatter = new SimpleDateFormat(dateFormatAnnotation.value());
-                Class<?> sourceFieldType = sourceField.getType();
-                if (Date.class.equals(sourceFieldType)) {
-                    return targetFormatter.format(value);
-                } else if (String.class.equals(sourceFieldType)) {
-                    SimpleDateFormat sourceFormatter = new SimpleDateFormat(dateFormatAnnotation.sourceFormat());
-                    Date date = sourceFormatter.parse(String.valueOf(value));
-                    return targetFormatter.format(date);
-                } else {
-                    log.error("仅支持Date、String类型字段的格式转换。sourceFiledType:" + sourceField.getType());
-                    return value;
-                }
-            } else {
+            if (sourceField == null) {
                 return value;
             }
+
+            if (value == null) {
+                return value;
+            }
+
+            // 根据注释格式转换日期字段格式
+            SimpleDateFormat targetFormatter = new SimpleDateFormat(dateFormatAnnotation.targetFormat());
+            Class<?> sourceFieldType = sourceField.getType();
+            if (Date.class.equals(sourceFieldType)) {
+                return targetFormatter.format(value);
+            } else if (String.class.equals(sourceFieldType)) {
+                SimpleDateFormat sourceFormatter = new SimpleDateFormat(dateFormatAnnotation.sourceFormat());
+                Date date = sourceFormatter.parse(String.valueOf(value));
+                return targetFormatter.format(date);
+            } else if (long.class.equals(sourceFieldType)) {
+                Date date = new Date((long) value);
+                return targetFormatter.format(date);
+            } else {
+                log.error("仅支持Date、String、long类型字段的日期格式转换。sourceFiledType:" + sourceField.getType());
+                return value;
+            }
+
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
             throw ex;
@@ -190,6 +247,7 @@ public class BeanCopyUtils {
 
     /**
      * 转换basecode
+     *
      * @param source
      * @param sourceClazz
      * @param value
@@ -226,6 +284,7 @@ public class BeanCopyUtils {
 
     /**
      * 转换null为默认值
+     *
      * @param targetField
      * @param value
      * @param clazzs
@@ -245,6 +304,53 @@ public class BeanCopyUtils {
         }
         return value;
     }
+
+    private static ClassPropertyDescriptor getClassPropertyDescriptor(Class<?> clazz) {
+        String className = clazz.getName();
+        if (classPropertyDescriptorMap.containsKey(className)) {
+            return classPropertyDescriptorMap.get(className);
+        } else {
+            ClassPropertyDescriptor classPropertyDescriptor = ClassPropertyDescriptor.build(clazz);
+            classPropertyDescriptorMap.put(className, classPropertyDescriptor);
+            return classPropertyDescriptor;
+        }
+    }
+
+    private static class ClassPropertyDescriptor {
+        private String className;
+        private Map<String, Field> propertyFieldMap;
+
+        private static ClassPropertyDescriptor build(Class<?> clazz) {
+            ClassPropertyDescriptor classPropertyDescriptor = new ClassPropertyDescriptor();
+            PropertyDescriptor[] propertyDescriptors = BeanUtils.getPropertyDescriptors(clazz);
+            List<Field> fieldList = new ArrayList<>();
+            ClassUtil.findFiledsIncludeSuperClass(clazz, fieldList);
+            Map<String, Field> fieldMap = fieldList.stream().collect(Collectors.toMap(Field::getName, a -> a, (k1, k2) -> k1));
+            for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+                Field field = fieldMap.get(propertyDescriptor.getName());
+                classPropertyDescriptor.addPropertyField(propertyDescriptor.getName(), field);
+            }
+            classPropertyDescriptor.className = clazz.getName();
+            return classPropertyDescriptor;
+        }
+
+        public void addPropertyField(String propertyName, Field field) {
+            propertyFieldMap.put(propertyName, field);
+        }
+
+        public Field getPropertyFiled(String propertyName) {
+            if (propertyFieldMap.containsKey(propertyName)) {
+                return propertyFieldMap.get(propertyName);
+            }
+            return null;
+        }
+
+        public Map<String, Field> getPropertyFieldMap() {
+            return this.propertyFieldMap;
+        }
+    }
+
+
 }
 
 

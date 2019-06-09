@@ -42,7 +42,9 @@ public class AppServiceRegistryImpl implements AppServiceRegistry {
     public void registAppServiceDefinition(AppServiceDefinition appServiceDefinition) {
         Assert.notNull(appServiceDefinition, "parameter appServiceDefinition must not be null");
         if (appServiceDefinitionHolder.containsKey(appServiceDefinition.getBizCode())) {
-            throw new IllegalArgumentException("bizCode already exists. bizCode=" + appServiceDefinition.getBizCode());
+            throw new IllegalArgumentException("bizCode already exists. " +
+                    "appServie:" + appServiceDefinition.getAppServiceType().getName() +
+                    ", bizCode:" + appServiceDefinition.getBizCode());
         }
         appServiceDefinitionHolder.put(appServiceDefinition.getBizCode(), appServiceDefinition);
     }

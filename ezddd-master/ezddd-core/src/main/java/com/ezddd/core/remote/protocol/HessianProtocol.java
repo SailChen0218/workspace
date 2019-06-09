@@ -15,8 +15,7 @@ public class HessianProtocol implements Protocol {
     IRemoteCallReceiver remoteCallReceiver;
 
     @Bean("/hessian.do")
-    public HessianServiceExporter exportDomainService()
-    {
+    public HessianServiceExporter exportDomainService() {
         HessianServiceExporter exporter = new HessianServiceExporter();
         exporter.setService(remoteCallReceiver);
         exporter.setServiceInterface(IRemoteCallReceiver.class);

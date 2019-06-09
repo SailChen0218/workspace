@@ -1,4 +1,4 @@
-package com.ezshop.domain.event;
+package com.ezshop.domain.eventhandler;
 
 import com.ezddd.core.annotation.EzComponent;
 import com.ezddd.core.annotation.EzEventHandler;
@@ -9,7 +9,7 @@ import com.ezshop.domain.repository.OrderAggrootRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @EzComponent
-public class OrderAggrootListener extends AbstractEventListener<OrderAggroot> {
+public class OrderAggrootEhandler extends AbstractEventListener<OrderAggroot> {
 
     @Autowired
     OrderAggrootRepository orderAggrootRepository;

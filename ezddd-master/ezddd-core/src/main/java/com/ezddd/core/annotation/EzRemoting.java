@@ -9,5 +9,6 @@ import java.lang.annotation.*;
 @Documented
 @Inherited
 public @interface EzRemoting {
+    String domain() default "";
     String protocol() default ProtocolType.HESSIAN;
 }

@@ -30,9 +30,12 @@ public class RemoteCallReceiverImpl implements IRemoteCallReceiver {
         try {
             Object[] arguments = invocation.getArguments();
             Class<?>[] parameterTypes = invocation.getParameterTypes();
-            Object[] argumentsForInvoke = new Object[arguments.length];
-            for (int i = 0; i < arguments.length; i++) {
-                argumentsForInvoke[i] = parameterTypes[i].cast(arguments[i]);
+            Object[] argumentsForInvoke = null;
+            if (arguments != null) {
+                argumentsForInvoke = new Object[arguments.length];
+                for (int i = 0; i < arguments.length; i++) {
+                    argumentsForInvoke[i] = parameterTypes[i].cast(arguments[i]);
+                }
             }
             Method method = serviceDefinition.getInterfaceType().getMethod(invocation.getMethodName(), parameterTypes);
             Object result = method.invoke(serviceBean, argumentsForInvoke);

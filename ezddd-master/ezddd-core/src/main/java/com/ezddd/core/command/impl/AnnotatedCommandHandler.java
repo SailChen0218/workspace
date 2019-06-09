@@ -39,6 +39,9 @@ public class AnnotatedCommandHandler extends AbstractCommandHandler {
         try {
             if (commandDefinition.getCommandType() == CommandType.CREATE) {
                 Constructor constructor = (Constructor) commandDefinition.getMethodOfCommandHandler();
+                if (constructor == null) {
+                    System.out.println("constructor is null.");
+                }
                 constructor.newInstance(command);
             } else {
                 Class<?> aggregateType = commandDefinition.getAggregateType();

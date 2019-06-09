@@ -49,6 +49,7 @@ public class EzBeanScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
         boolean isDomain = importingClassMetadata.hasAnnotation(EnableEzdddDomain.class.getName());
         if (isDomain) {
             EzBeanScannerRegistrar.annotationTypeFilter = EzAnnotationTypeFilter.annotationTypeFilterForDomain;
+            basePackages.add("com.ezddd.core.spring");
             basePackages.add("com.ezddd.core.aggregate");
             basePackages.add("com.ezddd.core.command");
             basePackages.add("com.ezddd.core.event");
@@ -57,7 +58,6 @@ public class EzBeanScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
             basePackages.add("com.ezddd.core.remote.receiver");
             basePackages.add("com.ezddd.core.repository");
             basePackages.add("com.ezddd.core.service");
-            basePackages.add("com.ezddd.core.spring");
             basePackages.add("com.ezddd.extension");
             AnnotationAttributes annoAttrs = AnnotationAttributes.fromMap(
                     importingClassMetadata.getAnnotationAttributes(EnableEzdddDomain.class.getName()));

@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Documented
 @Inherited
 public @interface EzAppService {
-    String bizCode() default "";
+    String bizCode();
     int priority() default 0;
     String area() default Area.STANDARD;
 }

@@ -1,4 +1,4 @@
-package com.ezshop.domain.Convertor;
+package com.ezshop.domain.convertor;
 
 import com.ezddd.core.annotation.EzComponent;
 import com.ezddd.core.tunnel.Convertor;

@@ -16,7 +16,7 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 @Inherited
 @Documented
-public @interface TransformDate {
-    String value() default "yyyy-MM-dd HH:mm:ss";
+public @interface ConvertDate {
+    String targetFormat() default "yyyy-MM-dd HH:mm:ss";
     String sourceFormat() default "yyyy-MM-dd HH:mm:ss";
 }

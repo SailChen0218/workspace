@@ -4,31 +4,55 @@ import com.ezddd.core.annotation.EzComponent;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.util.Assert;
 
 @EzComponent
 public class EzApplicationContextUtil implements ApplicationContextAware {
-    private static ApplicationContext applicationContext = null;
+    private static ApplicationContext applicationContext;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         EzApplicationContextUtil.applicationContext = applicationContext;
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T> T getBean(String beanName) {
-        checkApplicationContext();
-        return (T) applicationContext.getBean(beanName);
+    /**
+     * 通过name获取 Bean.
+     *
+     * @param name
+     * @return
+     */
+    public static Object getBean(String name) {
+        return getApplicationContext().getBean(name);
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * 通过class获取Bean.
+     *
+     * @param clazz
+     * @param <T>
+     * @return
+     */
     public static <T> T getBean(Class<T> clazz) {
-        checkApplicationContext();
-        return (T) applicationContext.getBeansOfType(clazz);
+        return getApplicationContext().getBean(clazz);
     }
 
-    private static void checkApplicationContext() {
-        Assert.notNull(applicationContext,
-                "applicaitonContext未注入,请在applicationContext.xml中定义SpringContextUtil");
+    /**
+     * 通过name及Clazz返回指定的Bean
+     *
+     * @param name
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public static <T> T getBean(String name, Class<T> clazz) {
+        return getApplicationContext().getBean(name, clazz);
+    }
+
+    /**
+     * 获取applicationContext
+     *
+     * @return
+     */
+    public static ApplicationContext getApplicationContext() {
+        return EzApplicationContextUtil.applicationContext;
     }
 }

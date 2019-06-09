@@ -1,11 +1,13 @@
 package com.ezddd.core.spring;
 
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringApplicationRunListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 
 public class EzSpringApplicationRunListener implements SpringApplicationRunListener {
+    private ConfigurableListableBeanFactory beanFactory;
 
     public EzSpringApplicationRunListener(SpringApplication application, String[] args) {
     }

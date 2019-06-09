@@ -46,7 +46,7 @@ public class AppResult<T> implements Serializable {
      * @param value 结果值
      * @return 结果Dto对象
      */
-    public static <T> AppResult<T> valueOfSuccess(T value, String msgCode, Object[] params) {
+    public static <T> AppResult<T> valueOfSuccess(T value, String msgCode, Object... params) {
         AppResult<T> result = new AppResult<>();
         result.value = value;
         result.success = true;
@@ -54,24 +54,34 @@ public class AppResult<T> implements Serializable {
         return result;
     }
 
-    /**
-     * @Title: valueOfSuccess
-     * @Description: 生成成功结果
-     * @param value 结果值
-     * @return 结果Dto对象
-     */
-    public static <T> AppResult<T> valueOfSuccess(T value, String msgCode) {
-        return AppResult.valueOfSuccess(value, msgCode, null);
-    }
+//    /**
+//     * @Title: valueOfSuccess
+//     * @Description: 生成成功结果
+//     * @param value 结果值
+//     * @return 结果Dto对象
+//     */
+//    public static <T> AppResult<T> valueOfSuccess(T value, String msgCode) {
+//        return AppResult.valueOfSuccess(value, msgCode, null);
+//    }
 
     /**
      * @Title: valueOfSuccess
      * @Description: 生成成功结果
      * @return 结果Dto对象
      */
-    public static <T> AppResult<T> valueOfSuccess(String msgCode, Object[] params) {
+    public static <T> AppResult<T> valueOfSuccess(String msgCode, Object... params) {
         return AppResult.valueOfSuccess(null, msgCode, params);
     }
+
+//    /**
+//     * @Title: valueOfSuccess
+//     * @Description: 生成成功结果
+//     * @return 结果Dto对象
+//     */
+//    public static <T> AppResult<T> valueOfSuccess(String msgCode) {
+//        return AppResult.valueOfSuccess(null, msgCode, null);
+//    }
+
 
     /**
      * @Title: valueOfError
@@ -109,7 +119,7 @@ public class AppResult<T> implements Serializable {
      * @param params 消息参数
      * @return 结果Dto对象
      */
-    public static <T> AppResult<T> valueOfError(String exceptionContent, String msgCode, Object[] params) {
+    public static <T> AppResult<T> valueOfError(String exceptionContent, String msgCode, Object... params) {
         AppResult<T> result = new AppResult<>();
         result.exceptionContent = exceptionContent;
         result.success = false;
@@ -118,20 +128,20 @@ public class AppResult<T> implements Serializable {
         return result;
     }
 
-    /**
-     * @Title: valueOfError
-     * @Description: 生成失败结果
-     * @param msgCode 消息代码
-     * @return 结果Dto对象
-     */
-    public static <T> AppResult<T> valueOfError(String exceptionContent, String msgCode) {
-        AppResult<T> result = new AppResult<>();
-        result.exceptionContent = exceptionContent;
-        result.success = false;
-        result.msgCode = msgCode;
-        result.message = getMessageByCode(msgCode, null);
-        return result;
-    }
+//    /**
+//     * @Title: valueOfError
+//     * @Description: 生成失败结果
+//     * @param msgCode 消息代码
+//     * @return 结果Dto对象
+//     */
+//    public static <T> AppResult<T> valueOfError(String exceptionContent, String msgCode) {
+//        AppResult<T> result = new AppResult<>();
+//        result.exceptionContent = exceptionContent;
+//        result.success = false;
+//        result.msgCode = msgCode;
+//        result.message = getMessageByCode(msgCode, null);
+//        return result;
+//    }
 
     public T getValue() {
         return value;
@@ -169,7 +179,7 @@ public class AppResult<T> implements Serializable {
         this.success = success;
     }
 
-    private static String getMessageByCode(String msgCode, Object[] params) {
+    private static String getMessageByCode(String msgCode, Object... params) {
         return MessageUtil.getMessage(msgCode, params);
     }
 }

@@ -7,4 +7,5 @@ import com.ezshop.infra.tunnel.dataobject.OrderAggrootDo;
 
 @EzComponent
 public class OrderAggrootRepository extends DefaultCachedRepository<OrderAggroot, OrderAggrootDo> {
+
 }

@@ -2,8 +2,9 @@ package com.ezshop.domain.event;
 
 import com.ezddd.core.annotation.EzEvent;
 import com.ezddd.core.event.AbstractEventDefinition;
+import com.ezshop.domain.constants.DomainConstants;
 
-@EzEvent(domain = "Order")
+@EzEvent(domain = DomainConstants.NAME)
 public class OrderAggrootEvent extends AbstractEventDefinition {
     public static final OrderAggrootEvent onOrderCreated = new OrderAggrootEvent("onOrderCreated");
     public static final OrderAggrootEvent onOrderUpdated = new OrderAggrootEvent("onOrderUpdated");
