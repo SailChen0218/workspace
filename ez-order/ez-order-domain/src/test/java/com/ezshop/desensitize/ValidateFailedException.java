@@ -1,15 +1,16 @@
 package com.ezshop.desensitize;
 
-import java.util.Map;
+import com.ezshop.desensitize.dto.ErrorDto;
+import java.util.List;
 
 public class ValidateFailedException extends RuntimeException {
-    private Map<String, String> errors;
+    private List<ErrorDto> errors;
 
     public ValidateFailedException(String msg) {
         super(msg);
     }
 
-    public ValidateFailedException(Map<String, String> errors, String msg) {
+    public ValidateFailedException(List<ErrorDto> errors, String msg) {
         super(msg);
         this.errors = errors;
     }
@@ -18,11 +19,11 @@ public class ValidateFailedException extends RuntimeException {
         super(exception);
     }
 
-    public Map<String, String> getErrors() {
+    public List<ErrorDto> getErrors() {
         return errors;
     }
 
-    public void setErrors(Map<String, String> errors) {
+    public void setErrors(List<ErrorDto> errors) {
         this.errors = errors;
     }
 }

@@ -20,12 +20,15 @@ public class DesensitizeProcessorImpl implements DesensitizeProcessor{
     SentitiveTypeFactory sentitiveTypeFactory;
 
     /**
+     * 脱敏处理入口
      * @param target
+     * @param channel
+     * @param service
      * @throws DesensitizeFailedException
      */
     @Override
-    public void desensitize(Object target, String qdbh, String jyfwbh) throws DesensitizeFailedException {
-        processDesensitization("", "ROOT", target, qdbh, jyfwbh);
+    public void desensitize(Object target, String channel, String service) throws DesensitizeFailedException {
+        processDesensitization("", "ROOT", target, channel, service);
     }
 
     /**
@@ -34,15 +37,15 @@ public class DesensitizeProcessorImpl implements DesensitizeProcessor{
      * @param parentPath      父节点路径
      * @param currentNodeName 当前节点名称
      * @param currentNode     当前节点对象
-     * @param qdbh            渠道编号
-     * @param jyfwbh          交易服务编号
+     * @param channel         渠道编号
+     * @param service         交易服务编号
      * @throws DesensitizeFailedException
      */
     private void processDesensitization(String parentPath,
                                         String currentNodeName,
                                         Object currentNode,
-                                        String qdbh,
-                                        String jyfwbh) throws DesensitizeFailedException {
+                                        String channel,
+                                        String service) throws DesensitizeFailedException {
         try {
             String currentPath = "".equals(parentPath) ? currentNodeName : parentPath + "/" + currentNodeName;
             String currentFieldPath = null;
@@ -55,7 +58,7 @@ public class DesensitizeProcessorImpl implements DesensitizeProcessor{
                 // 判断是否为引用类型
                 if (!ReflectionUtils.isReferenceType(fieldType)) {
                     // 获取脱敏配置信息(0:不脱敏输出  1:脱敏输出  2:不输出)
-                    int desensitizationConfig = getDesensitizationConfig(qdbh, jyfwbh, currentFieldPath);
+                    int desensitizationConfig = getDesensitizationConfig(channel, service, currentFieldPath);
                     if (desensitizationConfig == 1) {
                         DesensitizedField desensitizedField = field.getAnnotation(DesensitizedField.class);
                         // 判断是否带有DesensitizedField注解，且为String类型。
@@ -78,7 +81,7 @@ public class DesensitizeProcessorImpl implements DesensitizeProcessor{
                     field.setAccessible(true);
                     Object value = field.get(currentNode);
                     if (value != null) {
-                        processDesensitization(currentPath, field.getName(), value, qdbh, jyfwbh);
+                        processDesensitization(currentPath, field.getName(), value, channel, service);
                     }
                 }
             }
@@ -92,12 +95,12 @@ public class DesensitizeProcessorImpl implements DesensitizeProcessor{
     /**
      * 根据渠道编号、交易服务编号、当前字段路径获取脱敏配置信息
      *
-     * @param qdbh
-     * @param jyfwbh
+     * @param channel
+     * @param service
      * @param currentFieldPath
      * @return 0:不脱敏输出  1:脱敏输出  2:不输出
      */
-    private int getDesensitizationConfig(String qdbh, String jyfwbh, String currentFieldPath) {
+    private int getDesensitizationConfig(String channel, String service, String currentFieldPath) {
         //TODO
         return 1;
     }

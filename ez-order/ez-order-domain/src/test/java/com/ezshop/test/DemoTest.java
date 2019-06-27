@@ -126,7 +126,7 @@ public class DemoTest {
 
     @Test
     public void testgetDemoDto_Aspect(){
-        DemoDto demoDto = demoService.getDemoDto("1234567890123456789012345678901", "121@email.com");
+        DemoDto demoDto = demoService.getDemoDto(null, null);
 //        System.out.println(JSON.toJSONString(demoDto));
     }
 
