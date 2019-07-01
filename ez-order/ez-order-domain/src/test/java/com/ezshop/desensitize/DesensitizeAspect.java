@@ -130,12 +130,7 @@ public class DesensitizeAspect {
     private void desensitize(Object target, String qdbh, String jyfwbh) throws DesensitizeFailedException {
         if (target == null) return;
         Class<?> targetType = target.getClass();
-        if (List.class.isAssignableFrom(targetType)) {
-            List list = (List) target;
-            for (int i = 0; i < list.size(); i++) {
-                desensitizeProcessor.desensitize(list.get(i), qdbh, jyfwbh);
-            }
-        } else if (ResultDto.class.isAssignableFrom(targetType)) {
+        if (ResultDto.class.isAssignableFrom(targetType)) {
             ResultDto resultDto = (ResultDto) target;
             desensitizeProcessor.desensitize(resultDto.getValue(), qdbh, jyfwbh);
         } else if (ResultVo.class.isAssignableFrom(targetType)) {

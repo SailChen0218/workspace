@@ -1,6 +1,6 @@
 package com.ezshop.desensitize.dao;
 
-import cn.com.servyou.bonde.gate.desensitize.dto.ParameterConfigDto;
+import com.ezshop.desensitize.dto.ParameterConfigDto;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

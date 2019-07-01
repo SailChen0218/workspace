@@ -3,8 +3,6 @@ package com.ezshop.desensitize.impl;
 import com.ezshop.desensitize.DesensitizeFailedException;
 import com.ezshop.desensitize.DesensitizeProcessor;
 import com.ezshop.desensitize.DesensitizedField;
-import com.ezshop.desensitize.dao.DesensitizeConfigDao;
-import com.ezshop.desensitize.dto.DesensitizeConfigDto;
 import com.ezshop.desensitize.type.SensitiveType;
 import com.ezshop.desensitize.type.SentitiveTypeFactory;
 import com.ezshop.desensitize.util.ReflectionUtils;
@@ -16,7 +14,10 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class DesensitizeProcessorImpl implements DesensitizeProcessor {
@@ -25,8 +26,8 @@ public class DesensitizeProcessorImpl implements DesensitizeProcessor {
     @Autowired
     SentitiveTypeFactory sentitiveTypeFactory;
 
-    @Autowired
-    DesensitizeConfigDao desensitizeConfigDao;
+//    @Autowired
+//    DesensitizeConfigDao desensitizeConfigDao;
 
     /**
      * 脱敏处理入口
@@ -41,16 +42,24 @@ public class DesensitizeProcessorImpl implements DesensitizeProcessor {
         if (target == null) return;
         Map<String, Integer> dsensitizationConfigMap = getDesensitizationConfigMap(channel, service);
         Class<?> targetType = target.getClass();
+        if (!ReflectionUtils.isReferenceType(targetType)) {
+            return;
+        }
         if (Collection.class.isAssignableFrom(targetType)) {
             Collection<Object> targetCollection = (Collection) target;
             if (targetCollection.size() > 0) {
                 Iterator<Object> iterable = targetCollection.iterator();
                 while (iterable.hasNext()) {
-                    desensitizeNode("ROOT", iterable.next(), channel, service, dsensitizationConfigMap);
+                    Object currentNode = iterable.next();
+                    if (!ReflectionUtils.isReferenceType(currentNode.getClass())) {
+                        return;
+                    }
+                    desensitizeNode("ROOT", currentNode, channel, service, dsensitizationConfigMap);
                 }
             }
+        } else {
+            desensitizeNode("ROOT", target, channel, service, dsensitizationConfigMap);
         }
-        desensitizeNode("ROOT", target, channel, service, dsensitizationConfigMap);
     }
 
     /**
@@ -156,15 +165,15 @@ public class DesensitizeProcessorImpl implements DesensitizeProcessor {
      * @return
      */
     private Map<String, Integer> getDesensitizationConfigMap(String channel, String service) {
-        List<DesensitizeConfigDto> desensitizeConfigDtos =
-                desensitizeConfigDao.queryDesensitizeConfig(channel, service);
-        if (desensitizeConfigDtos != null & desensitizeConfigDtos.size() > 0) {
-            Map<String, Integer> dsensitizationConfigMap = new HashMap<>(desensitizeConfigDtos.size());
-            for (DesensitizeConfigDto desensitizeConfigDto : desensitizeConfigDtos) {
-                dsensitizationConfigMap.put(desensitizeConfigDto.getNodePath(), desensitizeConfigDto.getConfigValue());
-            }
-            return dsensitizationConfigMap;
-        }
+//        List<DesensitizeConfigDto> desensitizeConfigDtos =
+//                desensitizeConfigDao.queryDesensitizeConfig(channel, service);
+//        if (desensitizeConfigDtos != null & desensitizeConfigDtos.size() > 0) {
+//            Map<String, Integer> dsensitizationConfigMap = new HashMap<>(desensitizeConfigDtos.size());
+//            for (DesensitizeConfigDto desensitizeConfigDto : desensitizeConfigDtos) {
+//                dsensitizationConfigMap.put(desensitizeConfigDto.getNodePath(), desensitizeConfigDto.getConfigValue());
+//            }
+//            return dsensitizationConfigMap;
+//        }
         return null;
     }
 
@@ -176,9 +185,9 @@ public class DesensitizeProcessorImpl implements DesensitizeProcessor {
      * @return 0:不脱敏输出  1:脱敏输出  2:不输出
      */
     private int getDesensitizationConfig(Map<String, Integer> dsensitizationConfigMap, String currentFieldPath) {
-        if (dsensitizationConfigMap != null && dsensitizationConfigMap.containsKey(currentFieldPath)) {
-            return dsensitizationConfigMap.get(currentFieldPath);
-        }
+//        if (dsensitizationConfigMap != null && dsensitizationConfigMap.containsKey(currentFieldPath)) {
+//            return dsensitizationConfigMap.get(currentFieldPath);
+//        }
         return 1;
     }
 }

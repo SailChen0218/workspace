@@ -90,7 +90,9 @@ public class DemoService {
      * @return
      */
     @Desensitized
-    public List<DemoDto> listDemoDto(String djxh) {
+    public List<DemoDto> listDemoDto(
+            @ApiParam(name = "djxh", value = "登记序号")
+            String djxh) {
         List<DemoDto> demoDtos = new ArrayList<>();
         DemoDto demoDto = new DemoDto();
         demoDto.setDjxh("12312312312");
