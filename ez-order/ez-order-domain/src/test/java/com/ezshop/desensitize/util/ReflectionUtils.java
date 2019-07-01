@@ -9,10 +9,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class ReflectionUtils {
@@ -20,41 +17,16 @@ public abstract class ReflectionUtils {
     private static final Map<Type, List<Field>> fieldOfTypeHolder = new ConcurrentHashMap<>(8);
 
     /**
-     * Attempt to find a {@link Method} on the supplied class with the supplied name
-     * and parameter types. Searches all superclasses up to {@code Object}.
-     * <p>Returns {@code null} if no {@link Method} can be found.
-     * @param clazz the class to introspect
-     * @param name the name of the method
-     * @param paramTypes the parameter types of the method
-     * (may be {@code null} to indicate any signature)
-     * @return the Method object, or {@code null} if none found
-     */
-    public static Method findMethod(Class<?> clazz, String name, Class<?>... paramTypes) {
-        Class<?> searchType = clazz;
-        while (searchType != null) {
-            Method[] methods = (searchType.isInterface() ? searchType.getMethods() : searchType.getDeclaredMethods());
-            for (Method method : methods) {
-                if (name.equals(method.getName())
-                        && (paramTypes == null || Arrays.equals(paramTypes, method.getParameterTypes()))) {
-                    return method;
-                }
-            }
-            searchType = searchType.getSuperclass();
-        }
-        return null;
-    }
-
-    /**
      * get all property fields.
      * @param clazz
      * @return
      */
-    public static List<Field> getFieldsFrom(Class<?> clazz) {
+    public static List<Field> getPropertyFieldsFrom(Class<?> clazz) {
         if (fieldOfTypeHolder.containsKey(clazz)) {
             return fieldOfTypeHolder.get(clazz);
         } else {
             List<Field> fields = new ArrayList<>(8);
-            getFieldsFrom(clazz, fields);
+            getPropertyFieldsFrom(clazz, fields);
             return fields;
         }
     }
@@ -64,7 +36,7 @@ public abstract class ReflectionUtils {
      * @param clazz
      * @param fieldList
      */
-    private static void getFieldsFrom(Class<?> clazz, List<Field> fieldList) {
+    private static void getPropertyFieldsFrom(Class<?> clazz, List<Field> fieldList) {
         Assert.notNull(clazz, "clazz must not be null.");
         Assert.notNull(fieldList, "fieldList must not be null.");
         Field[] fields = clazz.getDeclaredFields();
@@ -77,7 +49,7 @@ public abstract class ReflectionUtils {
         }
         Class<?> superClazz = clazz.getSuperclass();
         if (!Object.class.equals(superClazz)) {
-            getFieldsFrom(superClazz, fieldList);
+            getPropertyFieldsFrom(superClazz, fieldList);
         }
     }
 
@@ -123,5 +95,18 @@ public abstract class ReflectionUtils {
             return false;
         }
         return true;
+    }
+
+
+    /**
+     * 根据class获取实际元素类型
+     * @param targetType
+     * @return
+     */
+    public static Class<?> getActualType(Class<?> targetType) {
+        if (Collection.class.isAssignableFrom(targetType)) {
+            return targetType.getTypeParameters()[0].getClass();
+        }
+        return targetType;
     }
 }

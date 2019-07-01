@@ -8,4 +8,8 @@ public class DesensitizeFailedException extends RuntimeException {
     public DesensitizeFailedException(Throwable exception) {
         super(exception);
     }
+
+    public DesensitizeFailedException(String msg, Throwable exception) {
+        super(msg, exception);
+    }
 }

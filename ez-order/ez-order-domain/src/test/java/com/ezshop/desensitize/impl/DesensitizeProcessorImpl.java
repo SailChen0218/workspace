@@ -3,24 +3,34 @@ package com.ezshop.desensitize.impl;
 import com.ezshop.desensitize.DesensitizeFailedException;
 import com.ezshop.desensitize.DesensitizeProcessor;
 import com.ezshop.desensitize.DesensitizedField;
+import com.ezshop.desensitize.dao.DesensitizeConfigDao;
+import com.ezshop.desensitize.dto.DesensitizeConfigDto;
 import com.ezshop.desensitize.type.SensitiveType;
 import com.ezshop.desensitize.type.SentitiveTypeFactory;
 import com.ezshop.desensitize.util.ReflectionUtils;
-import org.springframework.beans.BeansException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
-import java.util.List;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.*;
 
 @Component
-public class DesensitizeProcessorImpl implements DesensitizeProcessor{
+public class DesensitizeProcessorImpl implements DesensitizeProcessor {
+    private static final Logger LOG = LoggerFactory.getLogger(DesensitizeProcessorImpl.class);
 
     @Autowired
     SentitiveTypeFactory sentitiveTypeFactory;
 
+    @Autowired
+    DesensitizeConfigDao desensitizeConfigDao;
+
     /**
      * 脱敏处理入口
+     *
      * @param target
      * @param channel
      * @param service
@@ -28,80 +38,147 @@ public class DesensitizeProcessorImpl implements DesensitizeProcessor{
      */
     @Override
     public void desensitize(Object target, String channel, String service) throws DesensitizeFailedException {
-        processDesensitization("", "ROOT", target, channel, service);
+        if (target == null) return;
+        Map<String, Integer> dsensitizationConfigMap = getDesensitizationConfigMap(channel, service);
+        Class<?> targetType = target.getClass();
+        if (Collection.class.isAssignableFrom(targetType)) {
+            Collection<Object> targetCollection = (Collection) target;
+            if (targetCollection.size() > 0) {
+                Iterator<Object> iterable = targetCollection.iterator();
+                while (iterable.hasNext()) {
+                    desensitizeNode("ROOT", iterable.next(), channel, service, dsensitizationConfigMap);
+                }
+            }
+        }
+        desensitizeNode("ROOT", target, channel, service, dsensitizationConfigMap);
     }
 
     /**
-     * 执行脱敏处理
+     * 引用类型对象节点脱敏
      *
-     * @param parentPath      父节点路径
-     * @param currentNodeName 当前节点名称
-     * @param currentNode     当前节点对象
-     * @param channel         渠道编号
-     * @param service         交易服务编号
+     * @param currentNodePath         当前节点路径
+     * @param currentNode             当前节点对象
+     * @param channel                 渠道编号
+     * @param service                 交易服务编号
+     * @param dsensitizationConfigMap 脱敏配置信息
      * @throws DesensitizeFailedException
      */
-    private void processDesensitization(String parentPath,
-                                        String currentNodeName,
-                                        Object currentNode,
-                                        String channel,
-                                        String service) throws DesensitizeFailedException {
+    private void desensitizeNode(String currentNodePath,
+                                 Object currentNode,
+                                 String channel,
+                                 String service,
+                                 Map<String, Integer> dsensitizationConfigMap) throws DesensitizeFailedException {
+        if (currentNode == null) return;
+        Class<?> targetType = currentNode.getClass();
         try {
-            String currentPath = "".equals(parentPath) ? currentNodeName : parentPath + "/" + currentNodeName;
-            String currentFieldPath = null;
-            Class<?> targetType = currentNode.getClass();
-            List<Field> fieldList = ReflectionUtils.getFieldsFrom(targetType);
+            List<Field> fieldList = ReflectionUtils.getPropertyFieldsFrom(targetType);
             for (Field field : fieldList) {
-                currentFieldPath = currentPath + "/" + field.getName();
-                System.out.println(currentFieldPath);
-                Class<?> fieldType = field.getType();
-                // 判断是否为引用类型
-                if (!ReflectionUtils.isReferenceType(fieldType)) {
-                    // 获取脱敏配置信息(0:不脱敏输出  1:脱敏输出  2:不输出)
-                    int desensitizationConfig = getDesensitizationConfig(channel, service, currentFieldPath);
-                    if (desensitizationConfig == 1) {
-                        DesensitizedField desensitizedField = field.getAnnotation(DesensitizedField.class);
-                        // 判断是否带有DesensitizedField注解，且为String类型。
-                        if (desensitizedField != null && String.class.equals(fieldType)) {
-                            SensitiveType sensitiveType = sentitiveTypeFactory.getSensitiveType(desensitizedField.value());
-                            if (sensitiveType != null) {
-                                field.setAccessible(true);
-                                Object value = field.get(currentNode);
-                                if (value != null) {
-                                    String desensitizedValue = sensitiveType.desensitized(value.toString());
-                                    field.set(currentNode, desensitizedValue);
-                                }
+                field.setAccessible(true);
+                Object fieldValue = field.get(currentNode);
+                if (fieldValue != null) {
+                    String currentFieldPath = currentNodePath + "/" + field.getName();
+                    Class<?> fieldType = field.getType();
+                    if (Collection.class.isAssignableFrom(fieldType)) {
+                        ParameterizedType type = (ParameterizedType) field.getGenericType();
+                        Type[] innerTypes = type.getActualTypeArguments();
+                        Class<?> fieldActualType = (Class<?>) innerTypes[0];
+                        Collection<Object> targetCollection = (Collection) fieldValue;
+                        if (targetCollection.size() > 0) {
+                            Iterator<Object> iterable = targetCollection.iterator();
+                            while (iterable.hasNext()) {
+                                desensitizeField(currentNode, field, iterable.next(), fieldActualType,
+                                        currentFieldPath, channel, service, dsensitizationConfigMap);
                             }
                         }
-                    } else if (desensitizationConfig == 2) {
-                        field.setAccessible(true);
-                        field.set(currentNode, null);
-                    }
-                } else {
-                    field.setAccessible(true);
-                    Object value = field.get(currentNode);
-                    if (value != null) {
-                        processDesensitization(currentPath, field.getName(), value, channel, service);
+                    } else {
+                        desensitizeField(currentNode, field, fieldValue, fieldType,
+                                currentFieldPath, channel, service, dsensitizationConfigMap);
                     }
                 }
             }
-        } catch (IllegalAccessException e) {
-            throw new DesensitizeFailedException(e);
-        } catch (BeansException e) {
-            throw new DesensitizeFailedException(e);
+        } catch (Exception e) {
+            LOG.error("对象脱敏处理失败了。脱敏对象:{},脱敏路径:{}", targetType.getClass().getName(), currentNodePath, e);
+            throw new DesensitizeFailedException("对象脱敏处理失败了。", e);
         }
     }
 
     /**
-     * 根据渠道编号、交易服务编号、当前字段路径获取脱敏配置信息
+     * 对象属性字段脱敏
+     *
+     * @param currentNode
+     * @param field
+     * @param fieldValue
+     * @param fieldType
+     * @param currentFieldPath
+     * @param channel
+     * @param service
+     * @param dsensitizationConfigMap
+     * @throws IllegalAccessException
+     */
+    private void desensitizeField(Object currentNode,
+                                  Field field,
+                                  Object fieldValue,
+                                  Class<?> fieldType,
+                                  String currentFieldPath,
+                                  String channel,
+                                  String service,
+                                  Map<String, Integer> dsensitizationConfigMap)
+            throws IllegalAccessException {
+        // 判断是否为引用类型
+        if (!ReflectionUtils.isReferenceType(fieldType)) {
+            // 获取脱敏配置信息(0:不脱敏输出  1:脱敏输出  2:不输出)
+            int desensitizationConfig = getDesensitizationConfig(dsensitizationConfigMap, currentFieldPath);
+            if (desensitizationConfig == 1) {
+                DesensitizedField desensitizedField = field.getAnnotation(DesensitizedField.class);
+                // 判断是否带有DesensitizedField注解，且为String类型。
+                if (desensitizedField != null && String.class.equals(fieldType)) {
+                    SensitiveType sensitiveType = sentitiveTypeFactory.getSensitiveType(desensitizedField.value());
+                    if (sensitiveType != null) {
+                        String desensitizedValue = sensitiveType.desensitized(fieldValue.toString());
+                        field.setAccessible(true);
+                        field.set(currentNode, desensitizedValue);
+                    }
+                }
+            } else if (desensitizationConfig == 2) {
+                field.setAccessible(true);
+                field.set(currentNode, null);
+            }
+        } else {
+            desensitizeNode(currentFieldPath, fieldValue, channel, service, dsensitizationConfigMap);
+        }
+    }
+
+    /**
+     * 获取脱敏配置信息
      *
      * @param channel
      * @param service
+     * @return
+     */
+    private Map<String, Integer> getDesensitizationConfigMap(String channel, String service) {
+        List<DesensitizeConfigDto> desensitizeConfigDtos =
+                desensitizeConfigDao.queryDesensitizeConfig(channel, service);
+        if (desensitizeConfigDtos != null & desensitizeConfigDtos.size() > 0) {
+            Map<String, Integer> dsensitizationConfigMap = new HashMap<>(desensitizeConfigDtos.size());
+            for (DesensitizeConfigDto desensitizeConfigDto : desensitizeConfigDtos) {
+                dsensitizationConfigMap.put(desensitizeConfigDto.getNodePath(), desensitizeConfigDto.getConfigValue());
+            }
+            return dsensitizationConfigMap;
+        }
+        return null;
+    }
+
+    /**
+     * 获取当前字段路径获取脱敏配置信息
+     *
+     * @param dsensitizationConfigMap
      * @param currentFieldPath
      * @return 0:不脱敏输出  1:脱敏输出  2:不输出
      */
-    private int getDesensitizationConfig(String channel, String service, String currentFieldPath) {
-        //TODO
+    private int getDesensitizationConfig(Map<String, Integer> dsensitizationConfigMap, String currentFieldPath) {
+        if (dsensitizationConfigMap != null && dsensitizationConfigMap.containsKey(currentFieldPath)) {
+            return dsensitizationConfigMap.get(currentFieldPath);
+        }
         return 1;
     }
 }
