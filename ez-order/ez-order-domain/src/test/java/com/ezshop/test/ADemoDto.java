@@ -2,10 +2,17 @@ package com.ezshop.test;
 
 import com.ezshop.desensitize.DesensitizedField;
 import com.ezshop.desensitize.type.impl.AddressType;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
+@ApiModel(value = "A样例")
 public class ADemoDto {
+
+    @ApiModelProperty("a字段1")
     @DesensitizedField(AddressType.class)
     private String a_field1;
+
+    @ApiModelProperty("a字段2")
     private String a_field2;
 
     public String getA_field1() {

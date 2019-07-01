@@ -10,6 +10,8 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Set;
 
 @ApiModel(value = "样例", description = "用于模拟后端校验及脱敏功能。")
 public class DemoDto {
@@ -26,22 +28,31 @@ public class DemoDto {
     @DesensitizedField(ChineseNameType.class)
     private String name;
 
-    @ApiModelProperty(value = "电子邮件", example = "test@servyou.com.cn")
+    @ApiModelProperty("电子邮件")
     @Email(message = "email格式不符合要求。")
     @DesensitizedField(EmailType.class)
     private String email;
 
-    @ApiModelProperty(value = "a值", example = "10")
+    @ApiModelProperty("a值")
     private int a;
+    @ApiModelProperty("b值")
     private int b;
 
-    @ApiModelProperty(value = "b值", example = "20")
+    @ApiModelProperty("身份证件号码")
     @DesensitizedField(IDCardType.class)
     private String sfzjhm;
 
+    @ApiModelProperty("A样例对象")
     private ADemoDto aDemoDto;
 
+    @ApiModelProperty("B样例对象")
     private BDemoDto bDemoDto;
+
+    @ApiModelProperty("A样例对象List")
+    private List<ADemoDto> aDemoDtoList;
+
+    @ApiModelProperty("B样例对象Set")
+    private Set<BDemoDto> bDemoDtoSet;
 
     public ADemoDto getADemoDto() {
         return aDemoDto;
@@ -113,5 +124,21 @@ public class DemoDto {
 
     public void setSfzjhm(String sfzjhm) {
         this.sfzjhm = sfzjhm;
+    }
+
+    public List<ADemoDto> getADemoDtoList() {
+        return aDemoDtoList;
+    }
+
+    public void setADemoDtoList(List<ADemoDto> aDemoDtoList) {
+        this.aDemoDtoList = aDemoDtoList;
+    }
+
+    public Set<BDemoDto> getBDemoDtoSet() {
+        return bDemoDtoSet;
+    }
+
+    public void setBDemoDtoSet(Set<BDemoDto> bDemoDtoSet) {
+        this.bDemoDtoSet = bDemoDtoSet;
     }
 }
