@@ -1,7 +1,7 @@
 package com.ezshop.test;
 
 import com.ezshop.desensitize.DesensitizedField;
-import com.ezshop.desensitize.type.impl.AddressType;
+import com.ezshop.desensitize.impl.type.AddressType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 

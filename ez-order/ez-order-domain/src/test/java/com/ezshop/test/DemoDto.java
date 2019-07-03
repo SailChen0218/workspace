@@ -1,9 +1,9 @@
 package com.ezshop.test;
 
 import com.ezshop.desensitize.DesensitizedField;
-import com.ezshop.desensitize.type.impl.ChineseNameType;
-import com.ezshop.desensitize.type.impl.EmailType;
-import com.ezshop.desensitize.type.impl.IDCardType;
+import com.ezshop.desensitize.impl.type.ChineseNameType;
+import com.ezshop.desensitize.impl.type.EmailType;
+import com.ezshop.desensitize.impl.type.IDCardType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.validator.constraints.Length;
