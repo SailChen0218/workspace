@@ -1,4 +1,4 @@
-package com.ezshop.desensitize.util;
+package com.ezshop.desensitize.spring;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
