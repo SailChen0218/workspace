@@ -1,7 +1,6 @@
 package com.ezshop.desensitize.spring;
 
 import com.ezshop.desensitize.Desensitized;
-import com.ezshop.desensitize.exception.DuplicateDeclaredMethodException;
 import com.ezshop.desensitize.util.ReflectionUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -23,10 +22,7 @@ public class DesensitizeBeanPostProcessor implements BeanPostProcessor {
         ReflectionUtils.getInterfaceMethodsWithAnnotation(bean.getClass(), Desensitized.class, interfaceMethodList);
         for (Method method : interfaceMethodList) {
             String classMethod = method.getDeclaringClass().getName() + "." + method.getName();
-            if (classMethodMap.containsKey(classMethod)) {
-                throw new DuplicateDeclaredMethodException("Desensitized注解方法重复错误，请检查是否存在方法重载。方法名:"
-                        + classMethod);
-            } else {
+            if (!classMethodMap.containsKey(classMethod)) {
                 classMethodMap.put(classMethod, method);
             }
         }

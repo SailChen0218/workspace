@@ -1,7 +1,5 @@
 package com.ezshop.desensitize;
 
-import com.ezshop.desensitize.type.SensitiveType;
-
 import java.lang.annotation.*;
 
 @Target(ElementType.FIELD)
