@@ -124,8 +124,7 @@ public abstract class ReflectionUtils {
      * @param method
      * @return
      */
-    public static Method getInterfaceMethod(Method method) {
-        Class<?> clazz = method.getDeclaringClass();
+    public static Method getInterfaceMethod(Class<?> clazz, Method method) {
         for (Class<?> interfaceClazz : clazz.getInterfaces()) {
             Method interfaceMethod = org.springframework.util.ReflectionUtils.findMethod(
                     interfaceClazz, method.getName(), method.getParameterTypes());
@@ -133,7 +132,13 @@ public abstract class ReflectionUtils {
                 return interfaceMethod;
             }
         }
-        return null;
+
+        Class<?> superClazz = clazz.getSuperclass();
+        if (!Object.class.equals(superClazz)) {
+            return getInterfaceMethod(superClazz, method);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -152,7 +157,7 @@ public abstract class ReflectionUtils {
             for (int i = 0; i < methods.length; i++) {
                 Annotation annotation = methods[i].getAnnotation(annotationType);
                 if (annotation != null) {
-                    Method interfaceMethod = ReflectionUtils.getInterfaceMethod(methods[i]);
+                    Method interfaceMethod = ReflectionUtils.getInterfaceMethod(targetType, methods[i]);
                     if (interfaceMethod != null) {
                         interfaceMethodList.add(interfaceMethod);
                     }

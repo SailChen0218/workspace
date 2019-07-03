@@ -59,7 +59,6 @@ public class DesensitizeAspect {
         // 对返回值进行脱敏处理
         desensitize(object, channel, service);
 
-        System.out.println(JSON.toJSONString(object));
         return object;
     }
 
@@ -73,15 +72,20 @@ public class DesensitizeAspect {
     private Object validateJoinPoit(JoinPoint joinPoint, String channel, String service) throws ValidateFailedException {
         Object[] args = joinPoint.getArgs();
         if (args != null && args.length > 0) {
+            // 获取校验目标接口方法
             Object target = joinPoint.getTarget();
             Signature signature = joinPoint.getSignature();
             MethodSignature methodSignature = (MethodSignature)signature;
-            Method targetMethod = ReflectionUtils.getInterfaceMethod(methodSignature.getMethod());
-            String[] argNames = getMethodArgNames(targetMethod);
+            Method targetMethod = methodSignature.getMethod();
+            Method targetInterfaceMethod = ReflectionUtils.getInterfaceMethod(
+                    targetMethod.getDeclaringClass(), methodSignature.getMethod());
+
+            // 校验接口方法请求参数
+            String[] argNames = getMethodArgNames(targetInterfaceMethod);
             List<ErrorDto> errorDtoList = validateProcessor.validateParameters(target,
-                    targetMethod, args, argNames, channel, service);
+                    targetInterfaceMethod, args, argNames, channel, service);
             if (errorDtoList.size() != 0) {
-                Class<?> methodReturnType = targetMethod.getReturnType();
+                Class<?> methodReturnType = targetInterfaceMethod.getReturnType();
                 if (ResultDto.class.isAssignableFrom(methodReturnType)) {
                     ResultDto resultDto = ResultDto.valueOfError("请求参数验证失败。");
                     resultDto.getResultMap().put("errors", errorDtoList);

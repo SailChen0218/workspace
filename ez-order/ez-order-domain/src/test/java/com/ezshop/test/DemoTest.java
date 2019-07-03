@@ -1,7 +1,8 @@
 package com.ezshop.test;
 
 import com.OrderDomainBootstrap;
-import com.ezshop.desensitize.spring.DesensitizeBeanPostProcessor;
+import com.alibaba.fastjson.JSON;
+import com.ezshop.desensitize.DesensitizeMethodHolder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class DemoTest {
     DemoServiceImpl demoService;
 
     @Autowired
-    DesensitizeBeanPostProcessor desensitizeBeanPostProcessor;
+    DesensitizeMethodHolder desensitizeMethodHolder;
 
     @Test
     public void testValidator_getDemoDto() {
@@ -132,22 +133,20 @@ public class DemoTest {
     @Test
     public void testgetDemoDto_Aspect(){
         DemoDto demoDto = demoService.getDemoDto("1234567890123456789012345678901", "test@163.com");
-        desensitizeBeanPostProcessor.findeMethod("test");
-//        System.out.println(JSON.toJSONString(demoDto));
+        desensitizeMethodHolder.findMethodByName("test");
+        System.out.println(JSON.toJSONString(demoDto));
     }
 
     @Test
     public void testgetResultDemoDto_Aspect(){
         ResultDto<DemoDto> resultDemoDto = demoService.getResultDemoDto("1234567890123456789012345678901", "test@163.com");
-        desensitizeBeanPostProcessor.findeMethod("test");
-//        System.out.println(JSON.toJSONString(resultDemoDto));
+        System.out.println(JSON.toJSONString(resultDemoDto));
     }
 
     @Test
     public void testgetResultDemoDtoList_Aspect(){
         ResultDto<List<DemoDto>> resultDemoDto = demoService.getResultDemoDtoList("1234567890123456789012345678901", "test@163.com");
-        desensitizeBeanPostProcessor.findeMethod("test");
-//        System.out.println(JSON.toJSONString(resultDemoDto));
+        System.out.println(JSON.toJSONString(resultDemoDto));
     }
 
 //    public static void main(String[] args) {
