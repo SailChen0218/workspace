@@ -1,4 +1,4 @@
-package com.ezshop.desensitize.type;
+package com.ezshop.desensitize;
 
 public enum SensitiveTypeEnum {
     /** 中文名 */

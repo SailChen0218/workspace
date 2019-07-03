@@ -1,7 +1,7 @@
-package com.ezshop.desensitize.type.impl;
+package com.ezshop.desensitize.impl;
 
-import com.ezshop.desensitize.type.SensitiveType;
-import com.ezshop.desensitize.type.SentitiveTypeFactory;
+import com.ezshop.desensitize.SensitiveType;
+import com.ezshop.desensitize.SentitiveTypeFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;

@@ -1,4 +1,4 @@
-package com.ezshop.desensitize;
+package com.ezshop.desensitize.exception;
 
 public class DesensitizeFailedException extends RuntimeException {
     public DesensitizeFailedException(String msg) {

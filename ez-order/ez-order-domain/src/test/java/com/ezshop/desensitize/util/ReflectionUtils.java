@@ -6,10 +6,14 @@ import org.springframework.util.Assert;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class ReflectionUtils {
@@ -18,6 +22,7 @@ public abstract class ReflectionUtils {
 
     /**
      * get all property fields.
+     *
      * @param clazz
      * @return
      */
@@ -33,6 +38,7 @@ public abstract class ReflectionUtils {
 
     /**
      * 递归循环遍历class文件获取所有字段
+     *
      * @param clazz
      * @param fieldList
      */
@@ -55,6 +61,7 @@ public abstract class ReflectionUtils {
 
     /**
      * 判断字段是否为属性
+     *
      * @param clazz
      * @param field
      * @return
@@ -75,6 +82,7 @@ public abstract class ReflectionUtils {
 
     /**
      * 判断class是否为引用类型，排除
+     *
      * @param clazz
      * @return
      */
@@ -97,9 +105,9 @@ public abstract class ReflectionUtils {
         return true;
     }
 
-
     /**
      * 根据class获取实际元素类型
+     *
      * @param targetType
      * @return
      */
@@ -108,5 +116,52 @@ public abstract class ReflectionUtils {
             return targetType.getTypeParameters()[0].getClass();
         }
         return targetType;
+    }
+
+    /**
+     * 根据Method对象获取Override接口的Method对象
+     *
+     * @param method
+     * @return
+     */
+    public static Method getInterfaceMethod(Method method) {
+        Class<?> clazz = method.getDeclaringClass();
+        for (Class<?> interfaceClazz : clazz.getInterfaces()) {
+            Method interfaceMethod = org.springframework.util.ReflectionUtils.findMethod(
+                    interfaceClazz, method.getName(), method.getParameterTypes());
+            if (interfaceMethod != null) {
+                return interfaceMethod;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取类及其父类中带有指定注解的所有方法
+     *
+     * @param targetType          目标类
+     * @param annotationType      目标注解
+     * @param interfaceMethodList 带有目标注解的接口方法列表
+     * @return
+     */
+    public static <A extends Annotation> void getInterfaceMethodsWithAnnotation(Class<?> targetType,
+                                                                                Class<A> annotationType,
+                                                                                List<Method> interfaceMethodList) {
+        Method[] methods = targetType.getDeclaredMethods();
+        if (methods != null) {
+            for (int i = 0; i < methods.length; i++) {
+                Annotation annotation = methods[i].getAnnotation(annotationType);
+                if (annotation != null) {
+                    Method interfaceMethod = ReflectionUtils.getInterfaceMethod(methods[i]);
+                    if (interfaceMethod != null) {
+                        interfaceMethodList.add(interfaceMethod);
+                    }
+                }
+            }
+        }
+
+        if (targetType.getSuperclass() != null && !Object.class.equals(targetType.getSuperclass())) {
+            getInterfaceMethodsWithAnnotation(targetType.getSuperclass(), annotationType, interfaceMethodList);
+        }
     }
 }

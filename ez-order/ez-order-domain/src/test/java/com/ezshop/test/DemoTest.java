@@ -1,6 +1,7 @@
 package com.ezshop.test;
 
 import com.OrderDomainBootstrap;
+import com.ezshop.desensitize.spring.DesensitizeBeanPostProcessor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import javax.validation.metadata.BeanDescriptor;
 import javax.validation.metadata.MethodDescriptor;
 import javax.validation.metadata.MethodType;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Set;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -24,21 +26,24 @@ import java.util.Set;
 public class DemoTest {
 
     @Autowired
-    DemoService demoService;
+    DemoServiceImpl demoService;
+
+    @Autowired
+    DesensitizeBeanPostProcessor desensitizeBeanPostProcessor;
 
     @Test
     public void testValidator_getDemoDto() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         ExecutableValidator executableValidator = factory.getValidator().forExecutables();
 
-        DemoService demoService = new DemoService();
+        DemoServiceImpl demoService = new DemoServiceImpl();
         Class<?> clazz = demoService.getClass();
         try {
             Method method = clazz.getDeclaredMethod("getDemoDto", String.class, String.class);
             Object[] parameterValues = {null, null};
-            Set<ConstraintViolation<DemoService>> violations = executableValidator
+            Set<ConstraintViolation<DemoServiceImpl>> violations = executableValidator
                     .validateParameters(demoService, method, parameterValues);
-            for (ConstraintViolation<DemoService> constraintViolation:violations){
+            for (ConstraintViolation<DemoServiceImpl> constraintViolation:violations){
                 System.out.println(constraintViolation.getMessage());
             }
         } catch (NoSuchMethodException e) {
@@ -58,7 +63,7 @@ public class DemoTest {
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
 
         Validator validator = validatorFactory.getValidator();
-        BeanDescriptor carDescriptor = validator.getConstraintsForClass( DemoService.class );
+        BeanDescriptor carDescriptor = validator.getConstraintsForClass( DemoServiceImpl.class );
         Set<MethodDescriptor> methodDescriptorSet = carDescriptor.getConstrainedMethods(MethodType.NON_GETTER);
         for (MethodDescriptor methodDescriptor: methodDescriptorSet){
             methodDescriptor.getConstraintDescriptors();
@@ -101,7 +106,7 @@ public class DemoTest {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         ExecutableValidator executableValidator = factory.getValidator().forExecutables();
 
-        DemoService demoService = new DemoService();
+        DemoServiceImpl demoService = new DemoServiceImpl();
         Class<?> clazz = demoService.getClass();
         try {
             Method method = clazz.getDeclaredMethod("updateDemoDto", DemoDto.class);
@@ -109,9 +114,9 @@ public class DemoTest {
             demoDto.setDjxh("djxh");
             demoDto.setEmail("email");
             Object[] parameterValues = {demoDto};
-            Set<ConstraintViolation<DemoService>> violations = executableValidator
+            Set<ConstraintViolation<DemoServiceImpl>> violations = executableValidator
                     .validateParameters(demoService, method, parameterValues);
-            for (ConstraintViolation<DemoService> constraintViolation:violations){
+            for (ConstraintViolation<DemoServiceImpl> constraintViolation:violations){
                 System.out.println(constraintViolation.getMessage());
             }
         } catch (NoSuchMethodException e) {
@@ -126,8 +131,23 @@ public class DemoTest {
 
     @Test
     public void testgetDemoDto_Aspect(){
-        DemoDto demoDto = demoService.getDemoDto(null, null);
+        DemoDto demoDto = demoService.getDemoDto("1234567890123456789012345678901", "test@163.com");
+        desensitizeBeanPostProcessor.findeMethod("test");
 //        System.out.println(JSON.toJSONString(demoDto));
+    }
+
+    @Test
+    public void testgetResultDemoDto_Aspect(){
+        ResultDto<DemoDto> resultDemoDto = demoService.getResultDemoDto("1234567890123456789012345678901", "test@163.com");
+        desensitizeBeanPostProcessor.findeMethod("test");
+//        System.out.println(JSON.toJSONString(resultDemoDto));
+    }
+
+    @Test
+    public void testgetResultDemoDtoList_Aspect(){
+        ResultDto<List<DemoDto>> resultDemoDto = demoService.getResultDemoDtoList("1234567890123456789012345678901", "test@163.com");
+        desensitizeBeanPostProcessor.findeMethod("test");
+//        System.out.println(JSON.toJSONString(resultDemoDto));
     }
 
 //    public static void main(String[] args) {

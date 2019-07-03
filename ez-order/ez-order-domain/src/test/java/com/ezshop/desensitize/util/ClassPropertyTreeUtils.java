@@ -1,7 +1,10 @@
-package com.ezshop.test;
+package com.ezshop.desensitize.util;
 
 import com.alibaba.fastjson.JSON;
-import com.ezshop.desensitize.util.ReflectionUtils;
+import com.ezshop.desensitize.exception.MethodReturnTypeParsingException;
+import com.ezshop.test.DemoServiceImpl;
+import com.ezshop.test.ResultDto;
+import com.ezshop.test.ResultVo;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.Method;
@@ -68,7 +71,7 @@ public class ClassPropertyTreeUtils {
 
     public static void main(String[] args) {
         try {
-            Class<?> clazz = DemoService.class;
+            Class<?> clazz = DemoServiceImpl.class;
             Method getResultDemoDtoMethod = clazz.getMethod("getResultDemoDtoList", String.class, String.class);
             for (int i = 0; i < 1; i++) {
                 ClassPropertyTreeNode classPropertyTreeNode =

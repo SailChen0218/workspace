@@ -1,7 +1,6 @@
-package com.ezshop.test;
+package com.ezshop.desensitize.util;
 
 import com.ezshop.desensitize.DesensitizedField;
-import com.ezshop.desensitize.util.ReflectionUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 

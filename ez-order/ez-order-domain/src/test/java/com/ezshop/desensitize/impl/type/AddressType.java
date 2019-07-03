@@ -1,6 +1,6 @@
-package com.ezshop.desensitize.type.impl;
+package com.ezshop.desensitize.impl.type;
 
-import com.ezshop.desensitize.type.SensitiveType;
+import com.ezshop.desensitize.SensitiveType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 

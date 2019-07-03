@@ -1,7 +1,12 @@
-package com.ezshop.desensitize;
+package com.ezshop.desensitize.spring;
 
 import com.alibaba.fastjson.JSON;
+import com.ezshop.desensitize.DesensitizeProcessor;
+import com.ezshop.desensitize.ValidateProcessor;
 import com.ezshop.desensitize.dto.ErrorDto;
+import com.ezshop.desensitize.exception.DesensitizeFailedException;
+import com.ezshop.desensitize.exception.ValidateFailedException;
+import com.ezshop.desensitize.util.ReflectionUtils;
 import com.ezshop.test.ResultDto;
 import com.ezshop.test.ResultVo;
 import io.swagger.annotations.ApiParam;
@@ -71,7 +76,7 @@ public class DesensitizeAspect {
             Object target = joinPoint.getTarget();
             Signature signature = joinPoint.getSignature();
             MethodSignature methodSignature = (MethodSignature)signature;
-            Method targetMethod = methodSignature.getMethod();
+            Method targetMethod = ReflectionUtils.getInterfaceMethod(methodSignature.getMethod());
             String[] argNames = getMethodArgNames(targetMethod);
             List<ErrorDto> errorDtoList = validateProcessor.validateParameters(target,
                     targetMethod, args, argNames, channel, service);
@@ -108,7 +113,7 @@ public class DesensitizeAspect {
             for (int i = 0; i < parameters.length; i++) {
                 ApiParam apiParams = parameters[i].getAnnotation(ApiParam.class);
                 if (apiParams == null) {
-                    throw new ValidateFailedException(method.getName() +
+                    throw new ValidateFailedException(method.getDeclaringClass().getName() + "." + method.getName() +
                             "方法参数缺少ApiParam注解。例：@ApiParam(name = \"djxh\", value = \"登记序号\")");
                 } else {
                     argNames[i] = apiParams.name();

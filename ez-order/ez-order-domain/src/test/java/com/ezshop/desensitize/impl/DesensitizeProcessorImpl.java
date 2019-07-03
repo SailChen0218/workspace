@@ -1,8 +1,8 @@
 package com.ezshop.desensitize.impl;
 
-import com.ezshop.desensitize.DesensitizeFailedException;
 import com.ezshop.desensitize.DesensitizeProcessor;
 import com.ezshop.desensitize.DesensitizedField;
+import com.ezshop.desensitize.exception.DesensitizeFailedException;
 import com.ezshop.desensitize.type.SensitiveType;
 import com.ezshop.desensitize.type.SentitiveTypeFactory;
 import com.ezshop.desensitize.util.ReflectionUtils;

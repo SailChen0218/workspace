@@ -1,6 +1,7 @@
-package com.ezshop.desensitize;
+package com.ezshop.desensitize.exception;
 
 import com.ezshop.desensitize.dto.ErrorDto;
+
 import java.util.List;
 
 public class ValidateFailedException extends RuntimeException {

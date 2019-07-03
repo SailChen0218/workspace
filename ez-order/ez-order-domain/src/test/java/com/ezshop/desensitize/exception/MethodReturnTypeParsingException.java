@@ -1,4 +1,4 @@
-package com.ezshop.test;
+package com.ezshop.desensitize.exception;
 
 public class MethodReturnTypeParsingException extends RuntimeException {
     public MethodReturnTypeParsingException(String msg) {
