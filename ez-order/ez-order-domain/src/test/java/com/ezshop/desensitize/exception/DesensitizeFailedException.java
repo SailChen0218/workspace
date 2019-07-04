@@ -1,6 +1,6 @@
 package com.ezshop.desensitize.exception;
 
-public class DesensitizeFailedException extends RuntimeException {
+public class DesensitizeFailedException extends Exception {
     public DesensitizeFailedException(String msg) {
         super(msg);
     }

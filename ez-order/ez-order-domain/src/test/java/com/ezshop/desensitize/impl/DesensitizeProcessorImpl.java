@@ -5,6 +5,7 @@ import com.ezshop.desensitize.DesensitizedField;
 import com.ezshop.desensitize.SensitiveType;
 import com.ezshop.desensitize.SentitiveTypeFactory;
 import com.ezshop.desensitize.exception.DesensitizeFailedException;
+import com.ezshop.desensitize.exception.SensitizeTypeNotExistsException;
 import com.ezshop.desensitize.util.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -128,7 +129,7 @@ public class DesensitizeProcessorImpl implements DesensitizeProcessor {
                                   String channel,
                                   String service,
                                   Map<String, Integer> dsensitizationConfigMap)
-            throws IllegalAccessException {
+            throws IllegalAccessException, SensitizeTypeNotExistsException, DesensitizeFailedException {
         // 判断是否为引用类型
         if (!ReflectionUtils.isReferenceType(fieldType)) {
             // 获取脱敏配置信息(0:不脱敏输出  1:脱敏输出  2:不输出)

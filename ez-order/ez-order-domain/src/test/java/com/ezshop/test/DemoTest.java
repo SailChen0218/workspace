@@ -135,9 +135,9 @@ public class DemoTest {
     public void testgetDemoDto_Aspect(){
         DemoDto demoDto = demoService.getDemoDto("1234567890123456789012345678901", "test@163.com");
 //        DemoDto demoDto = demoService.getDemoDto(null, null);
-        MethodResovingDto methodResovingDto = desensitizeMethodHolder
+        ResultDto<MethodResovingDto> resultDto = desensitizeMethodHolder
                 .resolveMethod("com.ezshop.test.DemoService.getDemoDto");
-        System.out.println(JSON.toJSONString(methodResovingDto));
+        System.out.println(JSON.toJSONString(resultDto.getValue()));
         System.out.println(JSON.toJSONString(demoDto));
     }
 

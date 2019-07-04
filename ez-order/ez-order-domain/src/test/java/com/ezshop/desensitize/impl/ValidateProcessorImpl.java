@@ -4,6 +4,7 @@ import com.ezshop.desensitize.ValidateProcessor;
 import com.ezshop.desensitize.dto.ErrorDto;
 import com.ezshop.desensitize.dto.ParameterConfigDto;
 import com.ezshop.desensitize.util.MessageConvertor;
+import com.ezshop.desensitize.util.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -40,11 +41,19 @@ public class ValidateProcessorImpl implements ValidateProcessor {
     public List<ErrorDto> validateParameters(Object target,
                                              Method method,
                                              Object[] parameterValues,
-                                             List<String> parameterNames,
                                              String channel,
                                              String service) {
         // 校验入参格式
         List<ErrorDto> errorDtoList = new ArrayList<>(8);
+        List<String> parameterNames = null;
+        try {
+            parameterNames = ReflectionUtils.getMethodParameterNames(method);
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
+            errorDtoList.add(new ErrorDto(method.getName(), ex.getMessage()));
+            return errorDtoList;
+        }
+
         Set<ConstraintViolation<Object>> constraintViolationSet =
                 getExecutableValidator().validateParameters(target, method, parameterValues);
         if (constraintViolationSet != null && constraintViolationSet.size() > 0) {

@@ -1,6 +1,5 @@
 package com.ezshop.desensitize.util;
 
-import com.ezshop.desensitize.exception.ValidateFailedException;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +9,7 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -189,9 +189,9 @@ public abstract class ReflectionUtils {
      *
      * @param method
      * @return
-     * @throws ValidateFailedException
+     * @throws Exception
      */
-    public static List<String> getMethodParameterNames(Method method) {
+    public static List<String> getMethodParameterNames(Method method) throws Exception {
         Parameter[] parameters = method.getParameters();
         if (parameters != null && parameters.length > 0) {
             List<String> argNames = new ArrayList<>(parameters.length);
@@ -199,6 +199,10 @@ public abstract class ReflectionUtils {
                 ApiParam apiParams = parameters[i].getAnnotation(ApiParam.class);
                 if (apiParams != null) {
                     argNames.add(apiParams.name());
+                } else {
+                    String msg = MessageFormat.format("参数缺少ApiParam注解。Class[{0}],Method[{1}],Parameter[{2}]",
+                            method.getDeclaringClass().getName(), method.getName(), parameters[i].getName());
+                    throw new Exception(msg);
                 }
             }
             return argNames;

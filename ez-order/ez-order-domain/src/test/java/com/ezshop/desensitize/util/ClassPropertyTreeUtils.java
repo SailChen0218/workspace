@@ -22,7 +22,8 @@ public class ClassPropertyTreeUtils {
      * @param targetMethod
      * @return
      */
-    public static ClassPropertyTreeNode parseMethodReturnType(Method targetMethod) {
+    public static ClassPropertyTreeNode parseMethodReturnType(Method targetMethod)
+            throws MethodReturnTypeParsingException{
         Assert.notNull(targetMethod, "targetMmethod must not be null.");
         try {
             Class<?> returnClazz = targetMethod.getReturnType();
@@ -71,7 +72,7 @@ public class ClassPropertyTreeUtils {
                         ClassPropertyTreeUtils.parseMethodReturnType(getResultDemoDtoMethod);
                 System.out.println(JSON.toJSONString(classPropertyTreeNode));
             }
-        } catch (NoSuchMethodException e) {
+        } catch (NoSuchMethodException | MethodReturnTypeParsingException e) {
             e.printStackTrace();
         }
     }

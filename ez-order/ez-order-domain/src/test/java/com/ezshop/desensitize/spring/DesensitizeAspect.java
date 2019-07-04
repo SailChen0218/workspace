@@ -79,9 +79,8 @@ public class DesensitizeAspect {
                     targetMethod.getDeclaringClass(), methodSignature.getMethod());
 
             // 校验接口方法请求参数
-            List<String> parameterNames = ReflectionUtils.getMethodParameterNames(targetInterfaceMethod);
             List<ErrorDto> errorDtoList = validateProcessor.validateParameters(target,
-                    targetInterfaceMethod, args, parameterNames, channel, service);
+                    targetInterfaceMethod, args, channel, service);
             if (errorDtoList.size() != 0) {
                 Class<?> methodReturnType = targetInterfaceMethod.getReturnType();
                 if (ResultDto.class.isAssignableFrom(methodReturnType)) {

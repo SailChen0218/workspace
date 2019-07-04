@@ -4,7 +4,7 @@ import com.ezshop.desensitize.dto.ErrorDto;
 
 import java.util.List;
 
-public class ValidateFailedException extends RuntimeException {
+public class ValidateFailedException extends Exception {
     private List<ErrorDto> errors;
 
     public ValidateFailedException(String msg) {

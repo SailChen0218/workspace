@@ -1,6 +1,7 @@
 package com.ezshop.desensitize;
 
 import com.ezshop.desensitize.dto.MethodResovingDto;
+import com.ezshop.test.ResultDto;
 
 import java.lang.reflect.Method;
 
@@ -28,5 +29,5 @@ public interface DesensitizeMethodHolder {
      * @param interfaceMethodName
      * @return
      */
-    MethodResovingDto resolveMethod(String interfaceMethodName);
+    ResultDto<MethodResovingDto> resolveMethod(String interfaceMethodName);
 }

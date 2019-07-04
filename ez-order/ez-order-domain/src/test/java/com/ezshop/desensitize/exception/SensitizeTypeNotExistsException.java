@@ -1,6 +1,6 @@
 package com.ezshop.desensitize.exception;
 
-public class SensitizeTypeNotExistsException extends RuntimeException {
+public class SensitizeTypeNotExistsException extends Exception {
     public SensitizeTypeNotExistsException(String msg) {
         super(msg);
     }
