@@ -8,7 +8,6 @@ import com.ezshop.test.ResultVo;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Map;
@@ -19,6 +18,7 @@ public class ClassPropertyTreeUtils {
 
     /**
      * 解析方法返回值属性树
+     *
      * @param targetMethod
      * @return
      */
@@ -28,23 +28,13 @@ public class ClassPropertyTreeUtils {
             Class<?> returnClazz = targetMethod.getReturnType();
             Class<?> actualReturnType = null;
             if (ResultDto.class.isAssignableFrom(returnClazz) || ResultVo.class.isAssignableFrom(returnClazz)) {
-                ParameterizedType returnType = (ParameterizedType) targetMethod.getGenericReturnType();
-                Type[] types = returnType.getActualTypeArguments();
-                if (types != null) {
-                    if (types[0] instanceof ParameterizedType) {
-                        ParameterizedType type = (ParameterizedType) types[0];
-                        if (Collection.class.isAssignableFrom((Class<?>) type.getRawType())) {
-                            Type[] innerTypes = type.getActualTypeArguments();
-                            if (innerTypes != null) {
-                                actualReturnType = (Class<?>) innerTypes[0];
-                            }
-                        }
-                    } else {
-                        actualReturnType = (Class<?>) types[0];
-                    }
-                }
+                actualReturnType = ReflectionUtils.getActualGenericType(targetMethod.getGenericReturnType());
             } else {
-                actualReturnType = ReflectionUtils.getActualType(returnClazz);
+                if (Collection.class.isAssignableFrom(returnClazz)) {
+                    actualReturnType = ReflectionUtils.getActualGenericType(targetMethod.getGenericReturnType());
+                } else {
+                    actualReturnType = returnClazz;
+                }
             }
             return ClassPropertyTreeUtils.parse(actualReturnType);
         } catch (Exception ex) {
@@ -55,10 +45,11 @@ public class ClassPropertyTreeUtils {
 
     /**
      * 解析类属性树
+     *
      * @param rootNodeType
      * @return
      */
-    public static ClassPropertyTreeNode parse(Class<?> rootNodeType) {
+    private static ClassPropertyTreeNode parse(Class<?> rootNodeType) {
         Assert.notNull(rootNodeType, "rootNodeType must not be null.");
         if (propertyTreeNodeHolder.containsKey(rootNodeType)) {
             return propertyTreeNodeHolder.get(rootNodeType);
@@ -72,6 +63,8 @@ public class ClassPropertyTreeUtils {
     public static void main(String[] args) {
         try {
             Class<?> clazz = DemoServiceImpl.class;
+//            Method getResultDemoDtoMethod = clazz.getMethod("listDemoDtoWithAuth");
+//            Method getResultDemoDtoMethod = clazz.getMethod("getResultDemoDto", String.class, String.class);
             Method getResultDemoDtoMethod = clazz.getMethod("getResultDemoDtoList", String.class, String.class);
             for (int i = 0; i < 1; i++) {
                 ClassPropertyTreeNode classPropertyTreeNode =

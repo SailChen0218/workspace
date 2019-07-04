@@ -1,9 +1,14 @@
 package com.ezshop.desensitize.impl;
 
 import com.ezshop.desensitize.DesensitizeMethodHolder;
+import com.ezshop.desensitize.dto.MethodResovingDto;
+import com.ezshop.desensitize.util.ClassPropertyTreeNode;
+import com.ezshop.desensitize.util.ClassPropertyTreeUtils;
+import com.ezshop.desensitize.util.ReflectionUtils;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,7 +18,7 @@ public class DesensitizeMethodHolderImpl implements DesensitizeMethodHolder {
 
     @Override
     public Method findMethodByName(String interfaceMethodName) {
-        if (!interfaceMethodMap.containsKey(interfaceMethodName)) {
+        if (interfaceMethodMap.containsKey(interfaceMethodName)) {
             return interfaceMethodMap.get(interfaceMethodName);
         }
         return null;
@@ -27,5 +32,19 @@ public class DesensitizeMethodHolderImpl implements DesensitizeMethodHolder {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public MethodResovingDto resolveMethod(String interfaceMethodName) {
+        Method method = this.findMethodByName(interfaceMethodName);
+        if (method == null) {
+            return null;
+        }
+        ClassPropertyTreeNode treeNode = ClassPropertyTreeUtils.parseMethodReturnType(method);
+        List<String> parameterNames = ReflectionUtils.getMethodParameterNames(method);
+        MethodResovingDto methodResovingDto = new MethodResovingDto();
+        methodResovingDto.setTreeNode(treeNode);
+        methodResovingDto.setParameters(parameterNames);
+        return methodResovingDto;
     }
 }

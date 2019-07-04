@@ -49,7 +49,7 @@ public class DemoDto {
     private BDemoDto bDemoDto;
 
     @ApiModelProperty("A样例对象List")
-    private List<ADemoDto> aDemoDtoList;
+    private List aDemoDtoList;
 
     @ApiModelProperty("B样例对象Set")
     private Set<BDemoDto> bDemoDtoSet;

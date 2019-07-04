@@ -13,7 +13,7 @@ public interface ValidateProcessor {
      * @param target          验证对象
      * @param targetMethod    验证方法
      * @param parameterValues 方法参数
-     * @param argNames        方法参数名称
+     * @param parameterNames  方法参数名称
      * @param channel         渠道编号
      * @param service         交易服务编号
      * @return
@@ -21,7 +21,7 @@ public interface ValidateProcessor {
     List<ErrorDto> validateParameters(Object target,
                                       Method targetMethod,
                                       Object[] parameterValues,
-                                      String[] argNames,
+                                      List<String> parameterNames,
                                       String channel,
                                       String service);
 }

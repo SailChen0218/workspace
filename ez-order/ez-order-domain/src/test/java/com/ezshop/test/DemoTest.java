@@ -3,6 +3,7 @@ package com.ezshop.test;
 import com.OrderDomainBootstrap;
 import com.alibaba.fastjson.JSON;
 import com.ezshop.desensitize.DesensitizeMethodHolder;
+import com.ezshop.desensitize.dto.MethodResovingDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,7 +134,10 @@ public class DemoTest {
     @Test
     public void testgetDemoDto_Aspect(){
         DemoDto demoDto = demoService.getDemoDto("1234567890123456789012345678901", "test@163.com");
-        desensitizeMethodHolder.findMethodByName("test");
+//        DemoDto demoDto = demoService.getDemoDto(null, null);
+        MethodResovingDto methodResovingDto = desensitizeMethodHolder
+                .resolveMethod("com.ezshop.test.DemoService.getDemoDto");
+        System.out.println(JSON.toJSONString(methodResovingDto));
         System.out.println(JSON.toJSONString(demoDto));
     }
 

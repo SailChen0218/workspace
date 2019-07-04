@@ -1,5 +1,7 @@
 package com.ezshop.desensitize.util;
 
+import com.ezshop.desensitize.exception.ValidateFailedException;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -7,9 +9,7 @@ import org.springframework.util.Assert;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -75,7 +75,7 @@ public abstract class ReflectionUtils {
             }
             return true;
         } catch (IntrospectionException e) {
-            logger.error("IntrospectionException occurred. clazz[{}],field[{}]", clazz.getName(), field.getName(), e);
+            logger.error("IntrospectionException occurred. clazz[{}],field[{}]", clazz.getName(), field.getName());
             return false;
         }
     }
@@ -103,19 +103,6 @@ public abstract class ReflectionUtils {
             return false;
         }
         return true;
-    }
-
-    /**
-     * 根据class获取实际元素类型
-     *
-     * @param targetType
-     * @return
-     */
-    public static Class<?> getActualType(Class<?> targetType) {
-        if (Collection.class.isAssignableFrom(targetType)) {
-            return targetType.getTypeParameters()[0].getClass();
-        }
-        return targetType;
     }
 
     /**
@@ -168,5 +155,54 @@ public abstract class ReflectionUtils {
         if (targetType.getSuperclass() != null && !Object.class.equals(targetType.getSuperclass())) {
             getInterfaceMethodsWithAnnotation(targetType.getSuperclass(), annotationType, interfaceMethodList);
         }
+    }
+
+    /**
+     * 根据泛型类实际类型
+     *
+     * @param targetType
+     * @return
+     */
+    public static Class<?> getActualGenericType(Type targetType) throws Exception {
+        if (targetType instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) targetType;
+            Type[] innerTypes = parameterizedType.getActualTypeArguments();
+            if (innerTypes != null && innerTypes.length == 1) {
+                return getActualGenericType(innerTypes[0]);
+            } else {
+                throw new RuntimeException("不支持多个泛型类型参数解析。");
+            }
+        } else {
+            if (targetType instanceof WildcardType) {
+                throw new RuntimeException("不支持通配符泛型参数解析。");
+            }
+            Class<?> targetClazz = (Class<?>) targetType;
+            if (Collection.class.isAssignableFrom(targetClazz)) {
+                throw new RuntimeException("Collection类型返回值缺少泛型参数。");
+            }
+            return targetClazz;
+        }
+    }
+
+    /**
+     * 获取方法带ApiParam注解的参数列表
+     *
+     * @param method
+     * @return
+     * @throws ValidateFailedException
+     */
+    public static List<String> getMethodParameterNames(Method method) {
+        Parameter[] parameters = method.getParameters();
+        if (parameters != null && parameters.length > 0) {
+            List<String> argNames = new ArrayList<>(parameters.length);
+            for (int i = 0; i < parameters.length; i++) {
+                ApiParam apiParams = parameters[i].getAnnotation(ApiParam.class);
+                if (apiParams != null) {
+                    argNames.add(apiParams.name());
+                }
+            }
+            return argNames;
+        }
+        return null;
     }
 }

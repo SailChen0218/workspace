@@ -9,7 +9,6 @@ import com.ezshop.desensitize.exception.ValidateFailedException;
 import com.ezshop.desensitize.util.ReflectionUtils;
 import com.ezshop.test.ResultDto;
 import com.ezshop.test.ResultVo;
-import io.swagger.annotations.ApiParam;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -21,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.List;
 
 @Aspect
@@ -81,9 +79,9 @@ public class DesensitizeAspect {
                     targetMethod.getDeclaringClass(), methodSignature.getMethod());
 
             // 校验接口方法请求参数
-            String[] argNames = getMethodArgNames(targetInterfaceMethod);
+            List<String> parameterNames = ReflectionUtils.getMethodParameterNames(targetInterfaceMethod);
             List<ErrorDto> errorDtoList = validateProcessor.validateParameters(target,
-                    targetInterfaceMethod, args, argNames, channel, service);
+                    targetInterfaceMethod, args, parameterNames, channel, service);
             if (errorDtoList.size() != 0) {
                 Class<?> methodReturnType = targetInterfaceMethod.getReturnType();
                 if (ResultDto.class.isAssignableFrom(methodReturnType)) {
@@ -99,31 +97,6 @@ public class DesensitizeAspect {
                             "请求参数验证失败。" + JSON.toJSONString(errorDtoList));
                 }
             }
-        }
-        return null;
-    }
-
-    /**
-     * 获取方法参数名称
-     *
-     * @param method
-     * @return
-     * @throws ValidateFailedException
-     */
-    private String[] getMethodArgNames(Method method) throws ValidateFailedException {
-        Parameter[] parameters = method.getParameters();
-        if (parameters != null && parameters.length > 0) {
-            String[] argNames = new String[parameters.length];
-            for (int i = 0; i < parameters.length; i++) {
-                ApiParam apiParams = parameters[i].getAnnotation(ApiParam.class);
-                if (apiParams == null) {
-                    throw new ValidateFailedException(method.getDeclaringClass().getName() + "." + method.getName() +
-                            "方法参数缺少ApiParam注解。例：@ApiParam(name = \"djxh\", value = \"登记序号\")");
-                } else {
-                    argNames[i] = apiParams.name();
-                }
-            }
-            return argNames;
         }
         return null;
     }
