@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -88,14 +86,12 @@ public class DesensitizeProcessorImpl implements DesensitizeProcessor {
                     String currentFieldPath = currentNodePath + "/" + field.getName();
                     Class<?> fieldType = field.getType();
                     if (Collection.class.isAssignableFrom(fieldType)) {
-                        ParameterizedType type = (ParameterizedType) field.getGenericType();
-                        Type[] innerTypes = type.getActualTypeArguments();
-                        Class<?> fieldActualType = (Class<?>) innerTypes[0];
                         Collection<Object> targetCollection = (Collection) fieldValue;
                         if (targetCollection.size() > 0) {
                             Iterator<Object> iterable = targetCollection.iterator();
                             while (iterable.hasNext()) {
-                                desensitizeField(currentNode, field, iterable.next(), fieldActualType,
+                                Object item = iterable.next();
+                                desensitizeField(currentNode, field, item, item.getClass(),
                                         currentFieldPath, channel, service, dsensitizationConfigMap);
                             }
                         }
