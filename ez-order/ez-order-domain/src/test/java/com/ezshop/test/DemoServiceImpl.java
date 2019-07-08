@@ -1,14 +1,12 @@
 package com.ezshop.test;
 
 import com.ezshop.desensitize.Desensitized;
-import io.swagger.annotations.ApiParam;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Priority;
-import javax.validation.Valid;
-import javax.validation.constraints.Email;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 //@Api(description = "接口入参校验及返回值脱敏测试接口")
 @Component
@@ -75,9 +73,16 @@ public class DemoServiceImpl implements DemoService {
      *
      * @param demoDto
      */
+    @Desensitized
     @Override
-    public void updateDemoDto(@Valid DemoDto demoDto) {
+    public void updateDemoDto(DemoDto demoDto) {
         System.out.println("updateDemoDto by DTO.");
+    }
+
+    @Desensitized
+    @Override
+    public List<String> getDemoNames() {
+        return Collections.singletonList("AAA");
     }
 
     @Override
@@ -92,9 +97,7 @@ public class DemoServiceImpl implements DemoService {
      */
     @Desensitized
     @Override
-    public List<DemoDto> listDemoDto(
-            @ApiParam(name = "djxh", value = "登记序号")
-                    String djxh) {
+    public List<DemoDto> listDemoDto(String djxh) {
         List<DemoDto> demoDtos = new ArrayList<>();
         DemoDto demoDto = new DemoDto();
         demoDto.setDjxh("12312312312");
@@ -131,11 +134,7 @@ public class DemoServiceImpl implements DemoService {
      */
     @Desensitized
     @Override
-    public ResultDto<DemoDto> getResultDemoDto(
-            @ApiParam(name = "djxh", value = "登记序号")
-            @Length(min = 31, max = 31, message = "djxh长度必须为{min}位。") String djxh,
-            @ApiParam(name = "email", value = "电子邮件")
-            @Email(message = "email格式不符合要求。") String email) {
+    public ResultDto<DemoDto> getResultDemoDto(String djxh, String email) {
         DemoDto demoDto = this.getDemoDto(djxh, email);
         return ResultDto.valueOfSuccess(demoDto);
     }
@@ -149,11 +148,7 @@ public class DemoServiceImpl implements DemoService {
      */
     @Desensitized
     @Override
-    public ResultDto<List<DemoDto>> getResultDemoDtoList(
-            @ApiParam(name = "djxh", value = "登记序号")
-            @Length(min = 31, max = 31, message = "djxh长度必须为{min}位。") String djxh,
-            @ApiParam(name = "email", value = "电子邮件")
-            @Email(message = "email格式不符合要求。") String email) {
+    public ResultDto<List<DemoDto>> getResultDemoDtoList(String djxh, String email) {
         DemoDto demoDto = this.getDemoDto(djxh, email);
         return ResultDto.valueOfSuccess(Collections.singletonList(demoDto));
     }

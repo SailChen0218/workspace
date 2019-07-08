@@ -112,6 +112,10 @@ public abstract class ReflectionUtils {
      * @return
      */
     public static Method getInterfaceMethod(Class<?> clazz, Method method) {
+        if (clazz.isInterface()) {
+            return method;
+        }
+
         for (Class<?> interfaceClazz : clazz.getInterfaces()) {
             Method interfaceMethod = org.springframework.util.ReflectionUtils.findMethod(
                     interfaceClazz, method.getName(), method.getParameterTypes());
@@ -121,7 +125,7 @@ public abstract class ReflectionUtils {
         }
 
         Class<?> superClazz = clazz.getSuperclass();
-        if (!Object.class.equals(superClazz)) {
+        if (superClazz != null && !Object.class.equals(superClazz)) {
             return getInterfaceMethod(superClazz, method);
         } else {
             return null;
@@ -184,24 +188,59 @@ public abstract class ReflectionUtils {
         }
     }
 
+//    /**
+//     * 获取方法带ApiParam注解的参数列表(JDK1.8及之后)
+//     *
+//     * @param method
+//     * @return
+//     * @throws Exception
+//     */
+//    public static List<String> getMethodParameterNames(Method method) throws Exception {
+//        Parameter[] parameters = method.getParameters();
+//        if (parameters != null && parameters.length > 0) {
+//            List<String> argNames = new ArrayList<>(parameters.length);
+//            for (int i = 0; i < parameters.length; i++) {
+//                ApiParam apiParams = parameters[i].getAnnotation(ApiParam.class);
+//                if (apiParams != null) {
+//                    argNames.add(apiParams.name());
+//                } else {
+//                    String msg = MessageFormat.format("参数缺少ApiParam注解。Class[{0}],Method[{1}],Parameter[{2}]",
+//                            method.getDeclaringClass().getName(), method.getName(), parameters[i].getName());
+//                    throw new Exception(msg);
+//                }
+//            }
+//            return argNames;
+//        }
+//        return null;
+//    }
+
     /**
-     * 获取方法带ApiParam注解的参数列表
+     * 获取方法带ApiParam注解的参数列表 (JDK1.7及以前)
      *
      * @param method
      * @return
      * @throws Exception
      */
     public static List<String> getMethodParameterNames(Method method) throws Exception {
-        Parameter[] parameters = method.getParameters();
-        if (parameters != null && parameters.length > 0) {
-            List<String> argNames = new ArrayList<>(parameters.length);
-            for (int i = 0; i < parameters.length; i++) {
-                ApiParam apiParams = parameters[i].getAnnotation(ApiParam.class);
-                if (apiParams != null) {
-                    argNames.add(apiParams.name());
+        Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+        if (parameterAnnotations != null && parameterAnnotations.length > 0) {
+            List<String> argNames = new ArrayList<>(parameterAnnotations.length);
+            String argName = null;
+            for (int i = 0; i < parameterAnnotations.length; i++) {
+                if (parameterAnnotations[i] != null && parameterAnnotations[i].length > 0) {
+                    for (int j = 0; j < parameterAnnotations[i].length; j++) {
+                        if (parameterAnnotations[i][j] instanceof ApiParam) {
+                            argName = ((ApiParam)parameterAnnotations[i][j]).value();
+                            break;
+                        }
+                    }
+                }
+
+                if (argName != null) {
+                    argNames.add(argName);
                 } else {
-                    String msg = MessageFormat.format("参数缺少ApiParam注解。Class[{0}],Method[{1}],Parameter[{2}]",
-                            method.getDeclaringClass().getName(), method.getName(), parameters[i].getName());
+                    String msg = MessageFormat.format("参数缺少ApiParam注解。Class[{0}],Method[{1}]",
+                            method.getDeclaringClass().getName(), method.getName());
                     throw new Exception(msg);
                 }
             }

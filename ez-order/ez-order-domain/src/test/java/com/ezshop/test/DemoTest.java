@@ -28,7 +28,7 @@ import java.util.Set;
 public class DemoTest {
 
     @Autowired
-    DemoServiceImpl demoService;
+    DemoService demoService;
 
     @Autowired
     DesensitizeMethodHolder desensitizeMethodHolder;
@@ -55,13 +55,6 @@ public class DemoTest {
 
     @Test
     public void testValidator_getDemoDto_pg() {
-//        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-//        ExecutableValidator executableValidator = factory.getValidator().forExecutables();
-//
-//        ConstraintMapping constraintMapping = configuration.createConstraintMapping();
-//
-//
-
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
 
         Validator validator = validatorFactory.getValidator();
@@ -70,60 +63,14 @@ public class DemoTest {
         for (MethodDescriptor methodDescriptor: methodDescriptorSet){
             methodDescriptor.getConstraintDescriptors();
         }
-//
-//        ConstraintMapping constraintMapping = configuration.createConstraintMapping();
-//        constraintMapping.constraintDefinition()
-//
-//                .type( Car.class )
-//                .property( "manufacturer", FIELD )
-//                .constraint( new NotNullDef() )
-//                .property( "licensePlate", FIELD )
-//                .ignoreAnnotations( true )
-//                .constraint( new NotNullDef() )
-//                .constraint( new SizeDef().min( 2 ).max( 14 ) )
-//                .type( RentalCar.class )
-//                .property( "rentalStation", METHOD )
-//                .constraint( new NotNullDef() );
-//
-//        Validator validator = configuration.addMapping( constraintMapping )
-//                .buildValidatorFactory()
-//                .getValidator();
-//        DemoService demoService = new DemoService();
-//        Class<?> clazz = demoService.getClass();
-//        try {
-//            Method method = clazz.getDeclaredMethod("getDemoDto", String.class, String.class);
-//            Object[] parameterValues = {"djxh", "email"};
-//            Set<ConstraintViolation<DemoService>> violations = executableValidator
-//                    .validateParameters(demoService, method, parameterValues);
-//            for (ConstraintViolation<DemoService> constraintViolation:violations){
-//                System.out.println(constraintViolation.getMessage());
-//            }
-//        } catch (NoSuchMethodException e) {
-//            e.printStackTrace();
-//        }
     }
 
     @Test
-    public void testValidator_updateDemoDto() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        ExecutableValidator executableValidator = factory.getValidator().forExecutables();
-
-        DemoServiceImpl demoService = new DemoServiceImpl();
-        Class<?> clazz = demoService.getClass();
-        try {
-            Method method = clazz.getDeclaredMethod("updateDemoDto", DemoDto.class);
-            DemoDto demoDto = new DemoDto();
-            demoDto.setDjxh("djxh");
-            demoDto.setEmail("email");
-            Object[] parameterValues = {demoDto};
-            Set<ConstraintViolation<DemoServiceImpl>> violations = executableValidator
-                    .validateParameters(demoService, method, parameterValues);
-            for (ConstraintViolation<DemoServiceImpl> constraintViolation:violations){
-                System.out.println(constraintViolation.getMessage());
-            }
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
+    public void testupdateDemoDto_Aspect() {
+        DemoDto demoDto = new DemoDto();
+        demoDto.setDjxh("djxh");
+        demoDto.setEmail("email");
+        demoService.updateDemoDto(demoDto);
     }
 
     @Test
@@ -148,37 +95,14 @@ public class DemoTest {
     }
 
     @Test
+    public void testgetDemoNames_Aspect(){
+        List<String> names = demoService.getDemoNames();
+        System.out.println(JSON.toJSONString(names));
+    }
+
+    @Test
     public void testgetResultDemoDtoList_Aspect(){
         ResultDto<List<DemoDto>> resultDemoDto = demoService.getResultDemoDtoList("1234567890123456789012345678901", "test@163.com");
         System.out.println(JSON.toJSONString(resultDemoDto));
     }
-
-//    public static void main(String[] args) {
-//        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-//        ExecutableValidator executableValidator = factory.getValidator().forExecutables();
-//
-//        DemoService demoService = new DemoService();
-//        Class<?> clazz = demoService.getClass();
-//        try {
-//            Method method = clazz.getDeclaredMethod("getDemoDto", String.class, String.class);
-//            Object[] parameterValues = {"djxh", "email"};
-//            Set<ConstraintViolation<DemoService>> violations = executableValidator
-//                    .validateParameters(demoService, method, parameterValues);
-//            System.out.println("finish.");
-//
-////
-////            Class<?>[] parameterTypes = method.getParameterTypes();
-////            Annotation[][] annotations = method.getParameterAnnotations();
-////            for (int i = 0; i < annotations.length; i++) {
-////                if (annotations[i].length > 0) {
-////                    if (annotations[i][0].annotationType().isAnnotationPresent(Constraint.class)) {
-////                        System.out.println("");
-////                    }
-////                }
-////            }
-////            method.getParameterAnnotations();
-//        } catch (NoSuchMethodException e) {
-//            e.printStackTrace();
-//        }
-//    }
 }
