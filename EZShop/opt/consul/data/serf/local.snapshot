@@ -1,0 +1,70 @@
+alive: macs-MacBook-Pro.local 192.168.0.110:8301
+alive: macs-MacBook-Pro.local 192.168.0.110:8301
+alive: localhost.localdomain 172.16.1.4:8301
+clock: 1
+event-clock: 4
+leave
+clock: 2
+alive: macs-MacBook-Pro.local 192.168.0.110:8301
+alive: localhost.localdomain 172.16.1.4:8301
+clock: 3
+event-clock: 6
+not-alive: localhost.localdomain
+alive: localhost.localdomain 172.16.1.4:8301
+event-clock: 7
+leave
+clock: 4
+alive: macs-MacBook-Pro.local 192.168.0.110:8301
+alive: localhost.localdomain 172.16.1.4:8301
+clock: 5
+leave
+clock: 6
+alive: macs-MacBook-Pro.local 192.168.0.110:8301
+alive: localhost.localdomain 172.16.1.4:8301
+clock: 9
+leave
+clock: 10
+alive: macs-MacBook-Pro.local 192.168.0.110:8301
+alive: localhost.localdomain 172.16.1.4:8301
+clock: 12
+not-alive: localhost.localdomain
+alive: localhost.localdomain 172.16.1.4:8301
+not-alive: localhost.localdomain
+alive: localhost.localdomain 172.16.1.4:8301
+not-alive: localhost.localdomain
+alive: localhost.localdomain 172.16.1.4:8301
+not-alive: localhost.localdomain
+alive: localhost.localdomain 172.16.1.4:8301
+leave
+clock: 13
+alive: macs-MacBook-Pro.local 192.168.0.110:8301
+alive: localhost.localdomain 172.16.1.4:8301
+clock: 15
+not-alive: localhost.localdomain
+alive: localhost.localdomain 172.16.1.4:8301
+event-clock: 10
+not-alive: localhost.localdomain
+leave
+clock: 16
+alive: macs-MacBook-Pro.local 192.168.0.110:8301
+alive: localhost.localdomain 172.16.1.4:8301
+clock: 17
+leave
+clock: 18
+alive: macs-MacBook-Pro.local 192.168.0.110:8301
+alive: devmaster 172.16.1.4:8301
+clock: 20
+not-alive: devmaster
+alive: devmaster 172.16.1.4:8301
+event-clock: 13
+not-alive: devmaster
+alive: devmaster 172.16.1.4:8301
+event-clock: 14
+leave
+clock: 21
+alive: macs-MacBook-Pro.local 192.168.0.110:8301
+alive: devmaster 172.16.1.4:8301
+clock: 22
+not-alive: devmaster
+leave
+clock: 23

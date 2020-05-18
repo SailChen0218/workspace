@@ -1,0 +1,6 @@
+{
+  "datacenter": "dc",
+  "data_dir": "/opt/consul/consul_data/",
+  "log_level": "DEBUG",
+  "server": false
+}

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ezshop.dao.orderdb.IOrderDao" >
+  <resultMap id="BaseResultMap" type="com.ezshop.common.domain.OrderDo" >
+    <id column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="product_numbers" property="productNumbers" jdbcType="DECIMAL" />
+    <result column="product_info" property="productInfo" jdbcType="VARCHAR" />
+    <result column="product_total_price" property="productTotalPrice" jdbcType="DECIMAL" />
+    <result column="order_delivery_status" property="orderDeliveryStatus" jdbcType="VARCHAR" />
+    <result column="express_delivery_company" property="expressDeliveryCompany" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="user_evaluation_grade" property="userEvaluationGrade" jdbcType="INTEGER" />
+    <result column="user_evaluation_content" property="userEvaluationContent" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="order_payment_status" property="orderPaymentStatus" jdbcType="VARCHAR" />
+    <result column="product_profit" property="productProfit" jdbcType="DECIMAL" />
+    <result column="trading_time" property="tradingTime" jdbcType="DATE" />
+    <result column="is_deleted" property="isDeleted" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="DATE" />
+    <result column="update_date" property="updateDate" jdbcType="DATE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    order_id, product_numbers, product_info, product_total_price, order_delivery_status, 
+    express_delivery_company, address, user_evaluation_grade, user_evaluation_content, 
+    user_id, user_name, order_payment_status, product_profit, trading_time, is_deleted, 
+    create_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from s_order
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from s_order
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.ezshop.common.domain.OrderDo" >
+    insert into s_order (order_id, product_numbers, product_info, 
+      product_total_price, order_delivery_status, 
+      express_delivery_company, address, user_evaluation_grade, 
+      user_evaluation_content, user_id, user_name, 
+      order_payment_status, product_profit, trading_time, 
+      is_deleted, create_date, update_date
+      )
+    values (#{orderId,jdbcType=VARCHAR}, #{productNumbers,jdbcType=DECIMAL}, #{productInfo,jdbcType=VARCHAR}, 
+      #{productTotalPrice,jdbcType=DECIMAL}, #{orderDeliveryStatus,jdbcType=VARCHAR}, 
+      #{expressDeliveryCompany,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{userEvaluationGrade,jdbcType=INTEGER}, 
+      #{userEvaluationContent,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{orderPaymentStatus,jdbcType=VARCHAR}, #{productProfit,jdbcType=DECIMAL}, #{tradingTime,jdbcType=DATE}, 
+      #{isDeleted,jdbcType=INTEGER}, #{createDate,jdbcType=DATE}, #{updateDate,jdbcType=DATE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ezshop.common.domain.OrderDo" >
+    insert into s_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="productNumbers != null" >
+        product_numbers,
+      </if>
+      <if test="productInfo != null" >
+        product_info,
+      </if>
+      <if test="productTotalPrice != null" >
+        product_total_price,
+      </if>
+      <if test="orderDeliveryStatus != null" >
+        order_delivery_status,
+      </if>
+      <if test="expressDeliveryCompany != null" >
+        express_delivery_company,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="userEvaluationGrade != null" >
+        user_evaluation_grade,
+      </if>
+      <if test="userEvaluationContent != null" >
+        user_evaluation_content,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="orderPaymentStatus != null" >
+        order_payment_status,
+      </if>
+      <if test="productProfit != null" >
+        product_profit,
+      </if>
+      <if test="tradingTime != null" >
+        trading_time,
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="productNumbers != null" >
+        #{productNumbers,jdbcType=DECIMAL},
+      </if>
+      <if test="productInfo != null" >
+        #{productInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="productTotalPrice != null" >
+        #{productTotalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="orderDeliveryStatus != null" >
+        #{orderDeliveryStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="expressDeliveryCompany != null" >
+        #{expressDeliveryCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="userEvaluationGrade != null" >
+        #{userEvaluationGrade,jdbcType=INTEGER},
+      </if>
+      <if test="userEvaluationContent != null" >
+        #{userEvaluationContent,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderPaymentStatus != null" >
+        #{orderPaymentStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="productProfit != null" >
+        #{productProfit,jdbcType=DECIMAL},
+      </if>
+      <if test="tradingTime != null" >
+        #{tradingTime,jdbcType=DATE},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=DATE},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ezshop.common.domain.OrderDo" >
+    update s_order
+    <set >
+      <if test="productNumbers != null" >
+        product_numbers = #{productNumbers,jdbcType=DECIMAL},
+      </if>
+      <if test="productInfo != null" >
+        product_info = #{productInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="productTotalPrice != null" >
+        product_total_price = #{productTotalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="orderDeliveryStatus != null" >
+        order_delivery_status = #{orderDeliveryStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="expressDeliveryCompany != null" >
+        express_delivery_company = #{expressDeliveryCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="userEvaluationGrade != null" >
+        user_evaluation_grade = #{userEvaluationGrade,jdbcType=INTEGER},
+      </if>
+      <if test="userEvaluationContent != null" >
+        user_evaluation_content = #{userEvaluationContent,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderPaymentStatus != null" >
+        order_payment_status = #{orderPaymentStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="productProfit != null" >
+        product_profit = #{productProfit,jdbcType=DECIMAL},
+      </if>
+      <if test="tradingTime != null" >
+        trading_time = #{tradingTime,jdbcType=DATE},
+      </if>
+      <if test="isDeleted != null" >
+        is_deleted = #{isDeleted,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=DATE},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=DATE},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ezshop.common.domain.OrderDo" >
+    update s_order
+    set product_numbers = #{productNumbers,jdbcType=DECIMAL},
+      product_info = #{productInfo,jdbcType=VARCHAR},
+      product_total_price = #{productTotalPrice,jdbcType=DECIMAL},
+      order_delivery_status = #{orderDeliveryStatus,jdbcType=VARCHAR},
+      express_delivery_company = #{expressDeliveryCompany,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      user_evaluation_grade = #{userEvaluationGrade,jdbcType=INTEGER},
+      user_evaluation_content = #{userEvaluationContent,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      order_payment_status = #{orderPaymentStatus,jdbcType=VARCHAR},
+      product_profit = #{productProfit,jdbcType=DECIMAL},
+      trading_time = #{tradingTime,jdbcType=DATE},
+      is_deleted = #{isDeleted,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=DATE},
+      update_date = #{updateDate,jdbcType=DATE}
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </update>
+</mapper>
